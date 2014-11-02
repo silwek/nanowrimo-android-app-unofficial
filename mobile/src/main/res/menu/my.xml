@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MyActivity" >
+    <item android:id="@+id/add_user"
+        android:title="@string/follow_people"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_menu_add"
+        android:showAsAction="ifRoom" />
+
+</menu>
