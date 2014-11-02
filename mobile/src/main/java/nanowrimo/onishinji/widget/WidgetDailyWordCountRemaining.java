@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import nanowrimo.onishinji.R;
+import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
 
 
@@ -55,7 +56,6 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
         final int N = appWidgetIds.length;
         for (int i = 0; i < N; i++) {
             WidgetDailyWordCountRemainingConfigureActivity.deleteTitlePref(context, appWidgetIds[i]);
-
         }
     }
 
@@ -69,7 +69,7 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    static void updateAppWidget(Context context, final AppWidgetManager appWidgetManager,
+    static void updateAppWidget(final Context context, final AppWidgetManager appWidgetManager,
                          final int appWidgetId) {
 
         CharSequence widgetText = WidgetDailyWordCountRemainingConfigureActivity.loadTitlePref(context, appWidgetId);
@@ -84,17 +84,14 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.button_update, pi);
 
         // Configure http request
-        RequestQueue queue = Volley.newRequestQueue(context);
+        HttpClient.getInstance().setContext(context);
         final String url = context.getString(R.string.base_url) + widgetText;
         JSONObject params = new JSONObject();
         Log.v("WIDGET", appWidgetId + " make an request to " + url);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
                 views.setViewVisibility(R.id.loader, View.GONE);
-                Log.d("WIDGET", "receive response from serv " + response.toString());
-
                 views.setViewVisibility(R.id.error_container, View.GONE);
                 User user = new User(response);
                 views.setTextViewText(R.id.appwidget_username, user.getName());
@@ -107,14 +104,13 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
             @Override
             public void onErrorResponse(VolleyError error) {
                 views.setViewVisibility(R.id.loader, View.GONE);
-                views.setTextViewText(R.id.error_container, "Erreur");
+                views.setTextViewText(R.id.error_container, context.getString(R.string.error_network_widget));
                 views.setViewVisibility(R.id.error_container, View.VISIBLE);
                 //  views.setTextViewText(R.id.appwidget_text, "error de volley");
                 appWidgetManager.updateAppWidget(appWidgetId, views);
-                Log.e("WIDGET", "receive error from serv " + error.getMessage() + " for url " + url);
             }
         });
-        queue.add(request);
+        HttpClient.getInstance().add(request);
     }
 
     /**
@@ -143,8 +139,6 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-
-        Log.d("WIDGET", " receive intent " + intent.getAction());
 
         if (ACTION_UPDATE_CLICK.equals(intent.getAction())) {
             onUpdate(context);

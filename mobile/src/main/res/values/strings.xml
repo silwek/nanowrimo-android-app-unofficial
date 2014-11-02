@@ -19,5 +19,6 @@
     <string name="please_loading">Loading..Wait..</string>
     <string name="unfollow_people">Ne plus suivre</string>
     <string name="follow_people">Suivre quelqu\'un</string>
+    <string name="error_network_widget">Erreur</string>
 
 </resources>

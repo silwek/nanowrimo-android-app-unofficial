@@ -23,6 +23,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONObject;
 
 import nanowrimo.onishinji.R;
+import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
 
 
@@ -71,6 +72,7 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
             return;
         }
 
+        HttpClient.getInstance().setContext(this);
         mAppWidgetText.setText(loadTitlePref(WidgetDailyWordCountRemainingConfigureActivity.this, mAppWidgetId));
     }
 
@@ -82,7 +84,6 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
             String username = mAppWidgetText.getText().toString();
 
             // Test username
-            RequestQueue queue = Volley.newRequestQueue(context);
             final String url = getString(R.string.base_url) + username;
             JSONObject params = new JSONObject();
             Log.v("WIDGET", "make an request to " + url);
@@ -117,7 +118,8 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
                     alert.show();
                 }
             });
-            queue.add(request);
+
+            HttpClient.getInstance().add(request);
 
         }
     };

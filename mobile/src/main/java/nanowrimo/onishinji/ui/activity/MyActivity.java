@@ -1,18 +1,14 @@
 package nanowrimo.onishinji.ui.activity;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -22,7 +18,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.astuetz.PagerSlidingTabStrip;
 
 import org.json.JSONObject;
 
@@ -30,13 +25,13 @@ import java.util.ArrayList;
 
 import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.adapter.SectionsPagerAdapter;
-import nanowrimo.onishinji.adapter.SectionsPagerAdapter;
 import nanowrimo.onishinji.model.Database;
+import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
-import nanowrimo.onishinji.ui.fragment.PlaceholderFragment;
+import nanowrimo.onishinji.ui.fragment.UserFragment;
 
 
-public class MyActivity extends FragmentActivity implements PlaceholderFragment.OnRemoveListener {
+public class MyActivity extends FragmentActivity implements UserFragment.OnRemoveListener {
 
     SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -67,7 +62,7 @@ public class MyActivity extends FragmentActivity implements PlaceholderFragment.
         for (String user : mDatabase.getUsers()) {
             onAddTab(user, false);
         }
-
+        HttpClient.getInstance().setContext(this);
     }
 
     private void checkEmptyDatabase() {
@@ -134,7 +129,7 @@ public class MyActivity extends FragmentActivity implements PlaceholderFragment.
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        if (true) {
+                        if (false) {
                             mDatabase.addUser(value);
                             onAddTab(value, true);
                             progressDialog.dismiss();
