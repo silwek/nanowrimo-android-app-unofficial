@@ -53,11 +53,6 @@ public class MyActivity extends FragmentActivity implements PlaceholderFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
 
-        // Set up the action bar.
-        final ActionBar bar = getActionBar();
-        bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-      //  bar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
-
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mDatabase = new Database(this);
@@ -68,15 +63,6 @@ public class MyActivity extends FragmentActivity implements PlaceholderFragment.
         mSectionsPagerAdapter = new SectionsPagerAdapter(mDatabase, this, getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setOnPageChangeListener(
-                new ViewPager.SimpleOnPageChangeListener() {
-                    @Override
-                    public void onPageSelected(int position) {
-                        // When swiping between pages, select the
-                        // corresponding tab.
-                        getActionBar().setSelectedNavigationItem(position);
-                    }
-                });
 
         for (String user : mDatabase.getUsers()) {
             onAddTab(user, false);
@@ -198,56 +184,16 @@ public class MyActivity extends FragmentActivity implements PlaceholderFragment.
 
         mSectionsPagerAdapter.notifyDataSetChanged();
 
-        ActionBar.Tab newTab = bar.newTab()
-                .setText(text)
-                .setTabListener(new TabListener());
-        bar.addTab(newTab);
-
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         if (selectLastTab) {
-            bar.selectTab(newTab);
-            mViewPager.setCurrentItem(bar.getTabCount());
+            mViewPager.setCurrentItem(mDatabase.getUsers().size());
         }
-
     }
 
     public void onRemoveTab(int position) {
-        final ActionBar bar = getActionBar();
-        if (bar.getTabCount() > 0) {
-
-            mSectionsPagerAdapter.notifyDataSetChanged();
-            bar.removeTabAt(position);
-
-            mViewPager.setAdapter(mSectionsPagerAdapter);
-            mViewPager.setCurrentItem(position - 1);
-        }
-
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setCurrentItem(position - 1);
     }
 
-    /**
-     * A TabListener receives event callbacks from the action bar as tabs
-     * are deselected, selected, and reselected.
-     */
-    private class TabListener implements ActionBar.TabListener {
-        private PlaceholderFragment mFragment;
-
-        public TabListener() {
-        }
-
-        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-            if(tab.getPosition() >= 0) {
-                mViewPager.setCurrentItem(tab.getPosition());
-            }
-           // mViewPager.set
-        }
-
-        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
-
-        }
-
-        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
-            Toast.makeText(MyActivity.this, "Reselected!", Toast.LENGTH_SHORT).show();
-        }
-    }
 }
