@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:showIn="@layout/fragment_my">
+
+    <com.filippudak.ProgressPieView.ProgressPieView
+        android:id="@+id/progressPieView"
+        android:layout_width="100dip"
+        android:layout_height="100dip"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center" />
+
+    <ImageView
+        android:id="@+id/progress_view_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:alpha="0.5"/>
+
+    <TextView
+        android:id="@+id/progressPieValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:textColor="@android:color/white"
+        android:lines="2"
+        android:lineSpacingExtra="@dimen/progress_pie_line_space"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="@dimen/progress_pie_separator_width"
+        android:layout_height="@dimen/progress_pie_separator_height"
+        android:layout_centerInParent="true"
+        android:background="@android:color/white" />
+</merge>

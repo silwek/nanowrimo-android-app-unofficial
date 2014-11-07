@@ -1,132 +1,197 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MyActivity$PlaceholderFragment">
-
-    <TextView
-        android:id="@+id/section_label"
-        android:textSize="22sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <include layout="@layout/sep" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="wordcount" />
-
-
-        <TextView
-            android:id="@+id/wordcount"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="..." />
-
-    </LinearLayout>
-
-    <include layout="@layout/sep" />
+    android:background="#eee"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="wordCountToday" />
+
+            android:layout_gravity="center"
+            app:cardCornerRadius="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/section_label"
+                    android:layout_width="wrap_content"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content"
+                    android:textSize="22sp" />
+
+                <include layout="@layout/sep" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/stats_wordcount" />
+
+                    <TextView
+                        android:id="@+id/wordcount"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/stats_empty" />
+
+                </LinearLayout>
+
+                <include layout="@layout/sep" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/stats_wordcount_today" />
 
 
-        <TextView
-            android:id="@+id/wordCountToday"
+                    <TextView
+                        android:id="@+id/wordCountToday"
 
-            android:layout_width="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/stats_empty" />
+
+                </LinearLayout>
+
+                <include layout="@layout/sep" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/stats_daily_target" />
+
+
+                    <TextView
+                        android:id="@+id/dailyTarget"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/stats_empty" />
+
+                </LinearLayout>
+
+                <include layout="@layout/sep" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/stats_daily_target_remaining" />
+
+
+                    <TextView
+                        android:id="@+id/dailyTargetRemaining"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/stats_empty" />
+
+                </LinearLayout>
+
+                <include layout="@layout/sep" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/stats_nb_day_remaining" />
+
+
+                    <TextView
+                        android:id="@+id/nbDayRemaining"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/stats_empty" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="..." />
+            android:layout_gravity="center"
+            app:cardCornerRadius="0dp">
+
+            <LinearLayout
+
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <nanowrimo.onishinji.ui.widget.WordCountProgress
+                    android:id="@+id/daily"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:iconProgressViewPie="@drawable/ic_pen" />
+
+                <View android:layout_width="20dp" android:layout_height="1dp" />
+
+                <nanowrimo.onishinji.ui.widget.WordCountProgress
+                    android:id="@+id/global"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:iconProgressViewPie="@drawable/ic_book" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
 
     </LinearLayout>
 
-    <include layout="@layout/sep" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="dailyTarget" />
-
-
-        <TextView
-            android:id="@+id/dailyTarget"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="..." />
-
-    </LinearLayout>
-
-    <include layout="@layout/sep" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="dailyTargetRemaining" />
-
-
-        <TextView
-            android:id="@+id/dailyTargetRemaining"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="..." />
-
-    </LinearLayout>
-
-    <include layout="@layout/sep" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="nbDayRemaining" />
-
-
-        <TextView
-            android:id="@+id/nbDayRemaining"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="..." />
-
-    </LinearLayout>
-
-
-</LinearLayout>
+</ScrollView>

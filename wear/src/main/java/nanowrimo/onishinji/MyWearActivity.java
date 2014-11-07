@@ -1,9 +1,11 @@
-package onishinji;
+package nanowrimo.onishinji;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
 import android.widget.TextView;
+
+import onishinji.R;
 
 public class MyWearActivity extends Activity {
 

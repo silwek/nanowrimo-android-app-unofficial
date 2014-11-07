@@ -4,9 +4,11 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -63,6 +65,16 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
             onAddTab(user, false);
         }
         HttpClient.getInstance().setContext(this);
+
+        if(getIntent() != null) {
+            Log.d("widget", "3) alors y a " + getIntent().getStringExtra("username"));
+
+            int index = mDatabase.getUsers().indexOf(getIntent().getStringExtra("username"));
+            Log.d("MyActivity", " found tab at " + index);
+            if(index != -1) {
+                mViewPager.setCurrentItem(index);
+            }
+        }
     }
 
     private void checkEmptyDatabase() {
@@ -121,8 +133,8 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
 
                         User user = new User(response);
 
-                        mDatabase.addUser(user.getName());
-                        onAddTab(user.getName(), true);
+                        mDatabase.addUser(user.getId());
+                        onAddTab(user.getId(), true);
                         progressDialog.dismiss();
                     }
                 }, new Response.ErrorListener() {
@@ -174,12 +186,11 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
 
 
     public void onAddTab(String text, Boolean selectLastTab) {
-        final ActionBar bar = getActionBar();
-        final int tabCount = bar.getTabCount();
 
+        mSectionsPagerAdapter.setDatabase(mDatabase);
         mSectionsPagerAdapter.notifyDataSetChanged();
 
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+       // mViewPager.setAdapter(mSectionsPagerAdapter);
 
         if (selectLastTab) {
             mViewPager.setCurrentItem(mDatabase.getUsers().size());
@@ -187,8 +198,25 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
     }
 
     public void onRemoveTab(int position) {
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setCurrentItem(position - 1);
+
+        // Quick and dirty way
+        finish();
+        Intent i = new Intent(this, MyActivity.class);
+
+        if(position-1 >= 0 && position-1 <= mDatabase.getUsers().size()) {
+            i.putExtra("username", mDatabase.getUsers().get(position - 1));
+        }
+
+        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(i);
+
+        //mSectionsPagerAdapter.setDatabase(mDatabase);
+        //mSectionsPagerAdapter.notifyDataSetChanged();
+
+        //mViewPager.removeAllViews();
+
+        //mViewPager.setAdapter(mSectionsPagerAdapter);
+        //mViewPager.setCurrentItem(position - 1);
     }
 
 }

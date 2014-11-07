@@ -5,6 +5,7 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 
 import java.util.ArrayList;
 
@@ -60,4 +61,12 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
         return dataSource.getUsers().get(position);
     }
 
+    @Override
+    public int getItemPosition(Object object){
+        return PagerAdapter.POSITION_NONE;
+    }
+
+    public void setDatabase(Database database) {
+        this.dataSource = database;
+    }
 }

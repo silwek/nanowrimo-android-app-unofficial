@@ -73,7 +73,7 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
         }
 
         HttpClient.getInstance().setContext(this);
-        mAppWidgetText.setText(loadTitlePref(WidgetDailyWordCountRemainingConfigureActivity.this, mAppWidgetId));
+        //mAppWidgetText.setText(loadTitlePref(WidgetDailyWordCountRemainingConfigureActivity.this, mAppWidgetId));
     }
 
     View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -96,7 +96,7 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
                     mButtonValid.setClickable(true);
                     mLoader.setVisibility(View.GONE);
                     User user = new User(response);
-                    saveTitlePref(context, mAppWidgetId, user.getName());
+                    saveTitlePref(context, mAppWidgetId, user.getId());
 
                     // It is the responsibility of the configuration activity to update the app widget
                     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -139,7 +139,7 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
         if (titleValue != null) {
             return titleValue;
         } else {
-            return context.getString(R.string.appwidget_text);
+            return "";
         }
     }
 

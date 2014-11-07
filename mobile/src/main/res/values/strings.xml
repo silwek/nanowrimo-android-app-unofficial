@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Nanowrimo</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="appwidget_text">Nom d\'utilisateurs</string>
-    <string name="configure">Afficher le nombre de mots du jour restant pour</string>
-    <string name="add_widget">Valider le widget</string>
-    <string name="default_username">Nom</string>
-    <string name="default_wordcount">0</string>
-    <string name="name_invalid">Nom invalide</string>
-    <string name="dialog_add_user_title">Nom de la personne</string>
-    <string name="dialog_add_user_message">C\'est le nom affiché après /participantsw</string>
+    <string name="app_name">WordCounter</string>
     <string name="base_url">http://new-class.com:1234/users/</string>
+    <string name="configure">Display daily word count remaining for</string>
+    <string name="add_widget">Save widget</string>
+    <string name="default_username">Name</string>
+    <string name="default_wordcount">0</string>
+    <string name="name_invalid">Invalid name</string>
+    <string name="dialog_add_user_title">Username</string>
+    <string name="dialog_add_user_message">Name after /participants</string>
     <string name="please_loading">Loading..Wait..</string>
-    <string name="unfollow_people">Ne plus suivre</string>
-    <string name="follow_people">Suivre quelqu\'un</string>
-    <string name="error_network_widget">Erreur</string>
+    <string name="unfollow_people">Unfollow</string>
+    <string name="follow_people">Follow</string>
+    <string name="error_network_widget">Network error</string>
+    <string name="stats_wordcount">Global word count</string>
+    <string name="stats_wordcount_today">Today word count</string>
+    <string name="stats_daily_target">Daily target</string>
+    <string name="stats_daily_target_remaining">Daily target word count remaining</string>
+    <string name="stats_nb_day_remaining">Days remaining</string>
+    <string name="stats_empty">...</string>
 
 </resources>

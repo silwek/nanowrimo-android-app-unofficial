@@ -1,0 +1,5 @@
+<resources>
+    <declare-styleable name="WordCountProgress">
+        <attr name="iconProgressViewPie" format="reference" />
+    </declare-styleable>
+</resources>

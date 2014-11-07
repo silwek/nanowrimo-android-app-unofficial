@@ -6,12 +6,13 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
         <activity
             android:name=".ui.activity.MyActivity"
+            android:theme="@style/noAnimTheme"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,6 +33,7 @@
             </intent-filter>
 
             <meta-data
+                
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_daily_word_count_remaining_info" />
         </receiver>

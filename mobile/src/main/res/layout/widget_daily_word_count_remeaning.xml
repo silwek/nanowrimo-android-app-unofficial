@@ -1,41 +1,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="#09C"
+    android:id="@+id/widget"
     android:layout_height="match_parent">
 
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical"
-        android:padding="@dimen/widget_margin">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_pen"
+        android:id="@+id/appwidget_progress"/>
 
-        <TextView
-            android:id="@+id/appwidget_wordcount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:background="#09C"
-            android:contentDescription="@string/appwidget_text"
-            android:ellipsize="marquee"
-            android:gravity="center_horizontal"
-            android:text="@string/default_wordcount"
-            android:textColor="#ffffff"
-            android:layout_gravity="center"
-            android:textSize="14sp"
-            android:textStyle="bold|italic" />
-
-        <TextView
-            android:id="@+id/appwidget_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="@string/default_username"
-            android:textColor="#ffffff" />
-
-
-    </LinearLayout>
 
     <TextView
         android:id="@+id/error_container"
@@ -48,22 +22,6 @@
         android:textColor="#ffffff"
         android:visibility="visible" />
 
-    <ProgressBar
-        android:id="@+id/loader"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#09C" />
 
-    <Button
-        android:id="@+id/button_update"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-
-        android:textColor="#ffffff"
-        android:layout_gravity="right"
-        android:text="R" />
 
 </RelativeLayout>

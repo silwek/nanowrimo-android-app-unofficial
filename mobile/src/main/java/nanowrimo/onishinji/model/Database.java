@@ -35,6 +35,9 @@ public class Database {
     }
 
     public void deleteUser(String username) {
+
+        Log.d("DB", "want to delete " + username + " (local " + getUsersString());
+
         if (this.users.contains(username)) {
             this.users.remove(username);
         }

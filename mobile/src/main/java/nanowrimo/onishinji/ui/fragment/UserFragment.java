@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
+import nanowrimo.onishinji.ui.widget.WordCountProgress;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -39,6 +40,8 @@ public class UserFragment extends Fragment {
     private TextView mTextViewDailyTarget;
     private TextView mTextViewDailyTargetRemaining;
     private TextView mTextViewNbDayRemaining;
+    private WordCountProgress mProgressDaily;
+    private WordCountProgress mProgressGlobal;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,11 +56,7 @@ public class UserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_my, container, false);
-//        this.username = savedInstanceState.getString("name");
         setHasOptionsMenu(true);
-
-//        this.username = getArguments().getString("name");
-
         return rootView;
     }
 
@@ -93,14 +92,16 @@ public class UserFragment extends Fragment {
         mTextViewDailyTarget = (TextView) getView().findViewById(R.id.dailyTarget);
         mTextViewDailyTargetRemaining = (TextView) getView().findViewById(R.id.dailyTargetRemaining);
         mTextViewNbDayRemaining = (TextView) getView().findViewById(R.id.nbDayRemaining);
+
+        mProgressDaily = (WordCountProgress) getView().findViewById(R.id.daily);
+        mProgressGlobal = (WordCountProgress) getView().findViewById(R.id.global);
+
        updateUI();
     }
 
     private void updateUI() {
         Log.d("fragment", "will update UI with " + username);
         mTextViewUsername.setText(username);
-
-
     }
 
     @Override
@@ -127,6 +128,14 @@ public class UserFragment extends Fragment {
                 mTextViewDailyTarget.setText(user.getDailyTarget()+"");
                 mTextViewDailyTargetRemaining.setText(user.getDailyTargetRemaining()+"");
                 mTextViewNbDayRemaining.setText(user.getNbDayRemaining()+"");
+
+                mProgressDaily.compute(user.getWordCountToday(), user.getDailyTarget(), true);
+                mProgressGlobal.compute(user.getWordcount(), 50000.0f, true);
+
+
+                final float target = user.getDailyTarget();
+                final float current = user.getWordCountToday();
+
             }
         }, new Response.ErrorListener() {
             @Override

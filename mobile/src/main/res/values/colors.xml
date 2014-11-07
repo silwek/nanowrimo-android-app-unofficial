@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="default_background_color">@android:color/transparent</color>
+    <color name="default_progress_color">#33b5e5</color>
+    <color name="default_stroke_color">#33b5e5</color>
+    <color name="default_text_color">#333333</color>
+    <color name="small_widget_progress_background">#b9b9b9</color>
+    <color name="small_widget_progress_color">#24b3f0</color>
+    <color name="small_widget_progress_win">#f0ba18</color>
+
+</resources>
