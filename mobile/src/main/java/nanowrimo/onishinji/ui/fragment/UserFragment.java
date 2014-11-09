@@ -1,5 +1,7 @@
 package nanowrimo.onishinji.ui.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,9 +23,11 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONObject;
 
 import nanowrimo.onishinji.R;
+import nanowrimo.onishinji.model.Database;
 import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
 import nanowrimo.onishinji.ui.widget.WordCountProgress;
+import nanowrimo.onishinji.utils.StringUtils;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -75,7 +80,29 @@ public class UserFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.delete_user:
                 if(mOnRemoveListener != null) {
-                    mOnRemoveListener.remove(username);
+
+                    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+
+                    alert.setTitle(getString(R.string.dialog_remove_user_title));
+                    alert.setMessage(getString(R.string.dialog_remove_user_message, username));
+ 
+                    alert.setPositiveButton(getActivity().getString(R.string.yes), new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            mOnRemoveListener.remove(username);
+                        }
+                    });
+
+                    alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // Canceled.
+                        }
+                    });
+
+                    alert.show();
+                    
                 }
                 break;
         }
@@ -102,7 +129,7 @@ public class UserFragment extends Fragment {
 
     private void updateUI() {
         Log.d("fragment", "will update UI with " + username);
-        mTextViewUsername.setText(username);
+        mTextViewUsername.setText(mOnRemoveListener.getNiceTitle(username));
     }
 
     @Override
@@ -115,12 +142,11 @@ public class UserFragment extends Fragment {
     private void getRemoteData() {
         // Configure http request
 
-        final String url = getActivity().getString(R.string.base_url) + username;
+        final String url = StringUtils.getUserUrl(username);
         JSONObject params = new JSONObject();
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("user", response.toString());
 
                 User user = new User(response);
 
@@ -136,7 +162,6 @@ public class UserFragment extends Fragment {
 
                 final float target = user.getDailyTarget();
                 final float current = user.getWordCountToday();
-
             }
         }, new Response.ErrorListener() {
             @Override
@@ -170,5 +195,7 @@ public class UserFragment extends Fragment {
 
     public interface OnRemoveListener {
         void remove(String username);
+
+        String getNiceTitle(String username);
     }
 }

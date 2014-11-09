@@ -31,6 +31,7 @@ import nanowrimo.onishinji.model.Database;
 import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
 import nanowrimo.onishinji.ui.fragment.UserFragment;
+import nanowrimo.onishinji.utils.StringUtils;
 
 
 public class MyActivity extends FragmentActivity implements UserFragment.OnRemoveListener {
@@ -66,12 +67,12 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
         }
         HttpClient.getInstance().setContext(this);
 
-        if(getIntent() != null) {
+        if (getIntent() != null) {
             Log.d("widget", "3) alors y a " + getIntent().getStringExtra("username"));
 
             int index = mDatabase.getUsers().indexOf(getIntent().getStringExtra("username"));
             Log.d("MyActivity", " found tab at " + index);
-            if(index != -1) {
+            if (index != -1) {
                 mViewPager.setCurrentItem(index);
             }
         }
@@ -116,7 +117,7 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
         final EditText input = new EditText(this);
         alert.setView(input);
 
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        alert.setPositiveButton(getString(R.string.follow), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 final String value = input.getText().toString();
 
@@ -125,7 +126,7 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
 
                 // Test username
                 RequestQueue queue = Volley.newRequestQueue(MyActivity.this);
-                final String url = getString(R.string.base_url) + value;
+                final String url = StringUtils.getUserUrl(value);
                 JSONObject params = new JSONObject();
                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
                     @Override
@@ -133,7 +134,7 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
 
                         User user = new User(response);
 
-                        mDatabase.addUser(user.getId());
+                        mDatabase.addUser(user.getId(), user.getName());
                         onAddTab(user.getId(), true);
                         progressDialog.dismiss();
                     }
@@ -141,20 +142,13 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
                     @Override
                     public void onErrorResponse(VolleyError error) {
 
-                        if (false) {
-                            mDatabase.addUser(value);
-                            onAddTab(value, true);
-                            progressDialog.dismiss();
-                        } else {
-                            progressDialog.dismiss();
-                            Toast alert = Toast.makeText(MyActivity.this, getString(R.string.name_invalid), Toast.LENGTH_SHORT);
-                            alert.show();
+                        progressDialog.dismiss();
+                        Toast alert = Toast.makeText(MyActivity.this, getString(R.string.name_invalid), Toast.LENGTH_SHORT);
+                        alert.show();
 
-                            if (!canCloseDialog) {
-                                displayAddUserDialog(canCloseDialog);
-                            }
+                        if (!canCloseDialog) {
+                            displayAddUserDialog(canCloseDialog);
                         }
-
                     }
                 });
                 queue.add(request);
@@ -163,7 +157,7 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
         });
 
         if (canCloseDialog) {
-            alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     // Canceled.
                 }
@@ -181,7 +175,12 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
         int oldPos = mDatabase.getUsers().indexOf(username);
         mDatabase.deleteUser(username);
         onRemoveTab(oldPos);
-        checkEmptyDatabase();
+        //checkEmptyDatabase();
+    }
+
+    @Override
+    public String getNiceTitle(String username) {
+        return mDatabase.getNiceTitle(username);
     }
 
 
@@ -190,7 +189,7 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
         mSectionsPagerAdapter.setDatabase(mDatabase);
         mSectionsPagerAdapter.notifyDataSetChanged();
 
-       // mViewPager.setAdapter(mSectionsPagerAdapter);
+        // mViewPager.setAdapter(mSectionsPagerAdapter);
 
         if (selectLastTab) {
             mViewPager.setCurrentItem(mDatabase.getUsers().size());
@@ -203,7 +202,7 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
         finish();
         Intent i = new Intent(this, MyActivity.class);
 
-        if(position-1 >= 0 && position-1 <= mDatabase.getUsers().size()) {
+        if (position - 1 >= 0 && position - 1 <= mDatabase.getUsers().size()) {
             i.putExtra("username", mDatabase.getUsers().get(position - 1));
         }
 

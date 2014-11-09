@@ -58,7 +58,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return dataSource.getUsers().get(position);
+        return dataSource.getNiceTitle(position);
     }
 
     @Override

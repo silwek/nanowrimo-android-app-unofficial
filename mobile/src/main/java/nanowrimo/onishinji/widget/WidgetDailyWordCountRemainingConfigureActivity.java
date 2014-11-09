@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
+import nanowrimo.onishinji.utils.StringUtils;
 
 
 /**
@@ -84,9 +85,8 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
             String username = mAppWidgetText.getText().toString();
 
             // Test username
-            final String url = getString(R.string.base_url) + username;
+            final String url = StringUtils.getUserUrl(username);
             JSONObject params = new JSONObject();
-            Log.v("WIDGET", "make an request to " + url);
             mLoader.setVisibility(View.VISIBLE);
             mButtonValid.setClickable(false);
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {

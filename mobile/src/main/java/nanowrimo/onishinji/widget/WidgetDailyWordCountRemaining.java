@@ -26,6 +26,7 @@ import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
 import nanowrimo.onishinji.ui.activity.MyActivity;
 import nanowrimo.onishinji.ui.widget.WordCountProgress;
+import nanowrimo.onishinji.utils.StringUtils;
 
 
 /**
@@ -83,7 +84,7 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
 
         // Configure http request
         HttpClient.getInstance().setContext(context);
-        final String url = context.getString(R.string.base_url) + widgetText;
+        final String url = StringUtils.getUserUrl((String) widgetText);
         JSONObject params = new JSONObject();
         Log.v("WIDGET", appWidgetId + " make an request to " + url);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
