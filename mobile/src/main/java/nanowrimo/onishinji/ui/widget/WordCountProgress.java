@@ -20,6 +20,11 @@ public class WordCountProgress extends RelativeLayout {
 
 
     private TextView mTextView;
+
+    public ProgressPieView getProgressPieView() {
+        return mProgressPieView;
+    }
+
     private ProgressPieView mProgressPieView;
     private TextView mProgressValue;
 
@@ -100,9 +105,13 @@ public class WordCountProgress extends RelativeLayout {
 
     public void compute(float current, float target, boolean withAnimation) {
 
-        float ratio = current / target;
+        float ratio = 100;
+        if(target > 0) {
+            ratio = current / target;
+        }
 
-        int p = (int) Math.min(ratio * 100, 100);
+        int p = (int) Math.max(Math.min(ratio * 100, 100), 0);
+
         if (withAnimation) {
             mProgressPieView.animateProgressFill(p);
         } else {

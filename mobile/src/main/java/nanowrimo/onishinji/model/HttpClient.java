@@ -21,6 +21,9 @@ public class HttpClient {
     }
 
     public void add(Request request) {
+
+        request.setShouldCache(false);
+
         if(queue == null) {
             throw new Error("QUEUE UNINITIALIZED");
         }

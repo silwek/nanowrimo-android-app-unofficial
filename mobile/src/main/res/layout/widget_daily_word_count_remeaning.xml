@@ -1,27 +1,14 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/widget"
+    android:orientation="horizontal"
     android:layout_height="match_parent">
 
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/ic_pen"
         android:id="@+id/appwidget_progress"/>
 
 
-    <TextView
-        android:id="@+id/error_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/common_signin_btn_default_background"
-        android:gravity="center_horizontal"
-        android:text=""
-        android:layout_centerInParent="true"
-        android:textColor="#ffffff"
-        android:visibility="visible" />
-
-
-
-</RelativeLayout>
+</LinearLayout>

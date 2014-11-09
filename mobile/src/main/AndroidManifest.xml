@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    android:installLocation="auto"
     package="nanowrimo.onishinji" >
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -33,7 +34,6 @@
             </intent-filter>
 
             <meta-data
-                
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_daily_word_count_remaining_info" />
         </receiver>

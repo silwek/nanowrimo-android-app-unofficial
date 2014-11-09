@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">WordCounter</string>
-    <string name="base_url">http://new-class.com:1234/users/</string>
+    <string name="base_url">http://nanowrimo-rest-api.ngrok.com/users/</string>
     <string name="configure">Display daily word count remaining for</string>
     <string name="add_widget">Save widget</string>
     <string name="default_username">Name</string>
@@ -13,12 +13,14 @@
     <string name="please_loading">Loading..Wait..</string>
     <string name="unfollow_people">Unfollow</string>
     <string name="follow_people">Follow</string>
-    <string name="error_network_widget">Network error</string>
+    <string name="error_network_widget">Error</string>
     <string name="stats_wordcount">Global word count</string>
     <string name="stats_wordcount_today">Today word count</string>
     <string name="stats_daily_target">Daily target</string>
     <string name="stats_daily_target_remaining">Daily target word count remaining</string>
     <string name="stats_nb_day_remaining">Days remaining</string>
     <string name="stats_empty">...</string>
+    <string name="error_network_widget_toast">Network error for %1$s (%2$s)</string>
+    <string name="error_network_fragment_bottom">network</string>
 
 </resources>

@@ -3,7 +3,7 @@
     android:minWidth="40dp"
     android:minHeight="40dp"
     android:updatePeriodMillis="10800000"
-    android:previewImage="@drawable/icon"
+    android:previewImage="@drawable/preview_widget"
     android:initialLayout="@layout/widget_daily_word_count_remeaning"
     android:configure="nanowrimo.onishinji.widget.WidgetDailyWordCountRemainingConfigureActivity"
     android:resizeMode="horizontal|vertical"

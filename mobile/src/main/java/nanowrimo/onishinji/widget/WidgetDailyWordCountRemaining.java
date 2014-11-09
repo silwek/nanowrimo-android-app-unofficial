@@ -10,7 +10,9 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -66,7 +68,7 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
     static void updateAppWidget(final Context context, final AppWidgetManager appWidgetManager,
                                 final int appWidgetId) {
 
-        CharSequence widgetText = WidgetDailyWordCountRemainingConfigureActivity.loadTitlePref(context, appWidgetId);
+        final CharSequence widgetText = WidgetDailyWordCountRemainingConfigureActivity.loadTitlePref(context, appWidgetId);
 
         // Construct the RemoteViews object
         final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_daily_word_count_remeaning);
@@ -87,9 +89,8 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                views.setViewVisibility(R.id.loader, View.GONE);
-                views.setViewVisibility(R.id.error_container, View.GONE);
-                User user = new User(response);
+
+               User user = new User(response);
                // views.setTextViewText(R.id.appwidget_wordcount, "" + user.getDailyTargetRemaining());
 
                 WordCountProgress pg = new WordCountProgress(context);
@@ -97,8 +98,9 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
                 pg.setIconRessource(R.drawable.ic_pen);
                 pg.configureView();
                 pg.compute(user.getWordCountToday(), user.getDailyTarget(), false);
-                pg.setText(""+user.getWordCountToday(), user.getName());
+                pg.setText(""+user.getDailyTarget(), user.getName());
 
+                pg.setLayoutParams(new ViewGroup.LayoutParams(100,100));
                 pg.measure(100, 100);
                 pg.layout(0, 0, pg.getMeasuredWidth(), pg.getMeasuredHeight());
                 pg.forceLayout();
@@ -111,7 +113,7 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
                 pg.buildDrawingCache();
                 Bitmap bm = pg.getDrawingCache();
 
-                Log.d("widget", bm.toString());
+//                Log.d("widget", bm.toString());
 
                 views.setImageViewBitmap(R.id.appwidget_progress, bm);
 
@@ -121,9 +123,34 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                views.setViewVisibility(R.id.loader, View.GONE);
-                views.setTextViewText(R.id.error_container, context.getString(R.string.error_network_widget));
-                views.setViewVisibility(R.id.error_container, View.VISIBLE);
+
+                Toast.makeText(context, context.getString(R.string.error_network_widget_toast, widgetText, error.getMessage()), Toast.LENGTH_SHORT).show();
+
+                WordCountProgress pg = new WordCountProgress(context);
+
+                pg.configureView();
+                pg.compute(0, 1, false);
+
+                pg.setIconRessource(R.drawable.ic_pen);
+                pg.setText(context.getString(R.string.error_network_widget), (String) widgetText);
+                pg.getProgressPieView().setBackgroundColor(context.getResources().getColor(android.R.color.holo_red_dark));
+
+                int size = 200;
+                pg.setLayoutParams(new ViewGroup.LayoutParams(size, size));
+                pg.measure(size, size);
+                pg.layout(0, 0, pg.getMeasuredWidth(), pg.getMeasuredHeight());
+                pg.forceLayout();
+
+                pg.setDrawingCacheEnabled(true);
+                pg.buildDrawingCache(true);
+
+                pg.requestLayout();
+
+                pg.buildDrawingCache();
+                Bitmap bm = pg.getDrawingCache();
+
+                views.setImageViewBitmap(R.id.appwidget_progress, bm);
+
                 //  views.setTextViewText(R.id.appwidget_text, "error de volley");
                 appWidgetManager.updateAppWidget(appWidgetId, views);
             }
