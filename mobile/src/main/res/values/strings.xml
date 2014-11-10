@@ -26,5 +26,6 @@
     <string name="cancel">Cancel</string>
     <string name="dialog_remove_user_title">Are you sur ?</string>
     <string name="dialog_remove_user_message">Do you really want unfollow %1$s\'s progression ?</string>
+    <string name="title_graph">Statistics</string>
 
 </resources>

@@ -3,87 +3,107 @@ package nanowrimo.onishinji.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 /**
  * Created by guillaume on 31/10/14.
  */
 public class User {
 
-    private String id = "";
-    private String name = "";
-    private int wordcount = 0;
-    private int wordCountToday = 0;
-    private int dailyTarget = 0;
-    private int dailyTargetRemaining = 0;
-    private int nbDayRemaining = 0;
+    private String mId = "";
+    private String mName = "";
+    private int mWordcount = 0;
+    private int mWordCountToday = 0;
+    private int mDailyTarget = 0;
+    private int mDailyTargetRemaining = 0;
+    private int mNbDayRemaining = 0;
+
+    private HashMap<String, String> links = new HashMap<String, String>();
+
 
     public User(JSONObject response) {
 
         try {
-            id = response.getString("id");
-            name = response.getString("name");
-            wordcount = response.getInt("wordcount");
-            wordCountToday = response.getInt("wordCountToday");
-            dailyTargetRemaining = response.getInt("dailyTargetRemaining");
-            dailyTarget = response.getInt("dailyTarget");
-            nbDayRemaining = response.getInt("nbDayRemaining");
+            mId = response.getString("id");
+            mName = response.getString("name");
+            mWordcount = response.getInt("wordcount");
+            mWordCountToday = response.getInt("wordCountToday");
+            mDailyTargetRemaining = response.getInt("dailyTargetRemaining");
+            mDailyTarget = response.getInt("dailyTarget");
+            mNbDayRemaining = response.getInt("nbDayRemaining");
+
+            JSONObject _links = response.getJSONObject("links");
+            links.put("self", _links.getString("self"));
+            links.put("friends", _links.getString("friends"));
+            links.put("history", _links.getString("history"));
+
         } catch (JSONException e) {
 
         }
     }
 
     public String getId() {
-        return id;
+        return mId;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.mId = id;
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.mName = name;
     }
 
     public int getWordcount() {
-        return wordcount;
+        return mWordcount;
     }
 
     public void setWordcount(int wordcount) {
-        this.wordcount = wordcount;
+        this.mWordcount = wordcount;
     }
 
     public int getWordCountToday() {
-        return wordCountToday;
+        return mWordCountToday;
     }
 
     public void setWordCountToday(int wordCountToday) {
-        this.wordCountToday = wordCountToday;
+        this.mWordCountToday = wordCountToday;
     }
 
     public int getDailyTarget() {
-        return dailyTarget;
+        return mDailyTarget;
     }
 
     public void setDailyTarget(int dailyTarget) {
-        this.dailyTarget = dailyTarget;
+        this.mDailyTarget = dailyTarget;
     }
 
     public int getDailyTargetRemaining() {
-        return dailyTargetRemaining;
+        return mDailyTargetRemaining;
     }
 
     public void setDailyTargetRemaining(int dailyTargetRemaining) {
-        this.dailyTargetRemaining = dailyTargetRemaining;
+        this.mDailyTargetRemaining = dailyTargetRemaining;
     }
 
+    public HashMap<String, String> getLinks() {
+        return links;
+    }
+
+    public void setLinks(HashMap<String, String> links) {
+        this.links = links;
+    }
+
+
     public int getNbDayRemaining() {
-        return nbDayRemaining;
+        return mNbDayRemaining;
     }
 
     public void setNbDayRemaining(int nbDayRemaining) {
-        this.nbDayRemaining = nbDayRemaining;
+        this.mNbDayRemaining = nbDayRemaining;
     }
 }

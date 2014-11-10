@@ -2,6 +2,7 @@ package nanowrimo.onishinji.ui.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,13 +20,26 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.LargeValueFormatter;
+import com.github.mikephil.charting.utils.ValueFormatter;
+import com.github.mikephil.charting.utils.XLabels;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+
 import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.Database;
+import nanowrimo.onishinji.model.Historic;
 import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
+import nanowrimo.onishinji.ui.widget.MyMarkerView;
 import nanowrimo.onishinji.ui.widget.WordCountProgress;
 import nanowrimo.onishinji.utils.StringUtils;
 
@@ -48,12 +62,14 @@ public class UserFragment extends Fragment {
     private TextView mTextViewNbDayRemaining;
     private WordCountProgress mProgressDaily;
     private WordCountProgress mProgressGlobal;
+    private LineChart mChart;
+    private LineData mLineData;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             this.username = savedInstanceState.getString("username");
         }
     }
@@ -79,13 +95,13 @@ public class UserFragment extends Fragment {
 
         switch (item.getItemId()) {
             case R.id.delete_user:
-                if(mOnRemoveListener != null) {
+                if (mOnRemoveListener != null) {
 
                     AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 
                     alert.setTitle(getString(R.string.dialog_remove_user_title));
                     alert.setMessage(getString(R.string.dialog_remove_user_message, username));
- 
+
                     alert.setPositiveButton(getActivity().getString(R.string.yes), new DialogInterface.OnClickListener() {
 
                         @Override
@@ -102,7 +118,7 @@ public class UserFragment extends Fragment {
                     });
 
                     alert.show();
-                    
+
                 }
                 break;
         }
@@ -120,11 +136,103 @@ public class UserFragment extends Fragment {
         mTextViewDailyTarget = (TextView) getView().findViewById(R.id.dailyTarget);
         mTextViewDailyTargetRemaining = (TextView) getView().findViewById(R.id.dailyTargetRemaining);
         mTextViewNbDayRemaining = (TextView) getView().findViewById(R.id.nbDayRemaining);
+        mChart = (LineChart) getView().findViewById(R.id.chart);
+        mChart.setDescription("");
+        mChart.setDrawLegend(false);
+
+        mChart.setDrawVerticalGrid(false);
+        mChart.setDrawGridBackground(false);
+
+        ArrayList<String> defaultLineValues = new ArrayList<String>();
+
+        defaultLineValues.add("11-01");
+        defaultLineValues.add("11-02");
+        defaultLineValues.add("11-03");
+        defaultLineValues.add("11-04");
+        defaultLineValues.add("11-05");
+        defaultLineValues.add("11-06");
+        defaultLineValues.add("11-07");
+        defaultLineValues.add("11-08");
+        defaultLineValues.add("11-09");
+        defaultLineValues.add("11-10");
+        defaultLineValues.add("11-11");
+        defaultLineValues.add("11-12");
+        defaultLineValues.add("11-13");
+        defaultLineValues.add("11-14");
+        defaultLineValues.add("11-15");
+        defaultLineValues.add("11-16");
+        defaultLineValues.add("11-17");
+        defaultLineValues.add("11-18");
+        defaultLineValues.add("11-19");
+        defaultLineValues.add("11-20");
+        defaultLineValues.add("11-21");
+        defaultLineValues.add("11-22");
+        defaultLineValues.add("11-23");
+        defaultLineValues.add("11-24");
+        defaultLineValues.add("11-25");
+        defaultLineValues.add("11-26");
+        defaultLineValues.add("11-27");
+        defaultLineValues.add("11-28");
+        defaultLineValues.add("11-29");
+        defaultLineValues.add("11-30");
+
+        ArrayList<Entry> defaultLineEntries = new ArrayList<Entry>();
+        defaultLineEntries.add(new Entry(0, 0));
+        defaultLineEntries.add(new Entry(50000, defaultLineValues.size() - 1));
+
+
+        LineDataSet linearProgressionDataSet = new LineDataSet(defaultLineEntries, "naive linear progression");
+        linearProgressionDataSet.enableDashedLine(10, 10, 0);
+        linearProgressionDataSet.setCircleSize(0);
+
+        linearProgressionDataSet.setColor(getResources().getColor(android.R.color.holo_orange_dark));
+        linearProgressionDataSet.setCircleColor(getResources().getColor(android.R.color.holo_orange_dark));
+
+        mLineData = new LineData(defaultLineValues, linearProgressionDataSet);
+        mChart.setData(mLineData);
+
+        mChart.setDrawYValues(true);
+        mChart.getYLabels().setFormatter(new LargeValueFormatter());
+
+        mChart.setPinchZoom(false);
+
+        XLabels xl = mChart.getXLabels();
+        xl.setCenterXLabelText(true);
+        xl.setAvoidFirstLastClipping(false);
+        xl.setAdjustXLabels(true);
+        xl.setPosition(XLabels.XLabelPosition.BOTTOM);
+
+        xl.setAvoidFirstLastClipping(true);
+
+        mChart.setValueFormatter(new LargeValueFormatter());
+        mChart.setDrawYValues(false);
+
+        // create a custom MarkerView (extend MarkerView) and specify the layout
+        // to use for it
+        MyMarkerView mv = new MyMarkerView(getActivity(), R.layout.custom_marker_view);
+        // define an offset to change the original position of the marker
+        // (optional)
+        mv.setOffsets(-mv.getMeasuredWidth() / 2, -mv.getMeasuredHeight());
+        // set the marker to the chart
+        mChart.setMarkerView(mv);
+
+
+        /*mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry entry, int i) {
+                Toast.makeText(getActivity(), entry.getVal() + " words", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });*/
 
         mProgressDaily = (WordCountProgress) getView().findViewById(R.id.daily);
         mProgressGlobal = (WordCountProgress) getView().findViewById(R.id.global);
 
-       updateUI();
+        updateUI();
     }
 
     private void updateUI() {
@@ -143,6 +251,9 @@ public class UserFragment extends Fragment {
         // Configure http request
 
         final String url = StringUtils.getUserUrl(username);
+
+        getHistoricRemoteData(url + "/history");
+
         JSONObject params = new JSONObject();
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
             @Override
@@ -150,11 +261,11 @@ public class UserFragment extends Fragment {
 
                 User user = new User(response);
 
-                mTextViewWordcount.setText(user.getWordcount()+"");
-                mTextViewWordcountToday.setText(user.getWordCountToday()+"");
-                mTextViewDailyTarget.setText(user.getDailyTarget()+"");
-                mTextViewDailyTargetRemaining.setText(user.getDailyTargetRemaining()+"");
-                mTextViewNbDayRemaining.setText(user.getNbDayRemaining()+"");
+                mTextViewWordcount.setText(user.getWordcount() + "");
+                mTextViewWordcountToday.setText(user.getWordCountToday() + "");
+                mTextViewDailyTarget.setText(user.getDailyTarget() + "");
+                mTextViewDailyTargetRemaining.setText(user.getDailyTargetRemaining() + "");
+                mTextViewNbDayRemaining.setText(user.getNbDayRemaining() + "");
 
                 mProgressDaily.compute(user.getWordCountToday(), user.getDailyTarget(), true);
                 mProgressGlobal.compute(user.getWordcount(), 50000.0f, true);
@@ -171,6 +282,43 @@ public class UserFragment extends Fragment {
 
                 mProgressGlobal.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
                 mProgressGlobal.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+                mChart.clear();
+
+            }
+        });
+
+        HttpClient.getInstance().add(request);
+    }
+
+    protected void getHistoricRemoteData(String url) {
+
+        JSONObject params = new JSONObject();
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                if (getActivity() != null) {
+                    Historic user = new Historic(response);
+
+                    //ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
+                    LineDataSet historyDataSet = new LineDataSet(user.getValues(), "Your progression");
+
+                    historyDataSet.setColor(getResources().getColor(R.color.small_widget_progress_color));
+                    historyDataSet.setCircleColor(getResources().getColor(R.color.small_widget_progress_color));
+
+                    historyDataSet.setCircleSize(4);
+                    historyDataSet.setLineWidth(2);
+                    mLineData.addDataSet(historyDataSet);
+
+                    mChart.centerViewPort(user.getValues().size() - 1, user.getValues().get(user.getValues().size() - 1).getVal());
+                    mChart.notifyDataSetChanged();
+                    mChart.invalidate();
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
 
             }
         });
