@@ -31,8 +31,12 @@ import com.github.mikephil.charting.utils.XLabels;
 
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.Database;
@@ -145,36 +149,35 @@ public class UserFragment extends Fragment {
 
         ArrayList<String> defaultLineValues = new ArrayList<String>();
 
-        defaultLineValues.add("11-01");
-        defaultLineValues.add("11-02");
-        defaultLineValues.add("11-03");
-        defaultLineValues.add("11-04");
-        defaultLineValues.add("11-05");
-        defaultLineValues.add("11-06");
-        defaultLineValues.add("11-07");
-        defaultLineValues.add("11-08");
-        defaultLineValues.add("11-09");
-        defaultLineValues.add("11-10");
-        defaultLineValues.add("11-11");
-        defaultLineValues.add("11-12");
-        defaultLineValues.add("11-13");
-        defaultLineValues.add("11-14");
-        defaultLineValues.add("11-15");
-        defaultLineValues.add("11-16");
-        defaultLineValues.add("11-17");
-        defaultLineValues.add("11-18");
-        defaultLineValues.add("11-19");
-        defaultLineValues.add("11-20");
-        defaultLineValues.add("11-21");
-        defaultLineValues.add("11-22");
-        defaultLineValues.add("11-23");
-        defaultLineValues.add("11-24");
-        defaultLineValues.add("11-25");
-        defaultLineValues.add("11-26");
-        defaultLineValues.add("11-27");
-        defaultLineValues.add("11-28");
-        defaultLineValues.add("11-29");
-        defaultLineValues.add("11-30");
+        Calendar c = Calendar.getInstance();
+
+        // start november
+        c.set(Calendar.MONTH, 10);
+        c.set(Calendar.DAY_OF_MONTH, 1);
+
+        SimpleDateFormat f = new SimpleDateFormat("dd-MM");
+        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM); // use MEDIUM or SHORT according to your needs
+
+        String data = dateFormatter.format(c.getTime());
+        // remove year
+        String year = String.valueOf(c.get(Calendar.YEAR));
+        data = data.replace(year, "").trim();
+
+        defaultLineValues.add(data);
+
+        for(int i = 2; i <= 30; i++) {
+            c.set(Calendar.DAY_OF_MONTH, i);
+
+            Date date = c.getTime();
+
+             data = dateFormatter.format(date);
+            // remove year
+             year = String.valueOf(c.get(Calendar.YEAR));
+            data = data.replace(year, "").trim();
+
+            defaultLineValues.add(data);
+
+        }
 
         ArrayList<Entry> defaultLineEntries = new ArrayList<Entry>();
         defaultLineEntries.add(new Entry(0, 0));
@@ -204,7 +207,7 @@ public class UserFragment extends Fragment {
         xl.setAdjustXLabels(true);
         xl.setPosition(XLabels.XLabelPosition.BOTTOM);
 
-        xl.setAvoidFirstLastClipping(true);
+      //  xl.setAvoidFirstLastClipping(true);
 
         mChart.setValueFormatter(new LargeValueFormatter());
         mChart.setDrawYValues(false);
@@ -239,7 +242,9 @@ public class UserFragment extends Fragment {
 
     private void updateUI() {
         Log.d("fragment", "will update UI with " + username);
-        mTextViewUsername.setText(mOnRemoveListener.getNiceTitle(username));
+
+        if(mTextViewUsername != null)
+            mTextViewUsername.setText(mOnRemoveListener.getNiceTitle(username));
     }
 
     @Override
@@ -264,29 +269,31 @@ public class UserFragment extends Fragment {
 
                     User user = new User(response);
 
-                    mTextViewWordcount.setText(user.getWordcount() + "");
-                    mTextViewWordcountToday.setText(user.getWordCountToday() + "");
-                    mTextViewDailyTarget.setText(user.getDailyTarget() + "");
-                    mTextViewDailyTargetRemaining.setText(user.getDailyTargetRemaining() + "");
-                    mTextViewNbDayRemaining.setText(user.getNbDayRemaining() + "");
+                    if(getActivity() != null) {
 
-                    mProgressDaily.compute(user.getWordCountToday(), user.getDailyTarget(), true);
-                    mProgressGlobal.compute(user.getWordcount(), 50000.0f, true);
+                        mTextViewWordcount.setText(user.getWordcount() + "");
+                        mTextViewWordcountToday.setText(user.getWordCountToday() + "");
+                        mTextViewDailyTarget.setText(user.getDailyTarget() + "");
+                        mTextViewDailyTargetRemaining.setText(user.getDailyTargetRemaining() + "");
+                        mTextViewNbDayRemaining.setText(user.getNbDayRemaining() + "");
 
+                        mProgressDaily.compute(user.getWordCountToday(), user.getDailyTarget(), true);
+                        mProgressGlobal.compute(user.getWordcount(), 50000.0f, true);
 
-                    final float target = user.getDailyTarget();
-                    final float current = user.getWordCountToday();
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    mProgressDaily.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
-                    mProgressDaily.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
 
-                    mProgressGlobal.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
-                    mProgressGlobal.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
-                    mChart.clear();
+                    if(getActivity() != null) {
+                        mProgressDaily.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
+                        mProgressDaily.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
 
+                        mProgressGlobal.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
+                        mProgressGlobal.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+                        mChart.clear();
+                    }
                 }
             });
 
@@ -314,7 +321,7 @@ public class UserFragment extends Fragment {
                     historyDataSet.setLineWidth(2);
                     mLineData.addDataSet(historyDataSet);
 
-                    mChart.centerViewPort(user.getValues().size() - 1, user.getValues().get(user.getValues().size() - 1).getVal());
+//                    mChart.centerViewPort(user.getValues().size() - 1, user.getValues().get(user.getValues().size() - 1).getVal());
                     mChart.notifyDataSetChanged();
                     mChart.invalidate();
 

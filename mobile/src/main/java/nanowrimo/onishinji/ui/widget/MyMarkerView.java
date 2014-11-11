@@ -8,6 +8,10 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.utils.MarkerView;
 import com.github.mikephil.charting.utils.Utils;
 
+import java.text.NumberFormat;
+import java.util.HashMap;
+import java.util.Locale;
+
 import nanowrimo.onishinji.R;
 
 public class MyMarkerView extends MarkerView {
@@ -22,11 +26,18 @@ public class MyMarkerView extends MarkerView {
 // content
     @Override
     public void refreshContent(Entry e, int dataSetIndex) {
+
+        NumberFormat numberFormat = NumberFormat.getInstance(Locale.getDefault());
+
         if (e instanceof CandleEntry) {
             CandleEntry ce = (CandleEntry) e;
             tvContent.setText("" + Utils.formatNumber(ce.getHigh(), 0, true));
         } else {
-            tvContent.setText("" + Utils.formatNumber(e.getVal(), 0, true));
+            HashMap<String, String> map = (HashMap<String, String>) e.getData();
+            String date = map.get("date");
+            String nbWorldToday = map.get("today");
+            String text = getContext().getResources().getString(R.string.stats_marker_view, numberFormat.format(e.getVal()), date, nbWorldToday);
+            tvContent.setText(text);
         }
     }
 }

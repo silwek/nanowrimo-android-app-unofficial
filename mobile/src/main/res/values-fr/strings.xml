@@ -26,5 +26,6 @@
     <string name="dialog_remove_user_title">Êtes-vous sur ?</string>
     <string name="dialog_remove_user_message">Êtes-vous vraiment sur de ne plus suivre la progression de %1$s ?</string>
     <string name="title_graph">Statistiques</string>
+    <string name="stats_marker_view">%1$s mots le %2$s (+%3$s)</string>
 
 </resources>

@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import com.filippudak.ProgressPieView.ProgressPieView;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import nanowrimo.onishinji.R;
 
 /**
@@ -105,6 +108,8 @@ public class WordCountProgress extends RelativeLayout {
 
     public void compute(float current, float target, boolean withAnimation) {
 
+        NumberFormat numberFormat = NumberFormat.getInstance(Locale.getDefault());
+
         float ratio = 100;
         if(target > 0) {
             ratio = current / target;
@@ -127,8 +132,8 @@ public class WordCountProgress extends RelativeLayout {
             mProgressPieView.setProgressColor(mCurrentProgressColor);
         }
 
-        final String text = String.valueOf((int) Math.ceil(current));
-        final String text2 = String.valueOf((int) Math.ceil(target));
+        final String text = numberFormat.format(current);
+        final String text2 = numberFormat.format(target);
 
         mProgressValue.setText(text + "\n" + text2);
 
