@@ -194,6 +194,8 @@ public class UserFragment extends Fragment {
         mChart.setDrawYValues(true);
         mChart.getYLabels().setFormatter(new LargeValueFormatter());
 
+        mChart.setHighlightIndicatorEnabled(false);
+
         mChart.setPinchZoom(false);
 
         XLabels xl = mChart.getXLabels();
@@ -250,44 +252,46 @@ public class UserFragment extends Fragment {
     private void getRemoteData() {
         // Configure http request
 
-        final String url = StringUtils.getUserUrl(username);
+        if(username != null) {
+            final String url = StringUtils.getUserUrl(username);
 
-        getHistoricRemoteData(url + "/history");
+            getHistoricRemoteData(url + "/history");
 
-        JSONObject params = new JSONObject();
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
+            JSONObject params = new JSONObject();
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
 
-                User user = new User(response);
+                    User user = new User(response);
 
-                mTextViewWordcount.setText(user.getWordcount() + "");
-                mTextViewWordcountToday.setText(user.getWordCountToday() + "");
-                mTextViewDailyTarget.setText(user.getDailyTarget() + "");
-                mTextViewDailyTargetRemaining.setText(user.getDailyTargetRemaining() + "");
-                mTextViewNbDayRemaining.setText(user.getNbDayRemaining() + "");
+                    mTextViewWordcount.setText(user.getWordcount() + "");
+                    mTextViewWordcountToday.setText(user.getWordCountToday() + "");
+                    mTextViewDailyTarget.setText(user.getDailyTarget() + "");
+                    mTextViewDailyTargetRemaining.setText(user.getDailyTargetRemaining() + "");
+                    mTextViewNbDayRemaining.setText(user.getNbDayRemaining() + "");
 
-                mProgressDaily.compute(user.getWordCountToday(), user.getDailyTarget(), true);
-                mProgressGlobal.compute(user.getWordcount(), 50000.0f, true);
+                    mProgressDaily.compute(user.getWordCountToday(), user.getDailyTarget(), true);
+                    mProgressGlobal.compute(user.getWordcount(), 50000.0f, true);
 
 
-                final float target = user.getDailyTarget();
-                final float current = user.getWordCountToday();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                mProgressDaily.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
-                mProgressDaily.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+                    final float target = user.getDailyTarget();
+                    final float current = user.getWordCountToday();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    mProgressDaily.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
+                    mProgressDaily.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
 
-                mProgressGlobal.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
-                mProgressGlobal.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
-                mChart.clear();
+                    mProgressGlobal.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
+                    mProgressGlobal.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+                    mChart.clear();
 
-            }
-        });
+                }
+            });
 
-        HttpClient.getInstance().add(request);
+            HttpClient.getInstance().add(request);
+        }
     }
 
     protected void getHistoricRemoteData(String url) {

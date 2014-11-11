@@ -4,11 +4,10 @@
     <string name="app_name">Wrimo Companion</string>
     <string name="configure">Display daily word count remaining for</string>
     <string name="add_widget">Save widget</string>
-    <string name="default_username">Name</string>
+    <string name="default_username">username</string>
     <string name="default_wordcount">0</string>
     <string name="name_invalid">Invalid name</string>
     <string name="dialog_add_user_title">Follow an NaNoWrimo\'s user</string>
-    <string name="dialog_add_user_message">Please enter the full name</string>
     <string name="please_loading">Loading..Wait..</string>
     <string name="unfollow_people">Unfollow</string>
     <string name="follow_people">Follow</string>
@@ -21,10 +20,10 @@
     <string name="stats_empty">...</string>
     <string name="error_network_widget_toast">Network error for %1$s (%2$s)</string>
     <string name="error_network_fragment_bottom">network</string>
-    <string name="yes">yes</string>
+    <string name="yes">Yes</string>
     <string name="follow">Follow</string>
     <string name="cancel">Cancel</string>
-    <string name="dialog_remove_user_title">Are you sur ?</string>
+    <string name="dialog_remove_user_title">Are you sure ?</string>
     <string name="dialog_remove_user_message">Do you really want unfollow %1$s\'s progression ?</string>
     <string name="title_graph">Statistics</string>
 

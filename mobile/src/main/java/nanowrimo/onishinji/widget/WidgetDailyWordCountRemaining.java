@@ -85,78 +85,81 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
         // Configure http request
         HttpClient.getInstance().setContext(context);
         final String url = StringUtils.getUserUrl((String) widgetText);
-        JSONObject params = new JSONObject();
-        Log.v("WIDGET", appWidgetId + " make an request to " + url);
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
 
-               User user = new User(response);
-               // views.setTextViewText(R.id.appwidget_wordcount, "" + user.getDailyTargetRemaining());
+        if(widgetText != null) {
+            JSONObject params = new JSONObject();
+            Log.v("WIDGET", appWidgetId + " make an request to " + url);
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
 
-                WordCountProgress pg = new WordCountProgress(context);
+                    User user = new User(response);
+                    // views.setTextViewText(R.id.appwidget_wordcount, "" + user.getDailyTargetRemaining());
 
-                pg.setIconRessource(R.drawable.ic_pen);
-                pg.configureView();
-                pg.compute(user.getWordCountToday(), user.getDailyTarget(), false);
-                pg.setText(""+user.getDailyTarget(), user.getName());
+                    WordCountProgress pg = new WordCountProgress(context);
 
-                pg.setLayoutParams(new ViewGroup.LayoutParams(100,100));
-                pg.measure(100, 100);
-                pg.layout(0, 0, pg.getMeasuredWidth(), pg.getMeasuredHeight());
-                pg.forceLayout();
+                    pg.setIconRessource(R.drawable.ic_pen);
+                    pg.configureView();
+                    pg.compute(user.getWordCountToday(), user.getDailyTarget(), false);
+                    pg.setText("" + user.getDailyTarget(), user.getName());
 
-                pg.setDrawingCacheEnabled(true);
-                pg.buildDrawingCache(true);
+                    pg.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
+                    pg.measure(100, 100);
+                    pg.layout(0, 0, pg.getMeasuredWidth(), pg.getMeasuredHeight());
+                    pg.forceLayout();
 
-                pg.requestLayout();
+                    pg.setDrawingCacheEnabled(true);
+                    pg.buildDrawingCache(true);
 
-                pg.buildDrawingCache();
-                Bitmap bm = pg.getDrawingCache();
+                    pg.requestLayout();
+
+                    pg.buildDrawingCache();
+                    Bitmap bm = pg.getDrawingCache();
 
 //                Log.d("widget", bm.toString());
 
-                views.setImageViewBitmap(R.id.appwidget_progress, bm);
+                    views.setImageViewBitmap(R.id.appwidget_progress, bm);
 
-                // Instruct the widget manager to update the widget
-                appWidgetManager.updateAppWidget(appWidgetId, views);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
+                    // Instruct the widget manager to update the widget
+                    appWidgetManager.updateAppWidget(appWidgetId, views);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
 
-                Toast.makeText(context, context.getString(R.string.error_network_widget_toast, widgetText, error.getMessage()), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getString(R.string.error_network_widget_toast, widgetText, error.getMessage()), Toast.LENGTH_SHORT).show();
 
-                WordCountProgress pg = new WordCountProgress(context);
+                    WordCountProgress pg = new WordCountProgress(context);
 
-                pg.configureView();
-                pg.compute(0, 1, false);
+                    pg.configureView();
+                    pg.compute(0, 1, false);
 
-                pg.setIconRessource(R.drawable.ic_pen);
-                pg.setText(context.getString(R.string.error_network_widget), (String) widgetText);
-                pg.getProgressPieView().setBackgroundColor(context.getResources().getColor(android.R.color.holo_red_dark));
+                    pg.setIconRessource(R.drawable.ic_pen);
+                    pg.setText(context.getString(R.string.error_network_widget), (String) widgetText);
+                    pg.getProgressPieView().setBackgroundColor(context.getResources().getColor(android.R.color.holo_red_dark));
 
-                int size = 200;
-                pg.setLayoutParams(new ViewGroup.LayoutParams(size, size));
-                pg.measure(size, size);
-                pg.layout(0, 0, pg.getMeasuredWidth(), pg.getMeasuredHeight());
-                pg.forceLayout();
+                    int size = 200;
+                    pg.setLayoutParams(new ViewGroup.LayoutParams(size, size));
+                    pg.measure(size, size);
+                    pg.layout(0, 0, pg.getMeasuredWidth(), pg.getMeasuredHeight());
+                    pg.forceLayout();
 
-                pg.setDrawingCacheEnabled(true);
-                pg.buildDrawingCache(true);
+                    pg.setDrawingCacheEnabled(true);
+                    pg.buildDrawingCache(true);
 
-                pg.requestLayout();
+                    pg.requestLayout();
 
-                pg.buildDrawingCache();
-                Bitmap bm = pg.getDrawingCache();
+                    pg.buildDrawingCache();
+                    Bitmap bm = pg.getDrawingCache();
 
-                views.setImageViewBitmap(R.id.appwidget_progress, bm);
+                    views.setImageViewBitmap(R.id.appwidget_progress, bm);
 
-                //  views.setTextViewText(R.id.appwidget_text, "error de volley");
-                appWidgetManager.updateAppWidget(appWidgetId, views);
-            }
-        });
-        HttpClient.getInstance().add(request);
+                    //  views.setTextViewText(R.id.appwidget_text, "error de volley");
+                    appWidgetManager.updateAppWidget(appWidgetId, views);
+                }
+            });
+            HttpClient.getInstance().add(request);
+        }
     }
 
     /**

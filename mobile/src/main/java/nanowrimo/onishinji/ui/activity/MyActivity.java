@@ -21,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import com.crashlytics.android.Crashlytics;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Crashlytics.start(this);
         setContentView(R.layout.activity_my);
 
         // Create the adapter that will return a fragment for each of the three
@@ -111,10 +113,10 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
         alert.setTitle(getString(R.string.dialog_add_user_title));
-        alert.setMessage(getString(R.string.dialog_add_user_message));
 
         // Set an EditText view to get user input
         final EditText input = new EditText(this);
+        input.setHint(getString(R.string.default_username));
         alert.setView(input);
 
         alert.setPositiveButton(getString(R.string.follow), new DialogInterface.OnClickListener() {
