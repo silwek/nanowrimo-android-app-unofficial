@@ -28,6 +28,7 @@
     <string name="dialog_remove_user_message">Do you really want unfollow %1$s\'s progression ?</string>
     <string name="title_graph">Statistics</string>
     <string name="stats_marker_view">%1$s words at %2$s (+%3$s)</string>
+    <string name="stats_bar_marker_view">%1$s words at %2$s</string>
 
     <string name="widget_title_global">Global wordcount</string>
     <string name="widget_title">Daily wordcount</string>

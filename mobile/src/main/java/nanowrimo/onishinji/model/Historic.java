@@ -3,6 +3,7 @@ package nanowrimo.onishinji.model;
 import android.text.format.DateUtils;
 import android.util.Log;
 
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 
@@ -23,8 +24,9 @@ import java.util.HashMap;
  */
 public class Historic {
 
-    ArrayList<Entry> mVals = new ArrayList<Entry>();
+    ArrayList<BarEntry> mVals = new ArrayList<BarEntry>();
     ArrayList<String> mDates = new ArrayList<String>();
+    private ArrayList<Entry> mValsCumul = new ArrayList<Entry>();
 
     public Historic(JSONObject response) {
 
@@ -61,7 +63,11 @@ public class Historic {
 
                 entry.setData(map);
 
-                mVals.add(entry);
+                mValsCumul.add(entry);
+
+                BarEntry barEntry = new BarEntry(val, i);
+                barEntry.setData(map);
+                mVals.add(barEntry);
 
                 previousVal = cumul;
 
@@ -74,8 +80,11 @@ public class Historic {
         }
     }
 
-    public ArrayList<Entry> getValues() {
+    public ArrayList<BarEntry> getValues() {
         return mVals;
+    }
+    public ArrayList<Entry> getValuesCumul() {
+        return mValsCumul;
     }
 
     public ArrayList<String> getDates() {

@@ -50,7 +50,10 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(false)
         Crashlytics.start(this);
+
         setContentView(R.layout.activity_my);
 
         // Create the adapter that will return a fragment for each of the three

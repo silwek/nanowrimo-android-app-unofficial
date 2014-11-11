@@ -21,12 +21,17 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.LargeValueFormatter;
+import com.github.mikephil.charting.utils.LimitLine;
 import com.github.mikephil.charting.utils.ValueFormatter;
 import com.github.mikephil.charting.utils.XLabels;
 
@@ -44,6 +49,7 @@ import nanowrimo.onishinji.model.Database;
 import nanowrimo.onishinji.model.Historic;
 import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
+import nanowrimo.onishinji.ui.widget.MyBarMarkerView;
 import nanowrimo.onishinji.ui.widget.MyMarkerView;
 import nanowrimo.onishinji.ui.widget.WordCountProgress;
 import nanowrimo.onishinji.utils.StringUtils;
@@ -69,6 +75,9 @@ public class UserFragment extends Fragment {
     private WordCountProgress mProgressGlobal;
     private LineChart mChart;
     private LineData mLineData;
+    private BarChart mChartBar;
+    private BarData mBarData;
+    private ArrayList<String> mDefaultLineValues;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -142,13 +151,65 @@ public class UserFragment extends Fragment {
         mTextViewDailyTargetRemaining = (TextView) getView().findViewById(R.id.dailyTargetRemaining);
         mTextViewNbDayRemaining = (TextView) getView().findViewById(R.id.nbDayRemaining);
         mChart = (LineChart) getView().findViewById(R.id.chart);
+        mChartBar = (BarChart) getView().findViewById(R.id.chart_bar);
+
+
         mChart.setDescription("");
         mChart.setDrawLegend(false);
-
         mChart.setDrawVerticalGrid(false);
         mChart.setDrawGridBackground(false);
+        mChart.getYLabels().setFormatter(new LargeValueFormatter());
+        mChart.setHighlightIndicatorEnabled(false);
+        mChart.setPinchZoom(false);
+        mChart.setDragEnabled(false);
+        mChart.setDoubleTapToZoomEnabled(false);
 
-        ArrayList<String> defaultLineValues = new ArrayList<String>();
+        XLabels xl = mChart.getXLabels();
+        xl.setCenterXLabelText(true);
+        xl.setAvoidFirstLastClipping(false);
+        xl.setAdjustXLabels(true);
+        xl.setPosition(XLabels.XLabelPosition.BOTTOM);
+
+        mChart.setValueFormatter(new LargeValueFormatter());
+        mChart.setDrawYValues(false);
+
+        // create a custom MarkerView (extend MarkerView) and specify the layout to use for it
+        MyMarkerView mv = new MyMarkerView(getActivity(), R.layout.custom_marker_view);
+        // define an offset to change the original position of the marker (optional)
+        mv.setOffsets(-mv.getMeasuredWidth() / 2, -mv.getMeasuredHeight());
+        // set the marker to the chart
+        mChart.setMarkerView(mv);
+
+
+        mChartBar.setDescription("");
+        mChartBar.setDrawLegend(false);
+        mChartBar.setDrawVerticalGrid(false);
+        mChartBar.setDrawGridBackground(false);
+        mChartBar.getYLabels().setFormatter(new LargeValueFormatter());
+        mChartBar.setHighlightIndicatorEnabled(false);
+        mChartBar.setPinchZoom(false);
+        mChartBar.setDragEnabled(false);
+        mChartBar.setDoubleTapToZoomEnabled(false);
+
+        xl = mChartBar.getXLabels();
+        xl.setCenterXLabelText(true);
+        xl.setAvoidFirstLastClipping(false);
+        xl.setAdjustXLabels(true);
+        xl.setPosition(XLabels.XLabelPosition.BOTTOM);
+
+        //mChartBar.setValueFormatter(new LargeValueFormatter());
+        mChartBar.setDrawYValues(false);
+
+        // create a custom MarkerView (extend MarkerView) and specify the layout to use for it
+        MyBarMarkerView mvb = new MyBarMarkerView(getActivity(), R.layout.custom_bar_marker_view);
+        // define an offset to change the original position of the marker (optional)
+        mvb.setOffsets(-mvb.getMeasuredWidth() / 2, -mvb.getMeasuredHeight());
+        // set the marker to the chart
+        mChartBar.setMarkerView(mvb);
+
+
+         mDefaultLineValues = new ArrayList<String>();
+
 
         Calendar c = Calendar.getInstance();
 
@@ -164,25 +225,26 @@ public class UserFragment extends Fragment {
         String year = String.valueOf(c.get(Calendar.YEAR));
         data = data.replace(year, "").trim();
 
-        defaultLineValues.add(data);
+        mDefaultLineValues.add(data);
 
-        for(int i = 2; i <= 30; i++) {
+        for (int i = 2; i <= 30; i++) {
             c.set(Calendar.DAY_OF_MONTH, i);
 
             Date date = c.getTime();
 
-             data = dateFormatter.format(date);
+            data = dateFormatter.format(date);
             // remove year
-             year = String.valueOf(c.get(Calendar.YEAR));
+            year = String.valueOf(c.get(Calendar.YEAR));
             data = data.replace(year, "").trim();
 
-            defaultLineValues.add(data);
+            mDefaultLineValues.add(data);
 
         }
 
+
         ArrayList<Entry> defaultLineEntries = new ArrayList<Entry>();
         defaultLineEntries.add(new Entry(0, 0));
-        defaultLineEntries.add(new Entry(50000, defaultLineValues.size() - 1));
+        defaultLineEntries.add(new Entry(50000, mDefaultLineValues.size() - 1));
 
 
         LineDataSet linearProgressionDataSet = new LineDataSet(defaultLineEntries, "naive linear progression");
@@ -192,48 +254,19 @@ public class UserFragment extends Fragment {
         linearProgressionDataSet.setColor(getResources().getColor(android.R.color.holo_orange_dark));
         linearProgressionDataSet.setCircleColor(getResources().getColor(android.R.color.holo_orange_dark));
 
-        mLineData = new LineData(defaultLineValues, linearProgressionDataSet);
+        mLineData = new LineData(mDefaultLineValues, linearProgressionDataSet);
         mChart.setData(mLineData);
 
-        mChart.setDrawYValues(true);
-        mChart.getYLabels().setFormatter(new LargeValueFormatter());
 
-        mChart.setHighlightIndicatorEnabled(false);
+        mBarData= new BarData(mDefaultLineValues, new BarDataSet(new ArrayList<BarEntry>(), "default"));
+        LimitLine ll = new LimitLine(1667);
+        ll.setLineColor(getResources().getColor(android.R.color.holo_orange_dark));
+        ll.enableDashedLine(10, 10, 0);
+        
 
-        mChart.setPinchZoom(false);
+        mBarData.addLimitLine(ll);
+        mChartBar.setData(mBarData);
 
-        XLabels xl = mChart.getXLabels();
-        xl.setCenterXLabelText(true);
-        xl.setAvoidFirstLastClipping(false);
-        xl.setAdjustXLabels(true);
-        xl.setPosition(XLabels.XLabelPosition.BOTTOM);
-
-      //  xl.setAvoidFirstLastClipping(true);
-
-        mChart.setValueFormatter(new LargeValueFormatter());
-        mChart.setDrawYValues(false);
-
-        // create a custom MarkerView (extend MarkerView) and specify the layout
-        // to use for it
-        MyMarkerView mv = new MyMarkerView(getActivity(), R.layout.custom_marker_view);
-        // define an offset to change the original position of the marker
-        // (optional)
-        mv.setOffsets(-mv.getMeasuredWidth() / 2, -mv.getMeasuredHeight());
-        // set the marker to the chart
-        mChart.setMarkerView(mv);
-
-
-        /*mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry entry, int i) {
-                Toast.makeText(getActivity(), entry.getVal() + " words", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected() {
-
-            }
-        });*/
 
         mProgressDaily = (WordCountProgress) getView().findViewById(R.id.daily);
         mProgressGlobal = (WordCountProgress) getView().findViewById(R.id.global);
@@ -244,7 +277,7 @@ public class UserFragment extends Fragment {
     private void updateUI() {
         Log.d("fragment", "will update UI with " + username);
 
-        if(mTextViewUsername != null)
+        if (mTextViewUsername != null)
             mTextViewUsername.setText(mOnRemoveListener.getNiceTitle(username));
     }
 
@@ -258,7 +291,7 @@ public class UserFragment extends Fragment {
     private void getRemoteData() {
         // Configure http request
 
-        if(username != null && !TextUtils.isEmpty(username)) {
+        if (username != null && !TextUtils.isEmpty(username)) {
             final String url = StringUtils.getUserUrl(username);
 
             getHistoricRemoteData(url + "/history");
@@ -270,7 +303,7 @@ public class UserFragment extends Fragment {
 
                     User user = new User(response);
 
-                    if(getActivity() != null) {
+                    if (getActivity() != null) {
 
                         mTextViewWordcount.setText(user.getWordcount() + "");
                         mTextViewWordcountToday.setText(user.getWordCountToday() + "");
@@ -287,7 +320,7 @@ public class UserFragment extends Fragment {
                 @Override
                 public void onErrorResponse(VolleyError error) {
 
-                    if(getActivity() != null) {
+                    if (getActivity() != null) {
                         mProgressDaily.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
                         mProgressDaily.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
 
@@ -313,7 +346,7 @@ public class UserFragment extends Fragment {
                     Historic user = new Historic(response);
 
                     //ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-                    LineDataSet historyDataSet = new LineDataSet(user.getValues(), "Your progression");
+                    LineDataSet historyDataSet = new LineDataSet(user.getValuesCumul(), "Your progression");
 
                     historyDataSet.setColor(getResources().getColor(R.color.small_widget_progress_color));
                     historyDataSet.setCircleColor(getResources().getColor(R.color.small_widget_progress_color));
@@ -322,9 +355,18 @@ public class UserFragment extends Fragment {
                     historyDataSet.setLineWidth(2);
                     mLineData.addDataSet(historyDataSet);
 
-//                    mChart.centerViewPort(user.getValues().size() - 1, user.getValues().get(user.getValues().size() - 1).getVal());
                     mChart.notifyDataSetChanged();
                     mChart.invalidate();
+
+
+                    BarDataSet set1 = new BarDataSet(user.getValues(), "DataSet");
+                    set1.setColor(getResources().getColor(R.color.small_widget_progress_color));
+                    set1.setBarShadowColor(getResources().getColor(android.R.color.transparent));
+
+                    mBarData.addDataSet(set1);
+
+                    mChartBar.notifyDataSetChanged();
+                    mChartBar.invalidate();
 
                 }
             }

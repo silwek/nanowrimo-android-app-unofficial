@@ -28,6 +28,7 @@
     <string name="dialog_remove_user_message">Êtes-vous vraiment sur de ne plus suivre la progression de %1$s ?</string>
     <string name="title_graph">Statistiques</string>
     <string name="stats_marker_view">%1$s mots le %2$s\n%3$s mots ce jour</string>
+    <string name="stats_bar_marker_view">%1$s mots le %2$s</string>
 
     <string name="widget_title_global">Nb de mots restants</string>
     <string name="widget_title">Objectif journalier</string>
