@@ -3,6 +3,7 @@
 
     <string name="app_name">Wrimo Companion</string>
     <string name="configure">Afficher le nombre de mots journalier restants pour l\'utilisateur:</string>
+    <string name="configure_global">Afficher le nombre de mots écrits pour l\'utilisateur</string>
     <string name="add_widget">Ajouter le widget</string>
     <string name="default_username">Pseudonyme</string>
     <string name="default_wordcount">0</string>
@@ -26,6 +27,9 @@
     <string name="dialog_remove_user_title">Êtes-vous sur ?</string>
     <string name="dialog_remove_user_message">Êtes-vous vraiment sur de ne plus suivre la progression de %1$s ?</string>
     <string name="title_graph">Statistiques</string>
-    <string name="stats_marker_view">%1$s mots le %2$s (+%3$s)</string>
+    <string name="stats_marker_view">%1$s mots le %2$s\n%3$s mots ce jour</string>
+
+    <string name="widget_title_global">Nb de mots restants</string>
+    <string name="widget_title">Objectif journalier</string>
 
 </resources>

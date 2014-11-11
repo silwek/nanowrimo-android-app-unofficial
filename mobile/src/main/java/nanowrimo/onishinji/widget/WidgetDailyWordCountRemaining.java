@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +25,10 @@ import org.json.JSONObject;
 import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
-import nanowrimo.onishinji.ui.activity.MyActivity;
 import nanowrimo.onishinji.ui.widget.WordCountProgress;
+import nanowrimo.onishinji.utils.ProgressPieDailyUtils;
+import nanowrimo.onishinji.utils.ProgressPieGlobalUtils;
+import nanowrimo.onishinji.utils.ProgressPieUtils;
 import nanowrimo.onishinji.utils.StringUtils;
 
 
@@ -37,6 +40,11 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
     private static final String ACTION_UPDATE_CLICK =
             "nanowrimo.onishinji.widget.action.UPDATE_CLICK";
 
+    protected ProgressPieUtils pieManager;
+
+    public WidgetDailyWordCountRemaining() {
+        this.pieManager = new ProgressPieDailyUtils();
+    }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -66,7 +74,7 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    static void updateAppWidget(final Context context, final AppWidgetManager appWidgetManager,
+     void updateAppWidget(final Context context, final AppWidgetManager appWidgetManager,
                                 final int appWidgetId) {
 
         final CharSequence widgetText = WidgetDailyWordCountRemainingConfigureActivity.loadTitlePref(context, appWidgetId);
@@ -75,18 +83,18 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
         final RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_daily_word_count_remeaning);
         views.setViewVisibility(R.id.loader, View.VISIBLE);
 
-        Intent i = new Intent(context, WidgetDailyWordCountRemaining.class);
+        Intent i = createInternalIntent(context);
         i.setAction(ACTION_UPDATE_CLICK+"_"+appWidgetId);
         i.putExtra("username", widgetText);
 
-        PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pi = PendingIntent.getBroadcast(context, appWidgetId, i, PendingIntent.FLAG_ONE_SHOT);
         views.setOnClickPendingIntent(R.id.widget, pi);
 
         // Configure http request
         HttpClient.getInstance().setContext(context);
         final String url = StringUtils.getUserUrl((String) widgetText);
 
-        if(widgetText != null) {
+        if(widgetText != null && !TextUtils.isEmpty(widgetText)) {
             JSONObject params = new JSONObject();
             Log.v("WIDGET", appWidgetId + " make an request to " + url);
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
@@ -96,12 +104,7 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
                     User user = new User(response);
                     // views.setTextViewText(R.id.appwidget_wordcount, "" + user.getDailyTargetRemaining());
 
-                    WordCountProgress pg = new WordCountProgress(context);
-
-                    pg.setIconRessource(R.drawable.ic_pen);
-                    pg.configureView();
-                    pg.compute(user.getWordCountToday(), user.getDailyTarget(), false);
-                    pg.setText("" + user.getDailyTarget(), user.getName());
+                    WordCountProgress pg = pieManager.getWordCountProgressPie(context, user);
 
                     pg.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
                     pg.measure(100, 100);
@@ -129,12 +132,10 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
 
                     Toast.makeText(context, context.getString(R.string.error_network_widget_toast, widgetText, error.getMessage()), Toast.LENGTH_SHORT).show();
 
-                    WordCountProgress pg = new WordCountProgress(context);
+                    WordCountProgress pg = pieManager.constructWordCountProgressPie(context);
 
-                    pg.configureView();
                     pg.compute(0, 1, false);
 
-                    pg.setIconRessource(R.drawable.ic_pen);
                     pg.setText(context.getString(R.string.error_network_widget), (String) widgetText);
                     pg.getProgressPieView().setBackgroundColor(context.getResources().getColor(android.R.color.holo_red_dark));
 
@@ -161,6 +162,11 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
             HttpClient.getInstance().add(request);
         }
     }
+
+    public Intent createInternalIntent(Context context) {
+        return new Intent(context, WidgetDailyWordCountRemaining.class);
+    }
+
 
     /**
      * A general technique for calling the onUpdate method,
@@ -196,10 +202,11 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
             PackageManager manager = context.getPackageManager();
             try {
                 i = manager.getLaunchIntentForPackage("nanowrimo.onishinji");
-                i.putExtra("username", intent.getStringExtra("username"));
 
                 if (i == null)
                     throw new PackageManager.NameNotFoundException();
+
+                i.putExtra("username", intent.getStringExtra("username"));
                 i.addCategory(Intent.CATEGORY_LAUNCHER);
                 context.startActivity(i);
             } catch (PackageManager.NameNotFoundException e) {

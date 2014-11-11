@@ -3,6 +3,7 @@
 
     <string name="app_name">Wrimo Companion</string>
     <string name="configure">Display daily word count remaining for</string>
+    <string name="configure_global">Display current word count for</string>
     <string name="add_widget">Save widget</string>
     <string name="default_username">username</string>
     <string name="default_wordcount">0</string>
@@ -27,5 +28,8 @@
     <string name="dialog_remove_user_message">Do you really want unfollow %1$s\'s progression ?</string>
     <string name="title_graph">Statistics</string>
     <string name="stats_marker_view">%1$s words at %2$s (+%3$s)</string>
+
+    <string name="widget_title_global">Global wordcount</string>
+    <string name="widget_title">Daily wordcount</string>
 
 </resources>

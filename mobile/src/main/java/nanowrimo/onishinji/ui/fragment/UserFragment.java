@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -257,7 +258,7 @@ public class UserFragment extends Fragment {
     private void getRemoteData() {
         // Configure http request
 
-        if(username != null) {
+        if(username != null && !TextUtils.isEmpty(username)) {
             final String url = StringUtils.getUserUrl(username);
 
             getHistoricRemoteData(url + "/history");

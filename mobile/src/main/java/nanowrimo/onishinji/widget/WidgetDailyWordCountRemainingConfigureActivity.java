@@ -52,7 +52,8 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
         // out of the widget placement if the user presses the back button.
         setResult(RESULT_CANCELED);
 
-        setContentView(R.layout.widget_daily_word_count_remeaning_configure);
+        setContentViewStub();
+
         mAppWidgetText = (EditText) findViewById(R.id.appwidget_text);
         mButtonValid = (Button) findViewById(R.id.add_button);
         mButtonValid.setOnClickListener(mOnClickListener);
@@ -75,6 +76,11 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
 
         HttpClient.getInstance().setContext(this);
         //mAppWidgetText.setText(loadTitlePref(WidgetDailyWordCountRemainingConfigureActivity.this, mAppWidgetId));
+    }
+
+    protected void setContentViewStub() {
+
+        setContentView(R.layout.widget_daily_word_count_remeaning_configure);
     }
 
     View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -100,7 +106,9 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
 
                     // It is the responsibility of the configuration activity to update the app widget
                     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-                    WidgetDailyWordCountRemaining.updateAppWidget(context, appWidgetManager, mAppWidgetId);
+
+                    WidgetDailyWordCountRemaining c = getWidget();
+                    c.updateAppWidget(context, appWidgetManager, mAppWidgetId);
 
                     // Make sure we pass back the original appWidgetId
                     Intent resultValue = new Intent();
@@ -123,6 +131,10 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
 
         }
     };
+
+    protected WidgetDailyWordCountRemaining getWidget() {
+        return new WidgetDailyWordCountRemaining();
+    }
 
     // Write the prefix to the SharedPreferences object for this widget
     static void saveTitlePref(Context context, int appWidgetId, String text) {
