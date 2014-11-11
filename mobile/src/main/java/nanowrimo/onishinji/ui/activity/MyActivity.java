@@ -51,7 +51,7 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(false)
+        if(true)
         Crashlytics.start(this);
 
         setContentView(R.layout.activity_my);

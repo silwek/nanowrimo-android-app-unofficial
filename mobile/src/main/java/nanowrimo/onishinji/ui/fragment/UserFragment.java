@@ -262,7 +262,7 @@ public class UserFragment extends Fragment {
         LimitLine ll = new LimitLine(1667);
         ll.setLineColor(getResources().getColor(android.R.color.holo_orange_dark));
         ll.enableDashedLine(10, 10, 0);
-        
+
 
         mBarData.addLimitLine(ll);
         mChartBar.setData(mBarData);
