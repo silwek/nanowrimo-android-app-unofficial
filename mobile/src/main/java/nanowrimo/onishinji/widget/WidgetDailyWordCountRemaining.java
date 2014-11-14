@@ -15,12 +15,16 @@ import android.view.ViewGroup;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 
 import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.HttpClient;
@@ -41,6 +45,8 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
             "nanowrimo.onishinji.widget.action.UPDATE_CLICK";
 
     protected ProgressPieUtils pieManager;
+
+    protected Boolean hasData = false;
 
     public WidgetDailyWordCountRemaining() {
         this.pieManager = new ProgressPieDailyUtils();
@@ -74,8 +80,8 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-     void updateAppWidget(final Context context, final AppWidgetManager appWidgetManager,
-                                final int appWidgetId) {
+    void updateAppWidget(final Context context, final AppWidgetManager appWidgetManager,
+                         final int appWidgetId) {
 
         final CharSequence widgetText = WidgetDailyWordCountRemainingConfigureActivity.loadTitlePref(context, appWidgetId);
 
@@ -84,7 +90,7 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
         views.setViewVisibility(R.id.loader, View.VISIBLE);
 
         Intent i = createInternalIntent(context);
-        i.setAction(ACTION_UPDATE_CLICK+"_"+appWidgetId);
+        i.setAction(ACTION_UPDATE_CLICK + "_" + appWidgetId);
         i.putExtra("username", widgetText);
 
         PendingIntent pi = PendingIntent.getBroadcast(context, appWidgetId, i, PendingIntent.FLAG_ONE_SHOT);
@@ -94,73 +100,98 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
         HttpClient.getInstance().setContext(context);
         final String url = StringUtils.getUserUrl((String) widgetText);
 
-        if(widgetText != null && !TextUtils.isEmpty(widgetText)) {
+        if (widgetText != null && !TextUtils.isEmpty(widgetText)) {
             JSONObject params = new JSONObject();
             Log.v("WIDGET", appWidgetId + " make an request to " + url);
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
 
-                    User user = new User(response);
-                    // views.setTextViewText(R.id.appwidget_wordcount, "" + user.getDailyTargetRemaining());
+                    handleResponse(response, context, views, appWidgetManager, appWidgetId);
 
-                    WordCountProgress pg = pieManager.getWordCountProgressPie(context, user);
-
-                    pg.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
-                    pg.measure(100, 100);
-                    pg.layout(0, 0, pg.getMeasuredWidth(), pg.getMeasuredHeight());
-                    pg.forceLayout();
-
-                    pg.setDrawingCacheEnabled(true);
-                    pg.buildDrawingCache(true);
-
-                    pg.requestLayout();
-
-                    pg.buildDrawingCache();
-                    Bitmap bm = pg.getDrawingCache();
-
-//                Log.d("widget", bm.toString());
-
-                    views.setImageViewBitmap(R.id.appwidget_progress, bm);
-
-                    // Instruct the widget manager to update the widget
-                    appWidgetManager.updateAppWidget(appWidgetId, views);
+                    //  Cache c = HttpClient.getInstance().getQueue().getCache();
+                    //  c.put(url, new Cache.Entry());
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
 
-                    Toast.makeText(context, context.getString(R.string.error_network_widget_toast, widgetText, error.getMessage()), Toast.LENGTH_SHORT).show();
+                    if (!hasData) {
 
-                    WordCountProgress pg = pieManager.constructWordCountProgressPie(context);
 
-                    pg.compute(0, 1, false);
+                        Cache c = HttpClient.getInstance().getQueue().getCache();
+                        Cache.Entry entry = c.get(url);
+                        if (entry != null) {
+                            // fetch the data from cache
+                            try {
+                                String data = new String(entry.data, "UTF-8");
+                                handleResponse(new JSONObject(data), context, views, appWidgetManager, appWidgetId);
 
-                    pg.setText(context.getString(R.string.error_network_widget), (String) widgetText);
-                    pg.getProgressPieView().setBackgroundColor(context.getResources().getColor(android.R.color.holo_red_dark));
+                            } catch (UnsupportedEncodingException e) {
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
 
-                    int size = 200;
-                    pg.setLayoutParams(new ViewGroup.LayoutParams(size, size));
-                    pg.measure(size, size);
-                    pg.layout(0, 0, pg.getMeasuredWidth(), pg.getMeasuredHeight());
-                    pg.forceLayout();
+                            WordCountProgress pg = pieManager.constructWordCountProgressPie(context);
 
-                    pg.setDrawingCacheEnabled(true);
-                    pg.buildDrawingCache(true);
+                            pg.compute(0, 1, false);
 
-                    pg.requestLayout();
+                            pg.setText(context.getString(R.string.error_network_widget), (String) widgetText);
+                            pg.getProgressPieView().setBackgroundColor(context.getResources().getColor(android.R.color.holo_red_dark));
 
-                    pg.buildDrawingCache();
-                    Bitmap bm = pg.getDrawingCache();
+                            int size = 200;
+                            pg.setLayoutParams(new ViewGroup.LayoutParams(size, size));
+                            pg.measure(size, size);
+                            pg.layout(0, 0, pg.getMeasuredWidth(), pg.getMeasuredHeight());
+                            pg.forceLayout();
 
-                    views.setImageViewBitmap(R.id.appwidget_progress, bm);
+                            pg.setDrawingCacheEnabled(true);
+                            pg.buildDrawingCache(true);
 
-                    //  views.setTextViewText(R.id.appwidget_text, "error de volley");
-                    appWidgetManager.updateAppWidget(appWidgetId, views);
+                            pg.requestLayout();
+
+                            pg.buildDrawingCache();
+                            Bitmap bm = pg.getDrawingCache();
+
+                            views.setImageViewBitmap(R.id.appwidget_progress, bm);
+
+                            //  views.setTextViewText(R.id.appwidget_text, "error de volley");
+                            appWidgetManager.updateAppWidget(appWidgetId, views);
+                        }
+                    }
                 }
             });
-            HttpClient.getInstance().add(request);
+
+            HttpClient.getInstance().add(request, true);
         }
+    }
+
+    private void handleResponse(JSONObject response, Context context, RemoteViews views, AppWidgetManager appWidgetManager, int appWidgetId) {
+        User user = new User(response);
+        // views.setTextViewText(R.id.appwidget_wordcount, "" + user.getDailyTargetRemaining());
+
+        WordCountProgress pg = pieManager.getWordCountProgressPie(context, user);
+
+        pg.setLayoutParams(new ViewGroup.LayoutParams(100, 100));
+        pg.measure(100, 100);
+        pg.layout(0, 0, pg.getMeasuredWidth(), pg.getMeasuredHeight());
+        pg.forceLayout();
+
+        pg.setDrawingCacheEnabled(true);
+        pg.buildDrawingCache(true);
+
+        pg.requestLayout();
+
+        pg.buildDrawingCache();
+        Bitmap bm = pg.getDrawingCache();
+
+        views.setImageViewBitmap(R.id.appwidget_progress, bm);
+
+        hasData = true;
+
+        // Instruct the widget manager to update the widget
+        appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
     public Intent createInternalIntent(Context context) {

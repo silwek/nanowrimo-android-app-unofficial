@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -35,8 +36,10 @@ import com.github.mikephil.charting.utils.LimitLine;
 import com.github.mikephil.charting.utils.ValueFormatter;
 import com.github.mikephil.charting.utils.XLabels;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -277,7 +280,7 @@ public class UserFragment extends Fragment {
     private void updateUI() {
         Log.d("fragment", "will update UI with " + username);
 
-        if (mTextViewUsername != null)
+        if (mTextViewUsername != null && mOnRemoveListener != null && username != null)
             mTextViewUsername.setText(mOnRemoveListener.getNiceTitle(username));
     }
 
@@ -300,84 +303,161 @@ public class UserFragment extends Fragment {
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-
-                    User user = new User(response);
-
-                    if (getActivity() != null) {
-
-                        mTextViewWordcount.setText(user.getWordcount() + "");
-                        mTextViewWordcountToday.setText(user.getWordCountToday() + "");
-                        mTextViewDailyTarget.setText(user.getDailyTarget() + "");
-                        mTextViewDailyTargetRemaining.setText(user.getDailyTargetRemaining() + "");
-                        mTextViewNbDayRemaining.setText(user.getNbDayRemaining() + "");
-
-                        mProgressDaily.compute(user.getWordCountToday(), user.getDailyTarget(), true);
-                        mProgressGlobal.compute(user.getWordcount(), 50000.0f, true);
-
-                    }
+                    handleResponse(response);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
 
                     if (getActivity() != null) {
-                        mProgressDaily.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
-                        mProgressDaily.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
 
-                        mProgressGlobal.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
-                        mProgressGlobal.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
-                        mChart.clear();
+                        Cache c = HttpClient.getInstance().getQueue().getCache();
+                        Cache.Entry entry = c.get(url);
+                        if (entry != null) {
+                            // fetch the data from cache
+                            try {
+                                String data = new String(entry.data, "UTF-8");
+                                handleResponse(new JSONObject(data));
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            mProgressDaily.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
+                            mProgressDaily.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+
+                            mProgressGlobal.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
+                            mProgressGlobal.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+                            mChart.clear();
+                        }
                     }
                 }
             });
 
-            HttpClient.getInstance().add(request);
+
+            // Search from cache first, make request in second
+            Cache c = HttpClient.getInstance().getQueue().getCache();
+            Cache.Entry entry = c.get(url);
+            if (entry != null) {
+                // fetch the data from cache
+                try {
+                    String data = new String(entry.data, "UTF-8");
+                    handleResponse(new JSONObject(data));
+
+                    c.invalidate(url, true);
+
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            HttpClient.getInstance().add(request, true);
         }
     }
 
-    protected void getHistoricRemoteData(String url) {
+    private void handleResponse(JSONObject response) {
+        User user = new User(response);
+
+        if (getActivity() != null) {
+
+            mTextViewWordcount.setText(user.getWordcount() + "");
+            mTextViewWordcountToday.setText(user.getWordCountToday() + "");
+            mTextViewDailyTarget.setText(user.getDailyTarget() + "");
+            mTextViewDailyTargetRemaining.setText(user.getDailyTargetRemaining() + "");
+            mTextViewNbDayRemaining.setText(user.getNbDayRemaining() + "");
+
+            mProgressDaily.compute(user.getWordCountToday(), user.getDailyTarget(), true);
+            mProgressGlobal.compute(user.getWordcount(), 50000.0f, true);
+
+        }
+    }
+
+    protected void getHistoricRemoteData(final String url) {
 
         JSONObject params = new JSONObject();
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
                 if (getActivity() != null) {
-                    Historic user = new Historic(response);
-
-                    //ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-                    LineDataSet historyDataSet = new LineDataSet(user.getValuesCumul(), "Your progression");
-
-                    historyDataSet.setColor(getResources().getColor(R.color.small_widget_progress_color));
-                    historyDataSet.setCircleColor(getResources().getColor(R.color.small_widget_progress_color));
-
-                    historyDataSet.setCircleSize(4);
-                    historyDataSet.setLineWidth(2);
-                    mLineData.addDataSet(historyDataSet);
-
-                    mChart.notifyDataSetChanged();
-                    mChart.invalidate();
-
-
-                    BarDataSet set1 = new BarDataSet(user.getValues(), "DataSet");
-                    set1.setColor(getResources().getColor(R.color.small_widget_progress_color));
-                    set1.setBarShadowColor(getResources().getColor(android.R.color.transparent));
-
-                    mBarData.addDataSet(set1);
-
-                    mChartBar.notifyDataSetChanged();
-                    mChartBar.invalidate();
-
+                    HandleHistoryResponse(response);
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
 
+                Cache c = HttpClient.getInstance().getQueue().getCache();
+                Cache.Entry entry = c.get(url);
+
+                Log.i("HISTORY", "1) get from cache " + url + " with " + entry);
+                if (entry != null) {
+                    // fetch the data from cache
+                    try {
+                        String data = new String(entry.data, "UTF-8");
+                        HandleHistoryResponse(new JSONObject(data));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+
+                }
             }
         });
 
-        HttpClient.getInstance().add(request);
+        // Search from cache first, make request in second
+        Cache c = HttpClient.getInstance().getQueue().getCache();
+        Cache.Entry entry = c.get(url);
+        Log.i("HISTORY", "2) get from cache " + url + " with " + entry);
+        if (entry != null) {
+            // fetch the data from cache
+            try {
+                String data = new String(entry.data, "UTF-8");
+                HandleHistoryResponse(new JSONObject(data));
+
+               c.invalidate(url, true);
+
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        HttpClient.getInstance().add(request, true);
+    }
+
+    private void HandleHistoryResponse(JSONObject response) {
+        Log.d("HISTORY", "HandleHistoryResponse called with " + response.toString());
+        Historic user = new Historic(response);
+
+        //ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
+        LineDataSet historyDataSet = new LineDataSet(user.getValuesCumul(), "Your progression");
+
+        historyDataSet.setColor(getResources().getColor(R.color.small_widget_progress_color));
+        historyDataSet.setCircleColor(getResources().getColor(R.color.small_widget_progress_color));
+
+        historyDataSet.setCircleSize(4);
+        historyDataSet.setLineWidth(2);
+        mLineData.addDataSet(historyDataSet);
+
+        mChart.notifyDataSetChanged();
+        mChart.invalidate();
+
+
+        BarDataSet set1 = new BarDataSet(user.getValues(), "DataSet");
+        set1.setColor(getResources().getColor(R.color.small_widget_progress_color));
+        set1.setBarShadowColor(getResources().getColor(android.R.color.transparent));
+
+        mBarData.addDataSet(set1);
+
+        mChartBar.notifyDataSetChanged();
+        mChartBar.invalidate();
     }
 
     public void setUsername(String s) {

@@ -12,6 +12,10 @@ import com.android.volley.toolbox.Volley;
  */
 public class HttpClient {
 
+    public RequestQueue getQueue() {
+        return queue;
+    }
+
     private RequestQueue queue;
 
     /** Constructeur privé */
@@ -21,8 +25,11 @@ public class HttpClient {
     }
 
     public void add(Request request) {
+        add(request, false);
+    }
+    public void add(Request request, Boolean useCache) {
 
-        request.setShouldCache(false);
+        request.setShouldCache(useCache);
 
         if(queue == null) {
             throw new Error("QUEUE UNINITIALIZED");
