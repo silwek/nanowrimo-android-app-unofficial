@@ -2,6 +2,7 @@ package nanowrimo.onishinji.ui.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +54,7 @@ import nanowrimo.onishinji.model.Database;
 import nanowrimo.onishinji.model.Historic;
 import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
+import nanowrimo.onishinji.ui.activity.FriendsActivity;
 import nanowrimo.onishinji.ui.widget.MyBarMarkerView;
 import nanowrimo.onishinji.ui.widget.MyMarkerView;
 import nanowrimo.onishinji.ui.widget.WordCountProgress;
@@ -81,6 +84,7 @@ public class UserFragment extends Fragment {
     private BarChart mChartBar;
     private BarData mBarData;
     private ArrayList<String> mDefaultLineValues;
+    private Button mButtonBuddies;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -155,6 +159,8 @@ public class UserFragment extends Fragment {
         mTextViewNbDayRemaining = (TextView) getView().findViewById(R.id.nbDayRemaining);
         mChart = (LineChart) getView().findViewById(R.id.chart);
         mChartBar = (BarChart) getView().findViewById(R.id.chart_bar);
+
+        mButtonBuddies = (Button) getView().findViewById(R.id.show_friends);
 
 
         mChart.setDescription("");
@@ -273,6 +279,17 @@ public class UserFragment extends Fragment {
 
         mProgressDaily = (WordCountProgress) getView().findViewById(R.id.daily);
         mProgressGlobal = (WordCountProgress) getView().findViewById(R.id.global);
+
+        mButtonBuddies.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getActivity(), FriendsActivity.class);
+                intent.putExtra("username", UserFragment.this.username);
+
+                startActivity(intent);
+            }
+        });
 
         updateUI();
     }

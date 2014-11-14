@@ -32,5 +32,6 @@
 
     <string name="widget_title_global">Nb de mots restants</string>
     <string name="widget_title">Objectif journalier</string>
+    <string name="show_friends">show friends</string>
 
 </resources>

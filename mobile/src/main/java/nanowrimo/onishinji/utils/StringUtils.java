@@ -73,4 +73,8 @@ public class StringUtils {
         }
         return list;
     }
+
+    public static String getFriendUserUrl(String username) {
+        return baseUrl + removeAccents(username).replace(" ", "-")+"/friends";
+    }
 }
