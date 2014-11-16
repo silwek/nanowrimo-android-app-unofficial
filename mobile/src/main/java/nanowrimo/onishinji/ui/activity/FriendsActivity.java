@@ -17,31 +17,37 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 
 import nanowrimo.onishinji.R;
+import nanowrimo.onishinji.model.BusManager;
+import nanowrimo.onishinji.model.Friends;
 import nanowrimo.onishinji.model.HttpClient;
+import nanowrimo.onishinji.model.User;
 import nanowrimo.onishinji.utils.StringUtils;
 
 public class FriendsActivity  extends FragmentActivity {
 
     private String mUsername;
+    private String mId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getIntent() != null) {
             mUsername = getIntent().getStringExtra("username");
+            mId = getIntent().getStringExtra("id");
+            setTitle(getString(R.string.title_friends_activity, mUsername));
+            getRemoteData();
         }
 
         setContentView(R.layout.activity_friends);
 
-        setTitle("friends of " + mUsername);
     }
 
 
     private void getRemoteData() {
         // Configure http request
 
-        if (mUsername != null && !TextUtils.isEmpty(mUsername)) {
-            final String url = StringUtils.getFriendUserUrl(mUsername);
+        if (mUsername != null && !TextUtils.isEmpty(mId)) {
+            final String url = StringUtils.getFriendUserUrl(mId);
 
 
             JSONObject params = new JSONObject();
@@ -99,6 +105,12 @@ public class FriendsActivity  extends FragmentActivity {
     private void handleResponse(JSONObject response) {
 
         Log.d("friends", response.toString());
+        Friends friends = new Friends(response);
+
+
+        BusManager.getInstance().getBus().post(friends);
+
+        Log.d("nb friends", "" + friends.getAll().size());
     }
 
 }

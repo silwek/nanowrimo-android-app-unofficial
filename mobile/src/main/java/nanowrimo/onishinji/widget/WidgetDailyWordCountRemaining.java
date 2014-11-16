@@ -91,7 +91,7 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
 
         Intent i = createInternalIntent(context);
         i.setAction(ACTION_UPDATE_CLICK + "_" + appWidgetId);
-        i.putExtra("username", widgetText);
+        i.putExtra("id", widgetText);
 
         PendingIntent pi = PendingIntent.getBroadcast(context, appWidgetId, i, PendingIntent.FLAG_ONE_SHOT);
         views.setOnClickPendingIntent(R.id.widget, pi);
@@ -237,7 +237,7 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
                 if (i == null)
                     throw new PackageManager.NameNotFoundException();
 
-                i.putExtra("username", intent.getStringExtra("username"));
+                i.putExtra("id", intent.getStringExtra("id"));
                 i.addCategory(Intent.CATEGORY_LAUNCHER);
                 context.startActivity(i);
             } catch (PackageManager.NameNotFoundException e) {

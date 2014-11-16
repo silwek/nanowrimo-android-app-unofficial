@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 
 import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.adapter.SectionsPagerAdapter;
+import nanowrimo.onishinji.model.BusManager;
 import nanowrimo.onishinji.model.Database;
 import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
@@ -46,6 +48,8 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
     private Database mDatabase;
     private ActionBar.Tab mLastTab;
     private boolean mTurnOff = false;
+    private PagerTitleStrip mPagerTitleStrip;
+    private String mKnowsUsers = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,8 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
 
         if(true)
         Crashlytics.start(this);
+
+        BusManager.getInstance();
 
         setContentView(R.layout.activity_my);
 
@@ -67,16 +73,16 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        mPagerTitleStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip);
+
+
         for (String user : mDatabase.getUsers()) {
             onAddTab(user, false);
         }
         HttpClient.getInstance().setContext(this);
 
         if (getIntent() != null) {
-            Log.d("widget", "3) alors y a " + getIntent().getStringExtra("username"));
-
-            int index = mDatabase.getUsers().indexOf(getIntent().getStringExtra("username"));
-            Log.d("MyActivity", " found tab at " + index);
+            int index = mDatabase.getUsers().indexOf(getIntent().getStringExtra("id"));
             if (index != -1) {
                 mViewPager.setCurrentItem(index);
             }
@@ -124,7 +130,7 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
 
         alert.setPositiveButton(getString(R.string.follow), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                final String value = input.getText().toString();
+                final String value = input.getText().toString().trim();
 
                 final ProgressDialog progressDialog = ProgressDialog.show(MyActivity.this, "", getString(R.string.please_loading), true);
                 progressDialog.show();
@@ -146,6 +152,8 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+
+                        Log.e("error", error.toString());
 
                         progressDialog.dismiss();
                         Toast alert = Toast.makeText(MyActivity.this, getString(R.string.name_invalid), Toast.LENGTH_SHORT);
@@ -191,10 +199,7 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
 
     public void onAddTab(String text, Boolean selectLastTab) {
 
-        mSectionsPagerAdapter.setDatabase(mDatabase);
         mSectionsPagerAdapter.notifyDataSetChanged();
-
-        // mViewPager.setAdapter(mSectionsPagerAdapter);
 
         if (selectLastTab) {
             mViewPager.setCurrentItem(mDatabase.getUsers().size());
@@ -203,24 +208,60 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
 
     public void onRemoveTab(int position) {
 
-        // Quick and dirty way
-        finish();
-        Intent i = new Intent(this, MyActivity.class);
+        mSectionsPagerAdapter.notifyDataSetChanged();
+        mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        if (position - 1 >= 0 && position - 1 <= mDatabase.getUsers().size()) {
-            i.putExtra("username", mDatabase.getUsers().get(position - 1));
-        }
-
-        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivity(i);
-
-        //mSectionsPagerAdapter.setDatabase(mDatabase);
-        //mSectionsPagerAdapter.notifyDataSetChanged();
-
-        //mViewPager.removeAllViews();
-
-        //mViewPager.setAdapter(mSectionsPagerAdapter);
-        //mViewPager.setCurrentItem(position - 1);
+        checkEmptyDatabase();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+        mKnowsUsers =  mDatabase.getUsersString();
+
+        outState.putString("knowUsers", mDatabase.getUsersString());
+        Log.d("my", "save " +  mDatabase.getUsersString());
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if(savedInstanceState != null) {
+            mDatabase = new Database(this);
+            if(!savedInstanceState.getString("knowUsers").equals(mDatabase.getUsersString())) {
+
+                Log.d("my","changement detecter sur les users");
+                mSectionsPagerAdapter = new SectionsPagerAdapter(mDatabase, this, getSupportFragmentManager());
+                mViewPager.setAdapter(mSectionsPagerAdapter);
+
+                checkEmptyDatabase();
+
+            }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mKnowsUsers =  mDatabase.getUsersString();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mDatabase = new Database(this);
+
+        if(mKnowsUsers != null && !mKnowsUsers.equals(mDatabase.getUsersString())) {
+
+            Log.d("my","onResume - changement detecter sur les users");
+            mSectionsPagerAdapter = new SectionsPagerAdapter(mDatabase, this, getSupportFragmentManager());
+            mViewPager.setAdapter(mSectionsPagerAdapter);
+
+            checkEmptyDatabase();
+        }
+
+    }
 }

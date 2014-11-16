@@ -32,6 +32,9 @@
 
     <string name="widget_title_global">Nb de mots restants</string>
     <string name="widget_title">Objectif journalier</string>
-    <string name="show_friends">show friends</string>
+    <string name="show_friends">Voir ses amis</string>
+    <string name="title_friends_activity">Les amis de %1$s</string>
+    <string name="btn_action_remove">Ne plus suivre</string>
+    <string name="btn_action_add">Suivre</string>
 
 </resources>

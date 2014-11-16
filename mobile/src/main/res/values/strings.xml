@@ -33,5 +33,8 @@
     <string name="widget_title_global">Global wordcount</string>
     <string name="widget_title">Daily wordcount</string>
     <string name="show_friends">show friends</string>
+    <string name="title_friends_activity">Buddies of %1$s</string>
+    <string name="btn_action_remove">Unfollow</string>
+    <string name="btn_action_add">follow</string>
 
 </resources>

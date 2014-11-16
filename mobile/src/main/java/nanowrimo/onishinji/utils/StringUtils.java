@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class StringUtils {
 
-    final static String baseUrl = "http://nanowrimo-rest-api.ngrok.com/users/";
+    final static String baseUrl = "http://new-class.com:1234/users/";
 
     public static String removeAccents(String text) {
         return text == null ? null :

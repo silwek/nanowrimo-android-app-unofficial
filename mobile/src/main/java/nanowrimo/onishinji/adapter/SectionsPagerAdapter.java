@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
@@ -16,7 +18,7 @@ import nanowrimo.onishinji.ui.fragment.UserFragment;
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
  * one of the sections/tabs/pages.
  */
-public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
+public class SectionsPagerAdapter extends SortableFragmentStatePagerAdapter {
 
     private  UserFragment.OnRemoveListener listener;
     private Database dataSource;
@@ -40,19 +42,35 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        UserFragment f = new UserFragment();
-        f.setUsername(dataSource.getUsers().get(position));
-        f.setOnRemoveListener(listener);
 
-//        tabInfos.add(position, f);
+        String id = dataSource.getUsers().get(position);
+
+        UserFragment f = new UserFragment();
+        f.setId(id);
+        f.setUsername(getPageTitle(position));
+        f.setOnRemoveListener(listener);
+        f.setPosition(position);
+
+        Log.d("fragment", " getItem " + position + " " + id);
 
         return f;
     }
 
     @Override
+    public long getItemId(int position) {
+        return dataSource.getUsers().get(position).toString().hashCode();
+    }
+
+    @Override
     public int getCount() {
         // Show 3 total pages.
-        return dataSource.getUsers().size();
+       // Log.d("fragment", " getCount " + dataSource.getUsers().size());
+
+        if(dataSource != null) {
+            return dataSource.getUsers().size();
+        }
+
+        return 0;
     }
 
 
@@ -60,13 +78,26 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         return dataSource.getNiceTitle(position);
     }
-
+/*
     @Override
     public int getItemPosition(Object object){
-        return PagerAdapter.POSITION_NONE;
-    }
 
+        UserFragment fragment = (UserFragment) object;
+
+        int newPos = dataSource.getUsers().indexOf(fragment.getUserId());
+
+        if(fragment.getPosition() == newPos) {
+            Log.d("fragment", " alors l'ancienne position du fragment " + fragment.getPosition() + " est encore à la bonne place" + newPos);
+            return POSITION_UNCHANGED;
+        }
+
+        Log.d("fragment", " le fragment n'est plus le même pour " + newPos + " vs " + fragment.getPosition());
+
+        return POSITION_NONE;
+    }
+*/
     public void setDatabase(Database database) {
         this.dataSource = database;
     }
+
 }

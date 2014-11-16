@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.squareup.otto.Bus;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,17 +54,29 @@ public class Database {
         Log.d("DB", "want to delete " + username + " (local " + getUsersString());
 
         if (this.users.contains(username)) {
+            Log.d("DB", "removeeeee " + username);
             this.users.remove(username);
             this.userInfos.remove(username);
         }
+
+        Log.d("DB", "has delete " + username + " (local " + this.users.toString());
+
         saveUsersString();
+    }
+
+    public boolean userIsMarkedAsFavorite(String username) {
+        if (this.users.contains(username)) {
+            return true;
+        }
+
+        return false;
     }
 
     public ArrayList<String> getUsers() {
         return this.users;
     }
 
-    protected String getUsersString() {
+    public String getUsersString() {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         String usersString = prefs.getString(PREF_PREFIX_KEY, "");
 
@@ -98,6 +112,8 @@ public class Database {
         prefs.putString(PREF_PREFIX_KEY_USERS_INFOS, infos);
 
         prefs.commit();
+
+        // BusManager.getInstance().getBus().post("userSaved");
     }
 
     public CharSequence getNiceTitle(int position) {

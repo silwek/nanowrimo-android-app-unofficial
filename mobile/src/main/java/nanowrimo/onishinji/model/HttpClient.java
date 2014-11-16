@@ -2,6 +2,7 @@ package nanowrimo.onishinji.model;
 
 import android.content.Context;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -29,6 +30,10 @@ public class HttpClient {
     }
     public void add(Request request, Boolean useCache) {
 
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request.setShouldCache(useCache);
 
         if(queue == null) {

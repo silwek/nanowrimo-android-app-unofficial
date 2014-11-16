@@ -23,8 +23,8 @@ android {
         applicationId "nanowrimo.onishinji"
         minSdkVersion 15
         targetSdkVersion 20
-        versionCode 7
-        versionName "1.2.1"
+        versionCode 8
+        versionName "1.3"
     }
     buildTypes {
         release {
@@ -44,4 +44,5 @@ dependencies {
     compile 'com.github.filippudak.progresspieview:library:1.0.+'
     compile 'me.grantland:autofittextview:0.2.+'
     compile 'com.crashlytics.android:crashlytics:1.+'
+    compile 'com.squareup:otto:1.3.5'
 }

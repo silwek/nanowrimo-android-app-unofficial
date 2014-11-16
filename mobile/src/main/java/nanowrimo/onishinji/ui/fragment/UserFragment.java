@@ -3,21 +3,16 @@ package nanowrimo.onishinji.ui.fragment;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Request;
@@ -32,10 +27,8 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.LargeValueFormatter;
 import com.github.mikephil.charting.utils.LimitLine;
-import com.github.mikephil.charting.utils.ValueFormatter;
 import com.github.mikephil.charting.utils.XLabels;
 
 import org.json.JSONException;
@@ -47,7 +40,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.Database;
@@ -70,7 +62,7 @@ public class UserFragment extends Fragment {
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
     private TextView mTextViewUsername;
-    private String username;
+    private String mId;
     private OnRemoveListener mOnRemoveListener;
     private TextView mTextViewWordcount;
     private TextView mTextViewWordcountToday;
@@ -83,16 +75,31 @@ public class UserFragment extends Fragment {
     private LineData mLineData;
     private BarChart mChartBar;
     private BarData mBarData;
-    private ArrayList<String> mDefaultLineValues;
     private Button mButtonBuddies;
+    private String mUsername;
+    private ProgressBar mProgressBar;
+
+    private int nbLoad = 2;
+    private Button mButtonAction;
+    private Database mDatabase;
+    private int position;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            this.username = savedInstanceState.getString("username");
+            this.mId = savedInstanceState.getString("id");
+            this.mUsername = savedInstanceState.getString("username");
+        } else {
+            String usernameByIntent = getActivity().getIntent().getStringExtra("id");
+            if (usernameByIntent != null && !usernameByIntent.isEmpty()) {
+                this.mId = usernameByIntent;
+                this.mUsername = getActivity().getIntent().getStringExtra("username");
+            }
         }
+
+        mDatabase = new Database(getActivity());
     }
 
     @Override
@@ -103,54 +110,69 @@ public class UserFragment extends Fragment {
         return rootView;
     }
 
+    private void onWantRemoveUser() {
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
 
-        inflater.inflate(R.menu.placeholderfragment, menu);
-    }
+        alert.setTitle(getString(R.string.dialog_remove_user_title));
+        alert.setMessage(getString(R.string.dialog_remove_user_message, mId));
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+        alert.setPositiveButton(getActivity().getString(R.string.yes), new DialogInterface.OnClickListener() {
 
-        switch (item.getItemId()) {
-            case R.id.delete_user:
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
                 if (mOnRemoveListener != null) {
-
-                    AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-
-                    alert.setTitle(getString(R.string.dialog_remove_user_title));
-                    alert.setMessage(getString(R.string.dialog_remove_user_message, username));
-
-                    alert.setPositiveButton(getActivity().getString(R.string.yes), new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                            mOnRemoveListener.remove(username);
-                        }
-                    });
-
-                    alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            // Canceled.
-                        }
-                    });
-
-                    alert.show();
-
+                    mOnRemoveListener.remove(mId);
+                } else {
+                    mDatabase.deleteUser(mId);
                 }
-                break;
-        }
 
-        return super.onOptionsItemSelected(item);
+                refreshActionButton();
+            }
+        });
+
+        alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
     }
+
+    private void onWantAddUser() {
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+
+        alert.setTitle(getString(R.string.dialog_add_user_title));
+
+        alert.setPositiveButton(getActivity().getString(R.string.yes), new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mDatabase.addUser(mId, mUsername);
+                refreshActionButton();
+            }
+        });
+
+        alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+            }
+        });
+
+        alert.show();
+
+    }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mButtonAction = (Button) getView().findViewById(R.id.button_action);
+        mProgressBar = (ProgressBar) getView().findViewById(R.id.progressBar);
         mTextViewUsername = (TextView) getView().findViewById(R.id.section_label);
         mTextViewWordcount = (TextView) getView().findViewById(R.id.wordcount);
         mTextViewWordcountToday = (TextView) getView().findViewById(R.id.wordCountToday);
@@ -217,8 +239,59 @@ public class UserFragment extends Fragment {
         mChartBar.setMarkerView(mvb);
 
 
-         mDefaultLineValues = new ArrayList<String>();
+        initializeGraphics();
 
+
+        mProgressDaily = (WordCountProgress) getView().findViewById(R.id.daily);
+        mProgressGlobal = (WordCountProgress) getView().findViewById(R.id.global);
+
+        mButtonBuddies.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getActivity(), FriendsActivity.class);
+                intent.putExtra("id", UserFragment.this.mId);
+                intent.putExtra("username", UserFragment.this.mUsername);
+
+                startActivity(intent);
+            }
+        });
+
+        updateUI();
+
+
+        refreshActionButton();
+    }
+
+    private void refreshActionButton() {
+
+        if(getActivity() != null) {
+            if (canRemoveUser()) {
+                mButtonAction.setText(getString(R.string.btn_action_remove));
+                mButtonAction.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onWantRemoveUser();
+                    }
+                });
+            } else {
+                mButtonAction.setText(getString(R.string.btn_action_add));
+                mButtonAction.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onWantAddUser();
+                    }
+                });
+            }
+        }
+    }
+
+    private boolean canRemoveUser() {
+        return mDatabase.userIsMarkedAsFavorite(mId);
+    }
+
+    private void initializeGraphics() {
+        ArrayList<String> defaultLineValues = new ArrayList<String>();
 
         Calendar c = Calendar.getInstance();
 
@@ -234,7 +307,7 @@ public class UserFragment extends Fragment {
         String year = String.valueOf(c.get(Calendar.YEAR));
         data = data.replace(year, "").trim();
 
-        mDefaultLineValues.add(data);
+        defaultLineValues.add(data);
 
         for (int i = 2; i <= 30; i++) {
             c.set(Calendar.DAY_OF_MONTH, i);
@@ -246,14 +319,14 @@ public class UserFragment extends Fragment {
             year = String.valueOf(c.get(Calendar.YEAR));
             data = data.replace(year, "").trim();
 
-            mDefaultLineValues.add(data);
+            defaultLineValues.add(data);
 
         }
 
 
         ArrayList<Entry> defaultLineEntries = new ArrayList<Entry>();
         defaultLineEntries.add(new Entry(0, 0));
-        defaultLineEntries.add(new Entry(50000, mDefaultLineValues.size() - 1));
+        defaultLineEntries.add(new Entry(50000, defaultLineValues.size() - 1));
 
 
         LineDataSet linearProgressionDataSet = new LineDataSet(defaultLineEntries, "naive linear progression");
@@ -263,11 +336,11 @@ public class UserFragment extends Fragment {
         linearProgressionDataSet.setColor(getResources().getColor(android.R.color.holo_orange_dark));
         linearProgressionDataSet.setCircleColor(getResources().getColor(android.R.color.holo_orange_dark));
 
-        mLineData = new LineData(mDefaultLineValues, linearProgressionDataSet);
+        mLineData = new LineData(defaultLineValues, linearProgressionDataSet);
         mChart.setData(mLineData);
 
 
-        mBarData= new BarData(mDefaultLineValues, new BarDataSet(new ArrayList<BarEntry>(), "default"));
+        mBarData = new BarData(defaultLineValues, new BarDataSet(new ArrayList<BarEntry>(), "default"));
         LimitLine ll = new LimitLine(1667);
         ll.setLineColor(getResources().getColor(android.R.color.holo_orange_dark));
         ll.enableDashedLine(10, 10, 0);
@@ -275,30 +348,18 @@ public class UserFragment extends Fragment {
 
         mBarData.addLimitLine(ll);
         mChartBar.setData(mBarData);
-
-
-        mProgressDaily = (WordCountProgress) getView().findViewById(R.id.daily);
-        mProgressGlobal = (WordCountProgress) getView().findViewById(R.id.global);
-
-        mButtonBuddies.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(getActivity(), FriendsActivity.class);
-                intent.putExtra("username", UserFragment.this.username);
-
-                startActivity(intent);
-            }
-        });
-
-        updateUI();
     }
 
     private void updateUI() {
-        Log.d("fragment", "will update UI with " + username);
+        Log.d("fragment", "will update UI with " + mId);
 
-        if (mTextViewUsername != null && mOnRemoveListener != null && username != null)
-            mTextViewUsername.setText(mOnRemoveListener.getNiceTitle(username));
+        if (mTextViewUsername != null && mOnRemoveListener != null && mId != null) {
+            mTextViewUsername.setText(mOnRemoveListener.getNiceTitle(mId));
+        }
+
+        if (mUsername != null && !mUsername.isEmpty()) {
+            mTextViewUsername.setText(mUsername);
+        }
     }
 
     @Override
@@ -311,8 +372,10 @@ public class UserFragment extends Fragment {
     private void getRemoteData() {
         // Configure http request
 
-        if (username != null && !TextUtils.isEmpty(username)) {
-            final String url = StringUtils.getUserUrl(username);
+        if (mId != null && !TextUtils.isEmpty(mId)) {
+
+            nbLoad = 2;
+            final String url = StringUtils.getUserUrl(mId);
 
             getHistoricRemoteData(url + "/history");
 
@@ -320,13 +383,18 @@ public class UserFragment extends Fragment {
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
+                    checkLoader();
                     handleResponse(response);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
 
+                    checkLoader();
+
                     if (getActivity() != null) {
+
+                        Log.e("error", error.toString());
 
                         Cache c = HttpClient.getInstance().getQueue().getCache();
                         Cache.Entry entry = c.get(url);
@@ -346,7 +414,7 @@ public class UserFragment extends Fragment {
 
                             mProgressGlobal.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
                             mProgressGlobal.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
-                            mChart.clear();
+
                         }
                     }
                 }
@@ -375,22 +443,6 @@ public class UserFragment extends Fragment {
         }
     }
 
-    private void handleResponse(JSONObject response) {
-        User user = new User(response);
-
-        if (getActivity() != null) {
-
-            mTextViewWordcount.setText(user.getWordcount() + "");
-            mTextViewWordcountToday.setText(user.getWordCountToday() + "");
-            mTextViewDailyTarget.setText(user.getDailyTarget() + "");
-            mTextViewDailyTargetRemaining.setText(user.getDailyTargetRemaining() + "");
-            mTextViewNbDayRemaining.setText(user.getNbDayRemaining() + "");
-
-            mProgressDaily.compute(user.getWordCountToday(), user.getDailyTarget(), true);
-            mProgressGlobal.compute(user.getWordcount(), 50000.0f, true);
-
-        }
-    }
 
     protected void getHistoricRemoteData(final String url) {
 
@@ -398,15 +450,14 @@ public class UserFragment extends Fragment {
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
-                if (getActivity() != null) {
-                    HandleHistoryResponse(response);
-                }
+                checkLoader();
+                HandleHistoryResponse(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
 
+                checkLoader();
                 Cache c = HttpClient.getInstance().getQueue().getCache();
                 Cache.Entry entry = c.get(url);
 
@@ -437,7 +488,7 @@ public class UserFragment extends Fragment {
                 String data = new String(entry.data, "UTF-8");
                 HandleHistoryResponse(new JSONObject(data));
 
-               c.invalidate(url, true);
+                c.invalidate(url, true);
 
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -449,52 +500,108 @@ public class UserFragment extends Fragment {
         HttpClient.getInstance().add(request, true);
     }
 
-    private void HandleHistoryResponse(JSONObject response) {
-        Log.d("HISTORY", "HandleHistoryResponse called with " + response.toString());
-        Historic user = new Historic(response);
+    private void handleResponse(JSONObject response) {
 
-        //ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-        LineDataSet historyDataSet = new LineDataSet(user.getValuesCumul(), "Your progression");
+        User user = new User(response);
 
-        historyDataSet.setColor(getResources().getColor(R.color.small_widget_progress_color));
-        historyDataSet.setCircleColor(getResources().getColor(R.color.small_widget_progress_color));
+        if (getActivity() != null) {
 
-        historyDataSet.setCircleSize(4);
-        historyDataSet.setLineWidth(2);
-        mLineData.addDataSet(historyDataSet);
+            mTextViewWordcount.setText(user.getWordcount() + "");
+            mTextViewWordcountToday.setText(user.getWordCountToday() + "");
+            mTextViewDailyTarget.setText(user.getDailyTarget() + "");
+            mTextViewDailyTargetRemaining.setText(user.getDailyTargetRemaining() + "");
+            mTextViewNbDayRemaining.setText(user.getNbDayRemaining() + "");
 
-        mChart.notifyDataSetChanged();
-        mChart.invalidate();
+            mProgressDaily.compute(user.getWordCountToday(), user.getDailyTarget(), true);
+            mProgressGlobal.compute(user.getWordcount(), 50000.0f, true);
 
-
-        BarDataSet set1 = new BarDataSet(user.getValues(), "DataSet");
-        set1.setColor(getResources().getColor(R.color.small_widget_progress_color));
-        set1.setBarShadowColor(getResources().getColor(android.R.color.transparent));
-
-        mBarData.addDataSet(set1);
-
-        mChartBar.notifyDataSetChanged();
-        mChartBar.invalidate();
+        }
     }
 
-    public void setUsername(String s) {
-        this.username = s;
+    private void HandleHistoryResponse(JSONObject response) {
+
+        if (getActivity() != null) {
+
+            mChart.clear();
+            mChartBar.clear();
+
+            initializeGraphics();
+
+            Log.d("HISTORY", "HandleHistoryResponse called with " + response.toString());
+            Historic user = new Historic(response);
+
+            //ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
+            LineDataSet historyDataSet = new LineDataSet(user.getValuesCumul(), "Your progression");
+
+            historyDataSet.setColor(getResources().getColor(R.color.small_widget_progress_color));
+            historyDataSet.setCircleColor(getResources().getColor(R.color.small_widget_progress_color));
+
+            historyDataSet.setCircleSize(4);
+            historyDataSet.setLineWidth(2);
+            mLineData.addDataSet(historyDataSet);
+
+            mChart.notifyDataSetChanged();
+            mChart.invalidate();
+
+
+            BarDataSet set1 = new BarDataSet(user.getValues(), "DataSet");
+            set1.setColor(getResources().getColor(R.color.small_widget_progress_color));
+            set1.setBarShadowColor(getResources().getColor(android.R.color.transparent));
+
+            mBarData.addDataSet(set1);
+
+            mChartBar.notifyDataSetChanged();
+            mChartBar.invalidate();
+        }
+    }
+
+    public void setId(String s) {
+        this.mId = s;
 
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("username", username);
+        outState.putString("id", mId);
+        outState.putString("username", mUsername);
     }
 
     public void setOnRemoveListener(OnRemoveListener listener) {
         mOnRemoveListener = listener;
     }
 
+    public void setUsername(CharSequence pageTitle) {
+        mUsername = (String) pageTitle;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public String getUserId() {
+
+        return this.mId;
+    }
+
     public interface OnRemoveListener {
         void remove(String username);
 
         String getNiceTitle(String username);
+
+    }
+
+    private void checkLoader() {
+        nbLoad--;
+
+        if (nbLoad == 0) {
+            mProgressBar.setVisibility(View.GONE);
+        } else {
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
     }
 }
