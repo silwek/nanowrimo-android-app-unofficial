@@ -34,9 +34,10 @@ public class MyMarkerView extends MarkerView {
             tvContent.setText("" + Utils.formatNumber(ce.getHigh(), 0, true));
         } else {
             HashMap<String, String> map = (HashMap<String, String>) e.getData();
-            String date = map.get("date");
-            String nbWorldToday = map.get("today");
-            String text = getContext().getResources().getString(R.string.stats_marker_view, numberFormat.format(e.getVal()), date, nbWorldToday);
+            String date = map != null ? map.get("date") : "";
+            String nbWorldToday = map != null ? map.get("today") : "";
+
+            String text =  map != null ? getContext().getResources().getString(R.string.stats_marker_view, numberFormat.format(e.getVal()), date, nbWorldToday) : "-";
             tvContent.setText(text);
         }
     }
