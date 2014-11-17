@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.android.volley.Cache;
 import com.android.volley.Request;
@@ -40,8 +41,20 @@ public class FriendsActivity  extends FragmentActivity {
 
         setContentView(R.layout.activity_friends);
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     private void getRemoteData() {
         // Configure http request
@@ -59,7 +72,6 @@ public class FriendsActivity  extends FragmentActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
 
                     Cache c = HttpClient.getInstance().getQueue().getCache();
                     Cache.Entry entry = c.get(url);
@@ -79,6 +91,7 @@ public class FriendsActivity  extends FragmentActivity {
                 }
             });
 
+            HttpClient.getInstance().add(request, true);
 
             // Search from cache first, make request in second
             Cache c = HttpClient.getInstance().getQueue().getCache();
@@ -98,19 +111,12 @@ public class FriendsActivity  extends FragmentActivity {
                 }
             }
 
-            HttpClient.getInstance().add(request, true);
         }
     }
 
     private void handleResponse(JSONObject response) {
-
-        Log.d("friends", response.toString());
         Friends friends = new Friends(response);
-
-
         BusManager.getInstance().getBus().post(friends);
-
-        Log.d("nb friends", "" + friends.getAll().size());
     }
 
 }

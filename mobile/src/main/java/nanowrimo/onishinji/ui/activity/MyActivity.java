@@ -50,6 +50,7 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
     private boolean mTurnOff = false;
     private PagerTitleStrip mPagerTitleStrip;
     private String mKnowsUsers = null;
+    private int mLastPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,23 +63,13 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
 
         setContentView(R.layout.activity_my);
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mDatabase = new Database(this);
-
-        checkEmptyDatabase();
-
-
-        mSectionsPagerAdapter = new SectionsPagerAdapter(mDatabase, this, getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        reloadViewPager();
 
         mPagerTitleStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip);
 
-
-        for (String user : mDatabase.getUsers()) {
-            onAddTab(user, false);
-        }
+        checkEmptyDatabase();
         HttpClient.getInstance().setContext(this);
 
         if (getIntent() != null) {
@@ -87,6 +78,13 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
                 mViewPager.setCurrentItem(index);
             }
         }
+
+    }
+
+    private void reloadViewPager() {
+        mDatabase = new Database(this);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(mDatabase, this, getSupportFragmentManager());
+        mViewPager.setAdapter(mSectionsPagerAdapter);
     }
 
     private void checkEmptyDatabase() {
@@ -188,7 +186,6 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
         int oldPos = mDatabase.getUsers().indexOf(username);
         mDatabase.deleteUser(username);
         onRemoveTab(oldPos);
-        //checkEmptyDatabase();
     }
 
     @Override
@@ -199,7 +196,7 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
 
     public void onAddTab(String text, Boolean selectLastTab) {
 
-        mSectionsPagerAdapter.notifyDataSetChanged();
+        reloadViewPager();
 
         if (selectLastTab) {
             mViewPager.setCurrentItem(mDatabase.getUsers().size());
@@ -208,8 +205,11 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
 
     public void onRemoveTab(int position) {
 
-        mSectionsPagerAdapter.notifyDataSetChanged();
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        reloadViewPager();
+
+        if (position - 1 >= 0 && position-1 < mDatabase.getUsers().size()) {
+            mViewPager.setCurrentItem(position--);
+        }
 
         checkEmptyDatabase();
     }
@@ -218,9 +218,8 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
     protected void onSaveInstanceState(Bundle outState) {
 
         mKnowsUsers =  mDatabase.getUsersString();
-
         outState.putString("knowUsers", mDatabase.getUsersString());
-        Log.d("my", "save " +  mDatabase.getUsersString());
+        outState.putInt("currentItem", mViewPager.getCurrentItem());
 
         super.onSaveInstanceState(outState);
     }
@@ -233,12 +232,16 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
             mDatabase = new Database(this);
             if(!savedInstanceState.getString("knowUsers").equals(mDatabase.getUsersString())) {
 
-                Log.d("my","changement detecter sur les users");
                 mSectionsPagerAdapter = new SectionsPagerAdapter(mDatabase, this, getSupportFragmentManager());
                 mViewPager.setAdapter(mSectionsPagerAdapter);
 
-                checkEmptyDatabase();
+                int lastPosition = savedInstanceState.getInt("currentItem");
+                if(lastPosition < mDatabase.getUsers().size() && lastPosition >= 0) {
+                    mViewPager.setCurrentItem(lastPosition);
+                }
 
+
+                checkEmptyDatabase();
             }
         }
     }
@@ -247,6 +250,7 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
     protected void onPause() {
         super.onPause();
         mKnowsUsers =  mDatabase.getUsersString();
+        mLastPosition = mViewPager.getCurrentItem();
     }
 
     @Override
@@ -256,9 +260,11 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
 
         if(mKnowsUsers != null && !mKnowsUsers.equals(mDatabase.getUsersString())) {
 
-            Log.d("my","onResume - changement detecter sur les users");
-            mSectionsPagerAdapter = new SectionsPagerAdapter(mDatabase, this, getSupportFragmentManager());
-            mViewPager.setAdapter(mSectionsPagerAdapter);
+            reloadViewPager();
+
+            if(mLastPosition < mDatabase.getUsers().size() && mLastPosition >= 0) {
+                mViewPager.setCurrentItem(mLastPosition);
+            }
 
             checkEmptyDatabase();
         }

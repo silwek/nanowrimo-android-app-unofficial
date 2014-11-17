@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.android.volley.Cache;
 import com.android.volley.Request;
@@ -34,5 +35,19 @@ public class FriendActivity  extends FragmentActivity {
         setContentView(R.layout.activity_friend);
 
         setTitle(getIntent().getStringExtra("username"));
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
