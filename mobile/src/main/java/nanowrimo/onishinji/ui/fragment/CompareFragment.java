@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -41,6 +42,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 
 import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.Database;
@@ -57,46 +59,50 @@ import nanowrimo.onishinji.utils.StringUtils;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class CompareFragment extends Fragment implements PickerUserFragment.EditNameDialogListener {
-    /**
-     * The fragment argument representing the section number for this
-     * fragment.
-     */
-    private static final String ARG_SECTION_NUMBER = "section_number";
-    private TextView mTextViewUsername;
-    private String mId;
-    private TextView mTextViewWordcount;
-    private TextView mTextViewWordcountToday;
-    private TextView mTextViewDailyTarget;
-    private TextView mTextViewDailyTargetRemaining;
-    private TextView mTextViewNbDayRemaining;
-    private WordCountProgress mProgressDaily;
-    private WordCountProgress mProgressGlobal;
+public class CompareFragment extends Fragment {
+
+    private WordCountProgress mProgressDaily1;
+    private WordCountProgress mProgressGlobal1;
+
+    private WordCountProgress mProgressDaily2;
+    private WordCountProgress mProgressGlobal2;
     private LineChart mChart;
     private LineData mLineData;
     private BarChart mChartBar;
     private BarData mBarData;
-    private Button mButtonBuddies;
-    private String mUsername;
     private ProgressBar mProgressBar;
 
-    private int nbLoad = 2;
-    private Button mButtonAction;
+    private int nbLoad = 4;
     private Database mDatabase;
-    private int position;
+    private String mIdUser1;
+    private String mUsernameUser1;
+    private String mIdUser2;
+    private String mUsernameUser2;
+    private TextView mTextViewUser1;
+    private TextView mTextViewUser2;
+    private LineDataSet mHistoryDataSet1;
+    private LineDataSet mHistoryDataSet2;
+    private BarDataSet mBarHistoryData1;
+    private BarDataSet mBarHistoryData2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            this.mId = savedInstanceState.getString("id_user_1");
-            this.mUsername = savedInstanceState.getString("username_user_1");
+            this.mIdUser1 = savedInstanceState.getString("id_user_1");
+            this.mUsernameUser1 = savedInstanceState.getString("username_user_1");
+
+            this.mIdUser2 = savedInstanceState.getString("id_user_2");
+            this.mUsernameUser2 = savedInstanceState.getString("username_user_2");
         } else {
             String usernameByIntent = getActivity().getIntent().getStringExtra("id_user_1");
             if (usernameByIntent != null && !usernameByIntent.isEmpty()) {
-                this.mId = usernameByIntent;
-                this.mUsername = getActivity().getIntent().getStringExtra("username_user_1");
+                this.mIdUser1 = usernameByIntent;
+                this.mUsernameUser1 = getActivity().getIntent().getStringExtra("username_user_1");
+
+                this.mIdUser2 = getActivity().getIntent().getStringExtra("id_user_2");
+                this.mUsernameUser2 = getActivity().getIntent().getStringExtra("username_user_2");
             }
         }
 
@@ -114,22 +120,16 @@ public class CompareFragment extends Fragment implements PickerUserFragment.Edit
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mButtonAction = (Button) getView().findViewById(R.id.button_action);
         mProgressBar = (ProgressBar) getView().findViewById(R.id.progressBar);
-        mTextViewUsername = (TextView) getView().findViewById(R.id.section_label);
-        mTextViewWordcount = (TextView) getView().findViewById(R.id.wordcount);
-        mTextViewWordcountToday = (TextView) getView().findViewById(R.id.wordCountToday);
-        mTextViewDailyTarget = (TextView) getView().findViewById(R.id.dailyTarget);
-        mTextViewDailyTargetRemaining = (TextView) getView().findViewById(R.id.dailyTargetRemaining);
-        mTextViewNbDayRemaining = (TextView) getView().findViewById(R.id.nbDayRemaining);
+
+        mTextViewUser1 = (TextView) getView().findViewById(R.id.mTextViewUser1);
+        mTextViewUser2 = (TextView) getView().findViewById(R.id.mTextViewUser2);
+
         mChart = (LineChart) getView().findViewById(R.id.chart);
         mChartBar = (BarChart) getView().findViewById(R.id.chart_bar);
 
-        mButtonBuddies = (Button) getView().findViewById(R.id.show_friends);
-
-
         mChart.setDescription("");
-        mChart.setDrawLegend(false);
+        mChart.setDrawLegend(true);
         mChart.setDrawVerticalGrid(false);
         mChart.setDrawGridBackground(false);
         mChart.getYLabels().setFormatter(new LargeValueFormatter());
@@ -154,9 +154,8 @@ public class CompareFragment extends Fragment implements PickerUserFragment.Edit
         // set the marker to the chart
         mChart.setMarkerView(mv);
 
-
         mChartBar.setDescription("");
-        mChartBar.setDrawLegend(false);
+        mChartBar.setDrawLegend(true);
         mChartBar.setDrawVerticalGrid(false);
         mChartBar.setDrawGridBackground(false);
         mChartBar.getYLabels().setFormatter(new LargeValueFormatter());
@@ -181,49 +180,13 @@ public class CompareFragment extends Fragment implements PickerUserFragment.Edit
         // set the marker to the chart
         mChartBar.setMarkerView(mvb);
 
-
         initializeGraphics();
 
+        mProgressDaily1 = (WordCountProgress) getView().findViewById(R.id.daily_user_1);
+        mProgressDaily2 = (WordCountProgress) getView().findViewById(R.id.daily_user_2);
+        mProgressGlobal1 = (WordCountProgress) getView().findViewById(R.id.global_user_1);
+        mProgressGlobal2 = (WordCountProgress) getView().findViewById(R.id.global_user_2);
 
-        mProgressDaily = (WordCountProgress) getView().findViewById(R.id.daily);
-        mProgressGlobal = (WordCountProgress) getView().findViewById(R.id.global);
-
-        mButtonBuddies.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(getActivity(), FriendsActivity.class);
-                intent.putExtra("id", CompareFragment.this.mId);
-                intent.putExtra("username", CompareFragment.this.mUsername);
-
-                startActivity(intent);
-            }
-        });
-
-
-        getView().findViewById(R.id.button_compare).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                FragmentManager fm = getActivity().getFragmentManager();
-
-                ArrayList<String> choices = new ArrayList<String>();
-                choices.add(0, "");
-                for (String u : mDatabase.getUsers()) {
-                    choices.add(u);
-                }
-
-                // Remove self
-                choices.remove(mId);
-
-
-                PickerUserFragment editNameDialog = PickerUserFragment.newInstance(getString(R.string.dialog_picker_title), choices);
-                editNameDialog.setListener(CompareFragment.this);
-                editNameDialog.show(fm, "dz");
-            }
-        });
-
-        updateUI();
 
     }
 
@@ -266,7 +229,7 @@ public class CompareFragment extends Fragment implements PickerUserFragment.Edit
         defaultLineEntries.add(new Entry(50000, defaultLineValues.size() - 1));
 
 
-        LineDataSet linearProgressionDataSet = new LineDataSet(defaultLineEntries, "naive linear progression");
+        LineDataSet linearProgressionDataSet = new LineDataSet(defaultLineEntries, getString(R.string.linear_progress_label));
         linearProgressionDataSet.enableDashedLine(10, 10, 0);
         linearProgressionDataSet.setCircleSize(0);
 
@@ -285,40 +248,36 @@ public class CompareFragment extends Fragment implements PickerUserFragment.Edit
 
         mBarData.addLimitLine(ll);
         mChartBar.setData(mBarData);
+
+        mTextViewUser1.setText(mUsernameUser1);
+        mTextViewUser2.setText(mUsernameUser2);
     }
 
-    private void updateUI() {
-        Log.d("fragment", "will update UI with " + mId);
-
-
-        if (mUsername != null && !mUsername.isEmpty()) {
-            mTextViewUsername.setText(mUsername);
-        }
-    }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        getRemoteData();
+        getRemoteData(1, mIdUser1);
+        getRemoteData(2, mIdUser2);
     }
 
-    private void getRemoteData() {
+    private void getRemoteData(final int user, String userId) {
         // Configure http request
 
-        if (mId != null && !TextUtils.isEmpty(mId)) {
+        if (userId != null && !TextUtils.isEmpty(userId)) {
 
-            nbLoad = 2;
-            final String url = StringUtils.getUserUrl(mId);
+            nbLoad = 4;
+            final String url = StringUtils.getUserUrl(userId);
 
-            getHistoricRemoteData(url + "/history");
+            getHistoricRemoteData(user, url + "/history");
 
             JSONObject params = new JSONObject();
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     checkLoader();
-                    handleResponse(response);
+                    handleResponse(user, response);
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -336,18 +295,23 @@ public class CompareFragment extends Fragment implements PickerUserFragment.Edit
                             // fetch the data from cache
                             try {
                                 String data = new String(entry.data, "UTF-8");
-                                handleResponse(new JSONObject(data));
+                                handleResponse(user, new JSONObject(data));
                             } catch (UnsupportedEncodingException e) {
                                 e.printStackTrace();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            mProgressDaily.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
-                            mProgressDaily.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
 
-                            mProgressGlobal.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
-                            mProgressGlobal.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+
+                            WordCountProgress progressDaily = user == 1 ? mProgressDaily1 : mProgressDaily2;
+                            WordCountProgress progressGlobal = user == 1 ? mProgressGlobal1 : mProgressGlobal2;
+
+                            progressDaily.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
+                            progressDaily.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+
+                            progressGlobal.setText(getString(R.string.error_network_widget), getString(R.string.error_network_fragment_bottom));
+                            progressGlobal.getProgressPieView().setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
 
                         }
                     }
@@ -362,7 +326,7 @@ public class CompareFragment extends Fragment implements PickerUserFragment.Edit
                 // fetch the data from cache
                 try {
                     String data = new String(entry.data, "UTF-8");
-                    handleResponse(new JSONObject(data));
+                    handleResponse(user, new JSONObject(data));
 
                     c.invalidate(url, true);
 
@@ -377,15 +341,14 @@ public class CompareFragment extends Fragment implements PickerUserFragment.Edit
         }
     }
 
-
-    protected void getHistoricRemoteData(final String url) {
+    protected void getHistoricRemoteData(final int user, final String url) {
 
         JSONObject params = new JSONObject();
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 checkLoader();
-                HandleHistoryResponse(response);
+                HandleHistoryResponse(user, response);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -400,7 +363,7 @@ public class CompareFragment extends Fragment implements PickerUserFragment.Edit
                     // fetch the data from cache
                     try {
                         String data = new String(entry.data, "UTF-8");
-                        HandleHistoryResponse(new JSONObject(data));
+                        HandleHistoryResponse(user, new JSONObject(data));
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     } catch (JSONException e) {
@@ -420,7 +383,7 @@ public class CompareFragment extends Fragment implements PickerUserFragment.Edit
             // fetch the data from cache
             try {
                 String data = new String(entry.data, "UTF-8");
-                HandleHistoryResponse(new JSONObject(data));
+                HandleHistoryResponse(user, new JSONObject(data));
 
                 c.invalidate(url, true);
 
@@ -434,106 +397,132 @@ public class CompareFragment extends Fragment implements PickerUserFragment.Edit
         HttpClient.getInstance().add(request, true);
     }
 
-    private void handleResponse(JSONObject response) {
+    private void handleResponse(int u, JSONObject response) {
 
         User user = new User(response);
 
         if (getActivity() != null) {
 
-            mTextViewWordcount.setText(user.getWordcount() + "");
-            mTextViewWordcountToday.setText(user.getWordCountToday() + "");
-            mTextViewDailyTarget.setText(user.getDailyTarget() + "");
-            mTextViewDailyTargetRemaining.setText(user.getDailyTargetRemaining() + "");
-            mTextViewNbDayRemaining.setText(user.getNbDayRemaining() + "");
+            WordCountProgress progressDaily = u == 1 ? mProgressDaily1 : mProgressDaily2;
+            WordCountProgress progressGlobal = u == 1 ? mProgressGlobal1 : mProgressGlobal2;
 
-            mProgressDaily.compute(user.getWordCountToday(), user.getDailyTarget(), true);
-            mProgressGlobal.compute(user.getWordcount(), 50000.0f, true);
+            progressDaily.compute(user.getWordCountToday(), user.getDailyTarget(), true);
+            progressGlobal.compute(user.getWordcount(), 50000.0f, true);
 
         }
     }
 
-    private void HandleHistoryResponse(JSONObject response) {
+    private void HandleHistoryResponse(int u, JSONObject response) {
 
         if (getActivity() != null) {
-
-            mChart.clear();
-            mChartBar.clear();
-
-            initializeGraphics();
 
             Log.d("HISTORY", "HandleHistoryResponse called with " + response.toString());
             Historic user = new Historic(response);
 
-            //ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
-            LineDataSet historyDataSet = new LineDataSet(user.getValuesCumul(), "Your progression");
+            LineDataSet historyDataSet = null;
+            BarDataSet set1 = null;
 
-            historyDataSet.setColor(getResources().getColor(R.color.small_widget_progress_color));
-            historyDataSet.setCircleColor(getResources().getColor(R.color.small_widget_progress_color));
+            boolean wasHistoryData1Null = false;
+            boolean wasHistoryData2Null = false;
+
+            boolean wasBarHistoryData1Null = false;
+            boolean wasBarHistoryData2Null = false;
+
+            if (u == 1) {
+                if (mHistoryDataSet1 == null) {
+                    wasHistoryData1Null = true;
+                    mHistoryDataSet1 = new LineDataSet(user.getValuesCumul(), mUsernameUser1);
+                }
+
+                if (mBarHistoryData1 == null) {
+                    wasBarHistoryData1Null = true;
+                    mBarHistoryData1 = new BarDataSet(user.getValues(), mUsernameUser1);
+                }
+
+                historyDataSet = mHistoryDataSet1;
+                set1 = mBarHistoryData1;
+            }
+
+            if (u == 2) {
+                if (mHistoryDataSet2 == null) {
+                    wasHistoryData2Null = true;
+                    mHistoryDataSet2 = new LineDataSet(user.getValuesCumul(), mUsernameUser2);
+                }
+
+                if (mBarHistoryData2 == null) {
+                    wasBarHistoryData2Null = true;
+                    mBarHistoryData2 = new BarDataSet(user.getValues(), mUsernameUser2);
+                }
+
+                historyDataSet = mHistoryDataSet2;
+                set1 = mBarHistoryData2;
+            }
+
+            // Remove existant
+            ArrayList<Entry> entries = historyDataSet.getYVals();
+            for (Iterator<Entry> iterator = entries.iterator(); iterator.hasNext(); ) {
+                Entry px = iterator.next();
+                iterator.remove();
+            }
+
+
+            ArrayList<BarEntry> entriesBar = set1.getYVals();
+            for (Iterator<BarEntry> iterator = entriesBar.iterator(); iterator.hasNext(); ) {
+                BarEntry px = iterator.next();
+                iterator.remove();
+            }
+
+
+            // Add new Value
+            for (Entry e : user.getValuesCumul()) {
+                historyDataSet.addEntry(e);
+            }
+
+            for (BarEntry e : user.getValues()) {
+                set1.addEntry(e);
+            }
+
+            historyDataSet.setColor(getResources().getColor(u == 1 ? R.color.small_widget_progress_color : android.R.color.holo_orange_dark));
+            historyDataSet.setCircleColor(getResources().getColor(u == 1 ? R.color.small_widget_progress_color : android.R.color.holo_orange_dark));
 
             historyDataSet.setCircleSize(4);
             historyDataSet.setLineWidth(2);
-            mLineData.addDataSet(historyDataSet);
+
+            if (wasHistoryData1Null || wasHistoryData2Null) {
+                mLineData.addDataSet(historyDataSet);
+            }
 
             mChart.notifyDataSetChanged();
             mChart.invalidate();
 
 
-            BarDataSet set1 = new BarDataSet(user.getValues(), "DataSet");
-            set1.setColor(getResources().getColor(R.color.small_widget_progress_color));
+            set1.setColor(getResources().getColor(u == 1 ? R.color.small_widget_progress_color : android.R.color.holo_orange_dark));
             set1.setBarShadowColor(getResources().getColor(android.R.color.transparent));
 
-            mBarData.addDataSet(set1);
+            if (wasBarHistoryData1Null || wasBarHistoryData2Null) {
+                mBarData.addDataSet(set1);
+            }
 
             mChartBar.notifyDataSetChanged();
             mChartBar.invalidate();
         }
     }
 
-    public void setId(String s) {
-        this.mId = s;
-
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("id", mId);
-        outState.putString("username", mUsername);
-    }
+        outState.putString("id_user_1", mIdUser1);
+        outState.putString("username_user_1", mUsernameUser1);
 
-
-    public void setUsername(CharSequence pageTitle) {
-        mUsername = (String) pageTitle;
-    }
-
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public String getUserId() {
-
-        return this.mId;
-    }
-
-    @Override
-    public void onFinishEditDialog(User user) {
-        Log.d("user", "start compare with " + user.getId() + " " + user.getName());
-
-       Intent i = new Intent(getActivity(), CompareActivity.class);
-        i.putExtra("id_user_1", mId);
-        i.putExtra("id_user_2", user.getId());
-        i.putExtra("username_user_1", mUsername);
-        i.putExtra("username_user_2", user.getName());
-
-        startActivity(i);
+        outState.putString("id_user_2", mIdUser2);
+        outState.putString("username_user_2", mUsernameUser2);
     }
 
     private void checkLoader() {
         nbLoad--;
+
+        Log.d("compare", "nb request restante " + nbLoad);
 
         if (nbLoad == 0) {
             mProgressBar.setVisibility(View.GONE);

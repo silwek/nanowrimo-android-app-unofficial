@@ -25,13 +25,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Cache;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import nanowrimo.onishinji.R;
@@ -128,14 +131,7 @@ public class PickerUserFragment extends DialogFragment {
                         @Override
                         public void onResponse(JSONObject response) {
 
-                            mLoader.setVisibility(View.GONE);
-                            User user = new User(response);
-
-                            if (mListener != null) {
-                                mListener.onFinishEditDialog(user);
-                            }
-
-                            dismiss();
+                            handleResponse(response);
 
 
                         }
@@ -151,12 +147,41 @@ public class PickerUserFragment extends DialogFragment {
                         }
                     });
 
-                    HttpClient.getInstance().add(request);
+                    // Search from cache first, make request in second
+                    Cache c = HttpClient.getInstance().getQueue().getCache();
+                    Cache.Entry entry = c.get(url);
+                    if (entry != null) {
+                        // fetch the data from cache
+                        try {
+                            String data = new String(entry.data, "UTF-8");
+                            handleResponse(new JSONObject(data));
+
+                            c.invalidate(url, true);
+
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        HttpClient.getInstance().add(request, true);
+                    }
 
                 }
             }
         });
         return view;
+    }
+
+    private void handleResponse(JSONObject response) {
+        mLoader.setVisibility(View.GONE);
+        User user = new User(response);
+
+        if (mListener != null) {
+            mListener.onFinishEditDialog(user);
+        }
+
+        dismiss();
     }
 
 }

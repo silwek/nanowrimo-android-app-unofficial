@@ -42,5 +42,6 @@
     <string name="choose_favorite_user">Sélectionner une personne mise en favori</string>
     <string name="btn_valid_compare_with">Démarrer la comparaison</string>
     <string name="title_compare_activity">%1$s vs %2$s</string>
+    <string name="linear_progress_label">Progression théorique</string>
 
 </resources>
