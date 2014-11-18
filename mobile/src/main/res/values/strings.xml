@@ -37,5 +37,9 @@
     <string name="btn_action_remove">Unfollow</string>
     <string name="btn_action_add">follow</string>
     <string name="compare_with">compare with</string>
+    <string name="dialog_picker_default">Enter Name</string>
+    <string name="dialog_picker_title">Some Title</string>
+    <string name="btn_valid_compare_with">Save</string>
+    <string name="choose_favorite_user">Select favorite</string>
 
 </resources>

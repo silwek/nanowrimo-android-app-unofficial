@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select favorite" />
+        android:text="@string/choose_favorite_user" />
 
     <Spinner
         android:id="@+id/spinner"
@@ -21,17 +21,26 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Compare with" />
+        android:text="@string/compare_with" />
 
     <EditText
         android:id="@+id/txt_your_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"  />
 
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        android:id="@+id/progressBar" />
+
     <Button
         android:id="@+id/button_save"
         style="@style/ButtonWrimo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save" />
+        android:layout_gravity="center_horizontal"
+        android:text="@string/btn_valid_compare_with" />
 </LinearLayout>

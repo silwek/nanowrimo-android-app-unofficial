@@ -37,5 +37,9 @@
     <string name="btn_action_remove">Ne plus suivre</string>
     <string name="btn_action_add">Suivre</string>
     <string name="compare_with">Comparer avec</string>
+    <string name="dialog_picker_default">Choix de la persone</string>
+    <string name="dialog_picker_title">Comparer vos stats</string>
+    <string name="choose_favorite_user">Sélectionner une personne mise en favori</string>
+    <string name="btn_valid_compare_with">Démarrer la comparaison</string>
 
 </resources>

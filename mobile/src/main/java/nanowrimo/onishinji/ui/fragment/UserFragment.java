@@ -267,12 +267,15 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
                 ArrayList<String> choices = new ArrayList<String>();
                 choices.add(0, "");
-                for(String u :  mDatabase.getUsers()) {
+                for (String u : mDatabase.getUsers()) {
                     choices.add(u);
                 }
 
+                // Remove self
+                choices.remove(mId);
 
-                PickerUserFragment editNameDialog = PickerUserFragment.newInstance("Some Title", choices);
+
+                PickerUserFragment editNameDialog = PickerUserFragment.newInstance(getString(R.string.dialog_picker_title), choices);
                 editNameDialog.setListener(UserFragment.this);
                 editNameDialog.show(fm, "dz");
             }
@@ -610,8 +613,8 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
     }
 
     @Override
-    public void onFinishEditDialog(String inputText) {
-        Log.d("user", "start compare with " + inputText);
+    public void onFinishEditDialog(User user) {
+        Log.d("user", "start compare with " + user.getId() + " " + user.getName());
     }
 
     public interface OnRemoveListener {
