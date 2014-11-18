@@ -40,6 +40,9 @@
         <activity android:name=".ui.activity.FriendActivity" >
         </activity>
 
+        <activity android:name=".ui.activity.CompareActivity" >
+        </activity>
+
 
 
         <receiver android:name=".widget.WidgetDailyWordCountRemaining" android:label="@string/widget_title" >

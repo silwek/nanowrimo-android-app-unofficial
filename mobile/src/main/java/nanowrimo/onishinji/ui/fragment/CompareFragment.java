@@ -57,7 +57,7 @@ import nanowrimo.onishinji.utils.StringUtils;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class UserFragment extends Fragment implements PickerUserFragment.EditNameDialogListener {
+public class CompareFragment extends Fragment implements PickerUserFragment.EditNameDialogListener {
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -65,7 +65,6 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
     private static final String ARG_SECTION_NUMBER = "section_number";
     private TextView mTextViewUsername;
     private String mId;
-    private OnRemoveListener mOnRemoveListener;
     private TextView mTextViewWordcount;
     private TextView mTextViewWordcountToday;
     private TextView mTextViewDailyTarget;
@@ -91,13 +90,13 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            this.mId = savedInstanceState.getString("id");
-            this.mUsername = savedInstanceState.getString("username");
+            this.mId = savedInstanceState.getString("id_user_1");
+            this.mUsername = savedInstanceState.getString("username_user_1");
         } else {
-            String usernameByIntent = getActivity().getIntent().getStringExtra("id");
+            String usernameByIntent = getActivity().getIntent().getStringExtra("id_user_1");
             if (usernameByIntent != null && !usernameByIntent.isEmpty()) {
                 this.mId = usernameByIntent;
-                this.mUsername = getActivity().getIntent().getStringExtra("username");
+                this.mUsername = getActivity().getIntent().getStringExtra("username_user_1");
             }
         }
 
@@ -107,67 +106,9 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_my, container, false);
-        setHasOptionsMenu(true);
+        View rootView = inflater.inflate(R.layout.fragment_compare, container, false);
         return rootView;
     }
-
-    private void onWantRemoveUser() {
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-
-        alert.setTitle(getString(R.string.dialog_remove_user_title));
-        alert.setMessage(getString(R.string.dialog_remove_user_message, mId));
-
-        alert.setPositiveButton(getActivity().getString(R.string.yes), new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                if (mOnRemoveListener != null) {
-                    mOnRemoveListener.remove(mId);
-                } else {
-                    mDatabase.deleteUser(mId);
-                }
-
-                refreshActionButton();
-            }
-        });
-
-        alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Canceled.
-            }
-        });
-
-        alert.show();
-    }
-
-    private void onWantAddUser() {
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-
-        alert.setTitle(getString(R.string.dialog_add_user_title));
-
-        alert.setPositiveButton(getActivity().getString(R.string.yes), new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mDatabase.addUser(mId, mUsername);
-                refreshActionButton();
-            }
-        });
-
-        alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-
-            }
-        });
-
-        alert.show();
-
-    }
-
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -252,8 +193,8 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
             public void onClick(View v) {
 
                 Intent intent = new Intent(getActivity(), FriendsActivity.class);
-                intent.putExtra("id", UserFragment.this.mId);
-                intent.putExtra("username", UserFragment.this.mUsername);
+                intent.putExtra("id", CompareFragment.this.mId);
+                intent.putExtra("username", CompareFragment.this.mUsername);
 
                 startActivity(intent);
             }
@@ -277,42 +218,13 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
 
                 PickerUserFragment editNameDialog = PickerUserFragment.newInstance(getString(R.string.dialog_picker_title), choices);
-                editNameDialog.setListener(UserFragment.this);
+                editNameDialog.setListener(CompareFragment.this);
                 editNameDialog.show(fm, "dz");
             }
         });
 
         updateUI();
 
-
-        refreshActionButton();
-    }
-
-    private void refreshActionButton() {
-
-        if(getActivity() != null) {
-            if (canRemoveUser()) {
-                mButtonAction.setText(getString(R.string.btn_action_remove));
-                mButtonAction.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onWantRemoveUser();
-                    }
-                });
-            } else {
-                mButtonAction.setText(getString(R.string.btn_action_add));
-                mButtonAction.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onWantAddUser();
-                    }
-                });
-            }
-        }
-    }
-
-    private boolean canRemoveUser() {
-        return mDatabase.userIsMarkedAsFavorite(mId);
     }
 
     private void initializeGraphics() {
@@ -378,9 +290,6 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
     private void updateUI() {
         Log.d("fragment", "will update UI with " + mId);
 
-        if (mTextViewUsername != null && mOnRemoveListener != null && mId != null) {
-            mTextViewUsername.setText(mOnRemoveListener.getNiceTitle(mId));
-        }
 
         if (mUsername != null && !mUsername.isEmpty()) {
             mTextViewUsername.setText(mUsername);
@@ -592,9 +501,6 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
         outState.putString("username", mUsername);
     }
 
-    public void setOnRemoveListener(OnRemoveListener listener) {
-        mOnRemoveListener = listener;
-    }
 
     public void setUsername(CharSequence pageTitle) {
         mUsername = (String) pageTitle;
@@ -624,13 +530,6 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
         i.putExtra("username_user_2", user.getName());
 
         startActivity(i);
-    }
-
-    public interface OnRemoveListener {
-        void remove(String username);
-
-        String getNiceTitle(String username);
-
     }
 
     private void checkLoader() {

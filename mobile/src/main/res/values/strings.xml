@@ -41,5 +41,6 @@
     <string name="dialog_picker_title">Some Title</string>
     <string name="btn_valid_compare_with">Save</string>
     <string name="choose_favorite_user">Select favorite</string>
+    <string name="title_compare_activity">%1$s vs %2$s</string>
 
 </resources>
