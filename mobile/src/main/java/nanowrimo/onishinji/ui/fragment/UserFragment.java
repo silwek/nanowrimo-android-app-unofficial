@@ -1,6 +1,7 @@
 package nanowrimo.onishinji.ui.fragment;
 
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -55,7 +56,7 @@ import nanowrimo.onishinji.utils.StringUtils;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class UserFragment extends Fragment {
+public class UserFragment extends Fragment implements PickerUserFragment.EditNameDialogListener {
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -254,6 +255,26 @@ public class UserFragment extends Fragment {
                 intent.putExtra("username", UserFragment.this.mUsername);
 
                 startActivity(intent);
+            }
+        });
+
+
+        getView().findViewById(R.id.button_compare).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                FragmentManager fm = getActivity().getFragmentManager();
+
+                ArrayList<String> choices = new ArrayList<String>();
+                choices.add(0, "");
+                for(String u :  mDatabase.getUsers()) {
+                    choices.add(u);
+                }
+
+
+                PickerUserFragment editNameDialog = PickerUserFragment.newInstance("Some Title", choices);
+                editNameDialog.setListener(UserFragment.this);
+                editNameDialog.show(fm, "dz");
             }
         });
 
@@ -586,6 +607,11 @@ public class UserFragment extends Fragment {
     public String getUserId() {
 
         return this.mId;
+    }
+
+    @Override
+    public void onFinishEditDialog(String inputText) {
+        Log.d("user", "start compare with " + inputText);
     }
 
     public interface OnRemoveListener {

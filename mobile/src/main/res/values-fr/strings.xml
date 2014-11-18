@@ -36,5 +36,6 @@
     <string name="title_friends_activity">Les amis de %1$s</string>
     <string name="btn_action_remove">Ne plus suivre</string>
     <string name="btn_action_add">Suivre</string>
+    <string name="compare_with">Comparer avec</string>
 
 </resources>
