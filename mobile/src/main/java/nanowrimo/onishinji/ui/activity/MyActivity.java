@@ -56,7 +56,6 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(true)
         Crashlytics.start(this);
 
         BusManager.getInstance();
@@ -73,12 +72,11 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
         HttpClient.getInstance().setContext(this);
 
         if (getIntent() != null) {
-            int index = mDatabase.getUsers().indexOf(getIntent().getStringExtra("id"));
+            int index = mDatabase.getUsers().indexOf(getIntent().getStringExtra("from_widget_id"));
             if (index != -1) {
                 mViewPager.setCurrentItem(index);
             }
         }
-
     }
 
     private void reloadViewPager() {

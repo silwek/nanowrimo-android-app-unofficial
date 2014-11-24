@@ -231,13 +231,14 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
 
             Intent i;
             PackageManager manager = context.getPackageManager();
+
             try {
                 i = manager.getLaunchIntentForPackage("nanowrimo.onishinji");
 
                 if (i == null)
                     throw new PackageManager.NameNotFoundException();
 
-                i.putExtra("id", intent.getStringExtra("id"));
+                i.putExtra("from_widget_id", intent.getStringExtra("id"));
                 i.addCategory(Intent.CATEGORY_LAUNCHER);
                 context.startActivity(i);
             } catch (PackageManager.NameNotFoundException e) {
