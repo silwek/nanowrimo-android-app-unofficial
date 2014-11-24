@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,7 +39,7 @@ import nanowrimo.onishinji.ui.fragment.UserFragment;
 import nanowrimo.onishinji.utils.StringUtils;
 
 
-public class MyActivity extends FragmentActivity implements UserFragment.OnRemoveListener {
+public class MyActivity extends ActionBarActivity implements UserFragment.OnRemoveListener {
 
     SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -56,11 +58,16 @@ public class MyActivity extends FragmentActivity implements UserFragment.OnRemov
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Crashlytics.start(this);
-
-        BusManager.getInstance();
 
         setContentView(R.layout.activity_my);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
+
+        Crashlytics.start(this);
+        BusManager.getInstance();
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
 
