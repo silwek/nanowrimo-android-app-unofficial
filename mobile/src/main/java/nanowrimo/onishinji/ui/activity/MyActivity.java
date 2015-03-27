@@ -95,7 +95,7 @@ public class MyActivity extends ActionBarActivity implements UserFragment.OnRemo
     private void checkEmptyDatabase() {
         ArrayList<String> users = mDatabase.getUsers();
         if (users.size() == 0) {
-            displayAddUserDialog(false);
+            //displayAddUserDialog(false);
         }
     }
 

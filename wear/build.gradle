@@ -8,13 +8,13 @@ android {
     defaultConfig {
         applicationId "nanowrimo.onishinji"
         minSdkVersion 20
-        targetSdkVersion 20
+        targetSdkVersion 15
         versionCode 1
         versionName "1.0"
     }
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
