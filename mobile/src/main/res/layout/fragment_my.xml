@@ -43,6 +43,7 @@
                     android:paddingTop="@dimen/activity_vertical_margin">
 
                     <TextView
+                        style="@style/TextRegular"
                         android:id="@+id/section_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -57,7 +58,30 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/textView"
+                            style="@style/TextRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/stats_goal" />
+
+                        <TextView
+                            android:id="@+id/goal"
+                            style="@style/TextRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/stats_empty" />
+
+                    </LinearLayout>
+
+                    <include layout="@layout/sep" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -65,7 +89,7 @@
 
                         <TextView
                             android:id="@+id/wordcount"
-
+                            style="@style/TextRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/stats_empty" />
@@ -81,6 +105,7 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            style="@style/TextRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -89,7 +114,7 @@
 
                         <TextView
                             android:id="@+id/wordCountToday"
-
+                            style="@style/TextRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/stats_empty" />
@@ -104,6 +129,7 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            style="@style/TextRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -112,7 +138,7 @@
 
                         <TextView
                             android:id="@+id/dailyTarget"
-
+                            style="@style/TextRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/stats_empty" />
@@ -127,6 +153,7 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            style="@style/TextRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -135,7 +162,7 @@
 
                         <TextView
                             android:id="@+id/dailyTargetRemaining"
-
+                            style="@style/TextRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/stats_empty" />
@@ -150,6 +177,7 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            style="@style/TextRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -158,6 +186,7 @@
 
                         <TextView
                             android:id="@+id/nbDayRemaining"
+                            style="@style/TextRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/stats_empty" />
@@ -219,6 +248,7 @@
                     android:paddingTop="@dimen/activity_vertical_margin">
 
                     <TextView
+                        style="@style/TextRegular"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"

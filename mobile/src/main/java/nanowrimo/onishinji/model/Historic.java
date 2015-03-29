@@ -28,7 +28,28 @@ public class Historic {
     ArrayList<String> mDates = new ArrayList<String>();
     private ArrayList<Entry> mValsCumul = new ArrayList<Entry>();
 
-    public Historic(JSONObject response) {
+    public Historic(Date startDate, JSONObject response) {
+
+//        {
+//            "count":6,
+//                "items":[
+//            {
+//                "date":"day 1",
+//                    "wordcount":"1000"
+//            },
+//            {
+//                "date":"day 2",
+//                    "wordcount":" 2000"
+//            },
+//            {
+//                "date":"day 3",
+//                    "wordcount":" 3000"
+//            }
+//            ...
+//            ],
+//            "links":{
+//        }
+//        }
 
         try {
             DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM); // use MEDIUM or SHORT according to your needs
@@ -37,6 +58,7 @@ public class Historic {
 
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             Calendar c = Calendar.getInstance();
+            c.setTime(startDate);
 
             float previousVal = 0;
             int l = items.length();
@@ -49,17 +71,17 @@ public class Historic {
 
                 Entry entry = new Entry(cumul, i);
 
-                Date date = format.parse(item.getString("date"));
+                Date date = c.getTime();
 
-                String data = dateFormatter.format(date);
+                String strDate = dateFormatter.format(date);
                 // remove year
                 String year = String.valueOf(c.get(Calendar.YEAR));
-                data = data.replace(year, "").trim();
+                strDate = strDate.replace(year, "").trim();
 
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("today", ""+(int) val);
                 map.put("cumul", ""+(int)cumul);
-                map.put("date", data);
+                map.put("date", strDate);
 
                 entry.setData(map);
 
@@ -71,11 +93,11 @@ public class Historic {
 
                 previousVal = cumul;
 
-                mDates.add(item.getString("date"));
+                mDates.add(strDate);
+
+                c.add(Calendar.DATE,1);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
             e.printStackTrace();
         }
     }

@@ -53,6 +53,7 @@ import nanowrimo.onishinji.ui.widget.MyBarMarkerView;
 import nanowrimo.onishinji.ui.widget.MyMarkerView;
 import nanowrimo.onishinji.ui.widget.WordCountProgress;
 import nanowrimo.onishinji.utils.StringUtils;
+import nanowrimo.onishinji.utils.WritingSessionHelper;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -66,6 +67,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
     private TextView mTextViewUsername;
     private String mId;
     private OnRemoveListener mOnRemoveListener;
+    private TextView mTextViewGoal;
     private TextView mTextViewWordcount;
     private TextView mTextViewWordcountToday;
     private TextView mTextViewDailyTarget;
@@ -176,6 +178,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
         mButtonAction = (Button) getView().findViewById(R.id.button_action);
         mProgressBar = (ProgressBar) getView().findViewById(R.id.progressBar);
         mTextViewUsername = (TextView) getView().findViewById(R.id.section_label);
+        mTextViewGoal = (TextView) getView().findViewById(R.id.goal);
         mTextViewWordcount = (TextView) getView().findViewById(R.id.wordcount);
         mTextViewWordcountToday = (TextView) getView().findViewById(R.id.wordCountToday);
         mTextViewDailyTarget = (TextView) getView().findViewById(R.id.dailyTarget);
@@ -320,38 +323,34 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
         Calendar c = Calendar.getInstance();
 
-        // start november
-        c.set(Calendar.MONTH, 10);
-        c.set(Calendar.DAY_OF_MONTH, 1);
+        // start
+        c.setTime(WritingSessionHelper.getInstance().getSessionStart());
 
         SimpleDateFormat f = new SimpleDateFormat("dd-MM");
         DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM); // use MEDIUM or SHORT according to your needs
 
-        String data = dateFormatter.format(c.getTime());
-        // remove year
-        String year = String.valueOf(c.get(Calendar.YEAR));
-        data = data.replace(year, "").trim();
+        String year;
+        String strDate;
 
-        defaultLineValues.add(data);
-
-        for (int i = 2; i <= 30; i++) {
+        final int lastDay = WritingSessionHelper.getInstance().getSessionLastDay();
+        for (int i = 1; i <= lastDay; i++) {
             c.set(Calendar.DAY_OF_MONTH, i);
 
             Date date = c.getTime();
 
-            data = dateFormatter.format(date);
+            strDate = dateFormatter.format(date);
             // remove year
             year = String.valueOf(c.get(Calendar.YEAR));
-            data = data.replace(year, "").trim();
+            strDate = strDate.replace(year, "").trim();
 
-            defaultLineValues.add(data);
+            defaultLineValues.add(strDate);
 
         }
 
 
         ArrayList<Entry> defaultLineEntries = new ArrayList<Entry>();
         defaultLineEntries.add(new Entry(0, 0));
-        defaultLineEntries.add(new Entry(50000, defaultLineValues.size() - 1));
+        defaultLineEntries.add(new Entry(WritingSessionHelper.getInstance().getGoal(), defaultLineValues.size() - 1));
 
 
         LineDataSet linearProgressionDataSet = new LineDataSet(defaultLineEntries, "naive linear progression");
@@ -366,7 +365,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
 
         mBarData = new BarData(defaultLineValues, new BarDataSet(new ArrayList<BarEntry>(), "default"));
-        LimitLine ll = new LimitLine(1667);
+        LimitLine ll = new LimitLine(WritingSessionHelper.getInstance().getDailyTarget());
         ll.setLineColor(getResources().getColor(android.R.color.holo_orange_dark));
         ll.enableDashedLine(10, 10, 0);
 
@@ -531,6 +530,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
         if (getActivity() != null) {
 
+            mTextViewGoal.setText(String.valueOf(user.getGoal()));
             mTextViewWordcount.setText(user.getWordcount() + "");
             mTextViewWordcountToday.setText(user.getWordCountToday() + "");
             mTextViewDailyTarget.setText(user.getDailyTarget() + "");
@@ -538,7 +538,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
             mTextViewNbDayRemaining.setText(user.getNbDayRemaining() + "");
 
             mProgressDaily.compute(user.getWordCountToday(), user.getDailyTarget(), true);
-            mProgressGlobal.compute(user.getWordcount(), 50000.0f, true);
+            mProgressGlobal.compute(user.getWordcount(), user.getGoal(), true);
 
         }
     }
@@ -553,7 +553,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
             initializeGraphics();
 
             Log.d("HISTORY", "HandleHistoryResponse called with " + response.toString());
-            Historic user = new Historic(response);
+            Historic user = new Historic(WritingSessionHelper.getInstance().getSessionStart(), response);
 
             //ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
             LineDataSet historyDataSet = new LineDataSet(user.getValuesCumul(), "Your progression");

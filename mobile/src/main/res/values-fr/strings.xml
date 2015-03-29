@@ -13,6 +13,7 @@
     <string name="unfollow_people">Ne plus suivre</string>
     <string name="follow_people">Suivre</string>
     <string name="error_network_widget">Erreur</string>
+    <string name="stats_goal">Objectif</string>
     <string name="stats_wordcount">Nombre de mots</string>
     <string name="stats_wordcount_today">Nombre de mots du jour</string>
     <string name="stats_daily_target">Objectif du jour</string>

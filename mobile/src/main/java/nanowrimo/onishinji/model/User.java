@@ -12,6 +12,7 @@ public class User {
 
     private String mId = "";
     private String mName = "";
+    private int mGoal = 50000;
     private int mWordcount = 0;
     private int mWordCountToday = 0;
     private int mDailyTarget = 0;
@@ -20,12 +21,16 @@ public class User {
 
     private HashMap<String, String> links = new HashMap<String, String>();
 
+    public User() {
+
+    }
 
     public User(JSONObject response) {
 
         try {
             mId = response.getString("id");
             mName = response.getString("name");
+            mGoal = response.getInt("userWordToReach");
             mWordcount = response.getInt("wordcount");
             mWordCountToday = response.getInt("wordCountToday");
             mDailyTargetRemaining = response.getInt("dailyTargetRemaining");
@@ -56,6 +61,14 @@ public class User {
 
     public void setName(String name) {
         this.mName = name;
+    }
+
+    public int getGoal() {
+        return mGoal;
+    }
+
+    public void setGoal(int goal) {
+        this.mGoal = goal;
     }
 
     public int getWordcount() {
