@@ -294,7 +294,10 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
     private void refreshActionButton() {
 
         if(getActivity() != null) {
-            if (canRemoveUser()) {
+            if(isCurrentUser()){
+                mButtonAction.setVisibility(View.GONE);
+            }else if (canRemoveUser()) {
+                mButtonAction.setVisibility(View.VISIBLE);
                 mButtonAction.setText(getString(R.string.btn_action_remove));
                 mButtonAction.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -303,6 +306,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
                     }
                 });
             } else {
+                mButtonAction.setVisibility(View.VISIBLE);
                 mButtonAction.setText(getString(R.string.btn_action_add));
                 mButtonAction.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -314,6 +318,9 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
         }
     }
 
+    private boolean isCurrentUser() {
+        return mDatabase.isCurrentUser(mId);
+    }
     private boolean canRemoveUser() {
         return mDatabase.userIsMarkedAsFavorite(mId);
     }
@@ -350,7 +357,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
         ArrayList<Entry> defaultLineEntries = new ArrayList<Entry>();
         defaultLineEntries.add(new Entry(0, 0));
-        defaultLineEntries.add(new Entry(WritingSessionHelper.getInstance().getGoal(), defaultLineValues.size() - 1));
+//        defaultLineEntries.add(new Entry(WritingSessionHelper.getInstance().getGoal(), defaultLineValues.size() - 1));
 
 
         LineDataSet linearProgressionDataSet = new LineDataSet(defaultLineEntries, "naive linear progression");
@@ -365,12 +372,12 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
 
         mBarData = new BarData(defaultLineValues, new BarDataSet(new ArrayList<BarEntry>(), "default"));
-        LimitLine ll = new LimitLine(WritingSessionHelper.getInstance().getDailyTarget());
-        ll.setLineColor(getResources().getColor(android.R.color.holo_orange_dark));
-        ll.enableDashedLine(10, 10, 0);
+//        LimitLine ll = new LimitLine(WritingSessionHelper.getInstance().getDailyTarget());
+//        ll.setLineColor(getResources().getColor(android.R.color.holo_orange_dark));
+//        ll.enableDashedLine(10, 10, 0);
 
 
-        mBarData.addLimitLine(ll);
+//        mBarData.addLimitLine(ll);
         mChartBar.setData(mBarData);
     }
 

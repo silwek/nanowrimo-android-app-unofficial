@@ -17,10 +17,24 @@ public class PreferencesHelper {
 
 
     private static final String PREFS_NAME = "nanowrimo.onishinji.app.prefs";
+    private static final String PREFS_FIRST_LAUNCH = "nanowrimo.onishinji.app.prefs.PREFS_FIRST_LAUNCH";
     private static final String PREFS_SESSION_NAME = "nanowrimo.onishinji.app.prefs.PREFS_SESSION_NAME";
     private static final String PREFS_SESSION_START = "nanowrimo.onishinji.app.prefs.PREFS_SESSION_START";
+    private static final String PREFS_USER_NAME = "nanowrimo.onishinji.app.prefs.PREFS_USER_NAME";
 
 
+    public static boolean isFirstLaunch(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        boolean firstLaunch = prefs.getBoolean(PREFS_FIRST_LAUNCH, true);
+        return firstLaunch;
+    }
+
+    public static void setFirstLaunch(Context context, boolean firstLaunch){
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(PREFS_FIRST_LAUNCH, firstLaunch);
+        editor.commit();
+    }
     public static String getSessionName(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         String sessionName = prefs.getString(PREFS_SESSION_NAME, "");
@@ -47,6 +61,18 @@ public class PreferencesHelper {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PREFS_SESSION_START, String.valueOf(sessionStart.getTime()));
+        editor.commit();
+    }
+    public static String getUserName(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        String userName = prefs.getString(PREFS_USER_NAME, "");
+        return userName;
+    }
+
+    public static void setUserName(Context context, String userName){
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PREFS_USER_NAME, userName);
         editor.commit();
     }
 }

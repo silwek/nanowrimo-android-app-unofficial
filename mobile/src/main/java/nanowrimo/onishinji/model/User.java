@@ -30,7 +30,7 @@ public class User {
         try {
             mId = response.getString("id");
             mName = response.getString("name");
-            mGoal = response.getInt("userWordToReach");
+            mGoal = response.getInt("userGoal");
             mWordcount = response.getInt("wordcount");
             mWordCountToday = response.getInt("wordCountToday");
             mDailyTargetRemaining = response.getInt("dailyTargetRemaining");

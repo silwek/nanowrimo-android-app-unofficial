@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -9,11 +10,12 @@
         android:background="@color/wrimo_color_secondary">
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:id="@+id/drawer_decor"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="8dp"
-            android:src="@drawable/drawer_header"
-            android:scaleType="fitStart"/>
+            android:src="@drawable/drawer_header_campnano"
+            android:scaleType="fitEnd"/>
 
         <TextView
             android:id="@+id/drawer_user_name"
@@ -31,11 +33,12 @@
             android:layout_alignParentStart="true" />
 
         <TextView
+            android:id="@+id/drawer_session_name"
             android:layout_below="@+id/drawer_user_name"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:paddingBottom="16dp"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:paddingLeft="16dp"
             android:ellipsize="end"
             android:lines="2"
@@ -47,6 +50,50 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginBottom="16dp"
         android:background="@color/wrimo_color_secondary_dark"/>
+
+    <Button
+        android:id="@+id/bt_follow"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Suivre un nanoteur"
+        android:gravity="left|center_vertical"
+        android:background="?android:attr/selectableItemBackground"
+        android:drawableLeft="@drawable/ic_action_important"
+        android:drawablePadding="8dp"
+        android:textColor="@color/wrimo_color_dark_text"
+        android:paddingLeft="16dp"
+        android:textSize="16sp"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Créer une session personnalisé (à venir)"
+        android:gravity="left|center_vertical"
+        android:background="?android:attr/selectableItemBackground"
+        android:drawableLeft="@drawable/ic_action_important"
+        android:drawablePadding="8dp"
+        android:textColor="#aaaaaa"
+        android:paddingLeft="16dp"
+        android:textSize="16sp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_height="1dp"
+        android:background="@color/wrimo_color_dark_text"/>
+
+    <Button
+        android:id="@+id/bt_playstore"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Votez pour l'application"
+        android:gravity="left|center_vertical"
+        android:background="?android:attr/selectableItemBackground"
+        android:textColor="@color/wrimo_color_dark_text"
+        android:paddingLeft="16dp"
+        android:textSize="14sp"/>
 
 </LinearLayout>

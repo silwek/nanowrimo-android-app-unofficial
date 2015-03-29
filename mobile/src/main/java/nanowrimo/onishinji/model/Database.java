@@ -64,6 +64,14 @@ public class Database {
         saveUsersString();
     }
 
+    public boolean isCurrentUser(String username) {
+        if(this.users.indexOf(username) == 0){
+            return true;
+        }
+
+        return false;
+    }
+
     public boolean userIsMarkedAsFavorite(String username) {
         if (this.users.contains(username)) {
             return true;

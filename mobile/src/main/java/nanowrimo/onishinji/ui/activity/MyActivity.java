@@ -47,10 +47,7 @@ import nanowrimo.onishinji.ui.fragment.UserFragment;
 import nanowrimo.onishinji.utils.StringUtils;
 
 
-public class MyActivity extends ActionBarActivity implements UserFragment.OnRemoveListener {
-
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
+public class MyActivity extends DrawerActivity implements UserFragment.OnRemoveListener {
 
     SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -58,7 +55,6 @@ public class MyActivity extends ActionBarActivity implements UserFragment.OnRemo
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
-    private Database mDatabase;
     private ActionBar.Tab mLastTab;
     private boolean mTurnOff = false;
     private PagerTitleStrip mPagerTitleStrip;
@@ -68,46 +64,7 @@ public class MyActivity extends ActionBarActivity implements UserFragment.OnRemo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_my);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            //Drawable d = getResources().getDrawable(R.drawable.ic_book_light);
-            //d.setColorFilter( 0xffffff, PorterDuff.Mode.SRC_ATOP );
-            //toolbar.setLogo(d);
-            ViewCompat.setElevation(toolbar,3);
-        }
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name) {
-
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                //getActionBar().setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                //getActionBar().setTitle(mDrawerTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-        mDrawerToggle.syncState();
-
-        // Set the drawer toggle as the DrawerListener
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-        Crashlytics.start(this);
-        BusManager.getInstance();
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
 
@@ -116,7 +73,6 @@ public class MyActivity extends ActionBarActivity implements UserFragment.OnRemo
         mPagerTitleStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip);
 
         checkEmptyDatabase();
-        HttpClient.getInstance().setContext(this);
 
         if (getIntent() != null) {
             int index = mDatabase.getUsers().indexOf(getIntent().getStringExtra("from_widget_id"));
@@ -136,9 +92,6 @@ public class MyActivity extends ActionBarActivity implements UserFragment.OnRemo
         ArrayList<String> users = mDatabase.getUsers();
         if (users.size() == 0) {
             //displayAddUserDialog(false);
-            //TODO for test
-            mDatabase.addUser("Silwek", "Silwek");
-            onAddTab("Silwek", true);
         }
     }
 
@@ -164,68 +117,10 @@ public class MyActivity extends ActionBarActivity implements UserFragment.OnRemo
 //        return super.onOptionsItemSelected(item);
 //    }
 
-    private void displayAddUserDialog(final boolean canCloseDialog) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-        alert.setTitle(getString(R.string.dialog_add_user_title));
 
-        // Set an EditText view to get user input
-        final EditText input = new EditText(this);
-        input.setHint(getString(R.string.default_username));
-        alert.setView(input);
-
-        alert.setPositiveButton(getString(R.string.follow), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                final String value = input.getText().toString().trim();
-
-                final ProgressDialog progressDialog = ProgressDialog.show(MyActivity.this, "", getString(R.string.please_loading), true);
-                progressDialog.show();
-
-                // Test username
-                RequestQueue queue = Volley.newRequestQueue(MyActivity.this);
-                final String url = StringUtils.getUserUrl(value);
-                JSONObject params = new JSONObject();
-                JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        User user = new User(response);
-
-                        mDatabase.addUser(user.getId(), user.getName());
-                        onAddTab(user.getId(), true);
-                        progressDialog.dismiss();
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        Log.e("error", error.toString());
-
-                        progressDialog.dismiss();
-                        Toast alert = Toast.makeText(MyActivity.this, getString(R.string.name_invalid), Toast.LENGTH_SHORT);
-                        alert.show();
-
-                        if (!canCloseDialog) {
-                            displayAddUserDialog(canCloseDialog);
-                        }
-                    }
-                });
-                queue.add(request);
-
-            }
-        });
-
-        if (canCloseDialog) {
-            alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    // Canceled.
-                }
-            });
-        }
-
-        alert.setCancelable(canCloseDialog);
-
-        alert.show();
+    protected void onAddUser(User user){
+        onAddTab(user.getId(), true);
     }
 
     @Override

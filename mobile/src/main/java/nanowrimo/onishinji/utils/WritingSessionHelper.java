@@ -28,14 +28,15 @@ public class WritingSessionHelper {
     protected WritingSession mWritingSession;
     protected User mUser;
 
+    public WritingSessionHelper(){
+        mWritingSession = new WritingSession();
+    }
+
     //==================================
     // WritingSession
     //==================================
 
     public void setNewSession(String sessionName, Date startDate){
-        if(mWritingSession == null){
-            mWritingSession = new WritingSession();
-        }
         mWritingSession.setName(sessionName);
         mWritingSession.setStartDate(startDate);
     }
@@ -46,6 +47,13 @@ public class WritingSessionHelper {
 
     public Date getSessionStart(){
         return mWritingSession.getStartDate();
+    }
+    public void setSessionName(String sessionName){
+        mWritingSession.setName(sessionName);
+    }
+
+    public void setSessionStart(Date startDate){
+        mWritingSession.setStartDate(startDate);
     }
 
     public int getSessionLastDay(){
@@ -74,16 +82,8 @@ public class WritingSessionHelper {
     public void saveConfig(Context context){
         PreferencesHelper.setSessionName(context, mWritingSession.getName());
         PreferencesHelper.setSessionStart(context, mWritingSession.getStartDate());
+        PreferencesHelper.setUserName(context, mUser.getName());
         new Database(context).addUser(mUser.getId(), mUser.getName());
     }
 
-//
-
-    public int getGoal(){
-        return 10000;
-    }
-
-    public int getDailyTarget(){
-        return 500;
-    }
 }

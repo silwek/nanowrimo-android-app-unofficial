@@ -12,6 +12,7 @@ import nanowrimo.onishinji.ui.fragment.PrepareSessionFragment;
 import nanowrimo.onishinji.ui.fragment.SlidingFragment;
 import nanowrimo.onishinji.ui.fragment.UserFormFragment;
 import nanowrimo.onishinji.ui.fragment.WelcomeFragment;
+import nanowrimo.onishinji.utils.PreferencesHelper;
 
 /**
  * Created by Silwek on 29/03/2015.
@@ -44,8 +45,10 @@ public class WelcomeActivity extends FragmentActivity implements SlidingFragment
             SlidingFragment frag = new PrepareSessionFragment();
             showNewFragment(frag);
         }else if(fragment instanceof PrepareSessionFragment){
+            PreferencesHelper.setFirstLaunch(this,false);
             Intent intent = new Intent(this,MyActivity.class);
             startActivity(intent);
+            finish();
         }
     }
 
