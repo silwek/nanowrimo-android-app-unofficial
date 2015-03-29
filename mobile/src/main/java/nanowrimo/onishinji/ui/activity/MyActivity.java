@@ -7,13 +7,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -41,6 +45,9 @@ import nanowrimo.onishinji.utils.StringUtils;
 
 public class MyActivity extends ActionBarActivity implements UserFragment.OnRemoveListener {
 
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mDrawerToggle;
+
     SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
@@ -65,6 +72,28 @@ public class MyActivity extends ActionBarActivity implements UserFragment.OnRemo
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                //getActionBar().setTitle(mTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                //getActionBar().setTitle(mDrawerTitle);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         Crashlytics.start(this);
         BusManager.getInstance();
@@ -96,6 +125,9 @@ public class MyActivity extends ActionBarActivity implements UserFragment.OnRemo
         ArrayList<String> users = mDatabase.getUsers();
         if (users.size() == 0) {
             //displayAddUserDialog(false);
+            //TODO for test
+            mDatabase.addUser("Silwek", "Silwek");
+            onAddTab("Silwek", true);
         }
     }
 

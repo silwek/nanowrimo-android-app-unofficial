@@ -2,12 +2,12 @@
 <resources>
 
     <color name="default_background_color">@android:color/transparent</color>
-    <color name="default_progress_color">#33b5e5</color>
-    <color name="default_stroke_color">#33b5e5</color>
-    <color name="default_text_color">#333333</color>
-    <color name="small_widget_progress_background">#b9b9b9</color>
-    <color name="small_widget_progress_color">#24b3f0</color>
-    <color name="small_widget_progress_win">#f0ba18</color>
-    <color name="nanowrimo_background_color">#592e15</color>
+    <color name="default_progress_color">@color/wrimo_color_secondary</color>
+    <color name="default_stroke_color">@color/wrimo_color_secondary</color>
+    <color name="default_text_color">@color/wrimo_color_dark_text</color>
+    <color name="small_widget_progress_background">@color/wrimo_color_light_grey</color>
+    <color name="small_widget_progress_color">@color/wrimo_color_secondary</color>
+    <color name="small_widget_progress_win">@color/wrimo_color_highlight</color>
+    <color name="nanowrimo_background_color">@color/wrimo_color</color>
 
 </resources>

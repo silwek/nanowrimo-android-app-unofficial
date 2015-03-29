@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="wrimo_color">#592e15</color>
+    <color name="wrimo_color_dark">#492412</color>
+    <color name="wrimo_color_secondary">#24b3f0</color>
+    <color name="wrimo_color_secondary_dark">#1e93bc</color>
+    <color name="wrimo_color_highlight">#f0ba18</color>
+    <color name="wrimo_color_dark_text">#424242</color>
+    <color name="wrimo_color_light_grey">#b9b9b9</color>
 </resources>

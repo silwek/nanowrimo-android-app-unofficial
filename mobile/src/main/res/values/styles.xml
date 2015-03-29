@@ -5,10 +5,12 @@
         <!-- Customize your theme here. -->
         <item name="android:actionBarStyle">@style/MyActionBar</item>
 
-        <item name="colorPrimary">@color/nanowrimo_background_color</item>
-        <item name="colorPrimaryDark">@color/nanowrimo_background_color</item>
+        <item name="colorPrimary">@color/wrimo_color</item>
+        <item name="colorPrimaryDark">@color/wrimo_color_dark</item>
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+
+        <item name="colorAccent">@color/wrimo_color_secondary</item>
 
     </style>
 
@@ -18,7 +20,13 @@
 
     <style name="MyActionBar"
         parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/nanowrimo_background_color</item>
+        <item name="android:background">@color/wrimo_color</item>
+
+        <item name="colorPrimary">@color/wrimo_color</item>
+        <item name="colorPrimaryDark">@color/wrimo_color_dark</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+
     </style>
 
 </resources>

@@ -5,7 +5,7 @@
 
   <style name="Wrimo" parent="@style/_Wrimo"/>
 
-  <style name="_Wrimo" parent="android:Theme.Holo.Light.DarkActionBar">
+  <style name="_Wrimo" parent="Theme.AppCompat.Light">
 
     <item name="android:editTextBackground">@drawable/wrimo_edit_text_holo_light</item>
 
