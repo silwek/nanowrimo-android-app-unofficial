@@ -65,7 +65,6 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
     private TextView mTextViewUsername;
-    private String mId;
     private OnRemoveListener mOnRemoveListener;
     private TextView mTextViewGoal;
     private TextView mTextViewWordcount;
@@ -80,13 +79,18 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
     private BarChart mChartBar;
     private BarData mBarData;
     private Button mButtonBuddies;
-    private String mUsername;
     private ProgressBar mProgressBar;
 
     private int nbLoad = 2;
     private Button mButtonAction;
     private Database mDatabase;
     private int position;
+
+    protected boolean mIsSessionStarted = true;
+
+    private String mId;
+    private String mUsername;
+    protected User mUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,6 +108,9 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
         }
 
         mDatabase = new Database(getActivity());
+
+        mIsSessionStarted = Calendar.getInstance().before(WritingSessionHelper.getInstance().getSessionStart());
+
     }
 
     @Override
@@ -326,59 +333,61 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
     }
 
     private void initializeGraphics() {
-        ArrayList<String> defaultLineValues = new ArrayList<String>();
+        if(mUser != null) {
+            ArrayList<String> defaultLineValues = new ArrayList<String>();
 
-        Calendar c = Calendar.getInstance();
+            Calendar c = Calendar.getInstance();
 
-        // start
-        c.setTime(WritingSessionHelper.getInstance().getSessionStart());
+            // start
+            c.setTime(WritingSessionHelper.getInstance().getSessionStart());
 
-        SimpleDateFormat f = new SimpleDateFormat("dd-MM");
-        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM); // use MEDIUM or SHORT according to your needs
+            SimpleDateFormat f = new SimpleDateFormat("dd-MM");
+            DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM); // use MEDIUM or SHORT according to your needs
 
-        String year;
-        String strDate;
+            String year;
+            String strDate;
 
-        final int lastDay = WritingSessionHelper.getInstance().getSessionLastDay();
-        for (int i = 1; i <= lastDay; i++) {
-            c.set(Calendar.DAY_OF_MONTH, i);
+            final int lastDay = WritingSessionHelper.getInstance().getSessionLastDay();
+            for(int i = 1; i <= lastDay; i++) {
+                c.set(Calendar.DAY_OF_MONTH, i);
 
-            Date date = c.getTime();
+                Date date = c.getTime();
 
-            strDate = dateFormatter.format(date);
-            // remove year
-            year = String.valueOf(c.get(Calendar.YEAR));
-            strDate = strDate.replace(year, "").trim();
+                strDate = dateFormatter.format(date);
+                // remove year
+                year = String.valueOf(c.get(Calendar.YEAR));
+                strDate = strDate.replace(year, "").trim();
 
-            defaultLineValues.add(strDate);
+                defaultLineValues.add(strDate);
 
+            }
+
+
+            ArrayList<Entry> defaultLineEntries = new ArrayList<Entry>();
+            defaultLineEntries.add(new Entry(0, 0));
+            defaultLineEntries.add(new Entry(mUser != null ? mUser.getGoal() : 50000, defaultLineValues.size() - 1));
+
+
+            LineDataSet linearProgressionDataSet = new LineDataSet(defaultLineEntries, "naive linear progression");
+            linearProgressionDataSet.enableDashedLine(10, 10, 0);
+            linearProgressionDataSet.setCircleSize(0);
+
+            linearProgressionDataSet.setColor(getResources().getColor(android.R.color.holo_orange_dark));
+            linearProgressionDataSet.setCircleColor(getResources().getColor(android.R.color.holo_orange_dark));
+
+            mLineData = new LineData(defaultLineValues, linearProgressionDataSet);
+            mChart.setData(mLineData);
+
+
+            mBarData = new BarData(defaultLineValues, new BarDataSet(new ArrayList<BarEntry>(), "default"));
+            LimitLine ll = new LimitLine(mUser != null ? mUser.getDailyTarget() : 1667);
+            ll.setLineColor(getResources().getColor(android.R.color.holo_orange_dark));
+            ll.enableDashedLine(10, 10, 0);
+
+
+            mBarData.addLimitLine(ll);
+            mChartBar.setData(mBarData);
         }
-
-
-        ArrayList<Entry> defaultLineEntries = new ArrayList<Entry>();
-        defaultLineEntries.add(new Entry(0, 0));
-//        defaultLineEntries.add(new Entry(WritingSessionHelper.getInstance().getGoal(), defaultLineValues.size() - 1));
-
-
-        LineDataSet linearProgressionDataSet = new LineDataSet(defaultLineEntries, "naive linear progression");
-        linearProgressionDataSet.enableDashedLine(10, 10, 0);
-        linearProgressionDataSet.setCircleSize(0);
-
-        linearProgressionDataSet.setColor(getResources().getColor(android.R.color.holo_orange_dark));
-        linearProgressionDataSet.setCircleColor(getResources().getColor(android.R.color.holo_orange_dark));
-
-        mLineData = new LineData(defaultLineValues, linearProgressionDataSet);
-        mChart.setData(mLineData);
-
-
-        mBarData = new BarData(defaultLineValues, new BarDataSet(new ArrayList<BarEntry>(), "default"));
-//        LimitLine ll = new LimitLine(WritingSessionHelper.getInstance().getDailyTarget());
-//        ll.setLineColor(getResources().getColor(android.R.color.holo_orange_dark));
-//        ll.enableDashedLine(10, 10, 0);
-
-
-//        mBarData.addLimitLine(ll);
-        mChartBar.setData(mBarData);
     }
 
     private void updateUI() {
@@ -407,8 +416,6 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
             nbLoad = 2;
             final String url = StringUtils.getUserUrl(mId);
-
-            getHistoricRemoteData(url + "/history");
 
             JSONObject params = new JSONObject();
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
@@ -533,21 +540,24 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
     private void handleResponse(JSONObject response) {
 
-        User user = new User(response);
+        mUser = new User(response);
 
         if (getActivity() != null) {
 
-            mTextViewGoal.setText(String.valueOf(user.getGoal()));
-            mTextViewWordcount.setText(user.getWordcount() + "");
-            mTextViewWordcountToday.setText(user.getWordCountToday() + "");
-            mTextViewDailyTarget.setText(user.getDailyTarget() + "");
-            mTextViewDailyTargetRemaining.setText(user.getDailyTargetRemaining() + "");
-            mTextViewNbDayRemaining.setText(user.getNbDayRemaining() + "");
+            mTextViewGoal.setText(String.valueOf(mUser.getGoal()));
+            mTextViewWordcount.setText(mUser.getWordcount() + "");
+            mTextViewWordcountToday.setText(mUser.getWordCountToday() + "");
+            mTextViewDailyTarget.setText(mIsSessionStarted ? mUser.getDailyTarget() + "" : "0");
+            mTextViewDailyTargetRemaining.setText(mIsSessionStarted?mUser.getDailyTargetRemaining() + "" : "0");
+            mTextViewNbDayRemaining.setText(mUser.getNbDayRemaining() + "");
 
-            mProgressDaily.compute(user.getWordCountToday(), user.getDailyTarget(), true);
-            mProgressGlobal.compute(user.getWordcount(), user.getGoal(), true);
+            mProgressDaily.compute(mUser.getWordCountToday(), mIsSessionStarted?mUser.getDailyTarget():0, true);
+            mProgressGlobal.compute(mUser.getWordcount(), mUser.getGoal(), true);
 
         }
+
+        final String url = StringUtils.getUserUrl(mId);
+        getHistoricRemoteData(url + "/history");
     }
 
     private void HandleHistoryResponse(JSONObject response) {
