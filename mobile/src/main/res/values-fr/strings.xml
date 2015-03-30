@@ -8,7 +8,7 @@
     <string name="default_username">Pseudonyme</string>
     <string name="default_wordcount">0</string>
     <string name="name_invalid">Pseudo invalide</string>
-    <string name="dialog_add_user_title">Suivre un utilisateur NaNoWrimo</string>
+    <string name="dialog_add_user_title">Suivre un utilisateur Camp NaNoWrimo</string>
     <string name="please_loading">Veuillez patienter...</string>
     <string name="unfollow_people">Ne plus suivre</string>
     <string name="follow_people">Suivre</string>
@@ -44,5 +44,18 @@
     <string name="btn_valid_compare_with">Démarrer la comparaison</string>
     <string name="title_compare_activity">%1$s vs %2$s</string>
     <string name="linear_progress_label">Progression théorique</string>
+
+    <string name="bad_request">Pseudo invalide ou erreur réseau</string>
+    <string name="menu_playstore">Votez pour votre application</string>
+
+    <string name="welcome_title">Je suis Wrimo Companion,\nvotre partenaire d\'écriture.</string>
+    <string name="welcome_question">Que voulez-vous faire ?</string>
+    <string name="welcome_choice_camp">Je veux participer au Camp Nanowrimo 2015</string>
+    <string name="welcome_choice_nano">Je veux participer au Nanowrimo 2015</string>
+    <string name="welcome_form_title">Veuillez entrer votre pseudonyme sur le site du %s</string>
+    <string name="welcome_start">Commencer la session</string>
+    <string name="welcome_prepare_session">Préparation de la session d\'écriture pour %s...</string>
+
+    <string name="camp_session_name">Camp Nanowrimo 2015</string>
 
 </resources>

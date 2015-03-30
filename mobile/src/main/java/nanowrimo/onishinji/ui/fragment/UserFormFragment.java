@@ -29,8 +29,7 @@ public class UserFormFragment extends SlidingFragment {
                              Bundle savedInstanceState) {
         ViewGroup v = (ViewGroup) inflater.inflate(R.layout.fragment_user_form, container, false);
 
-        ((TextView) v.findViewById(R.id.tv_header)).setText(String.format(
-                        "Veuillez entrer votre pseudonyme sur le site du %s",
+        ((TextView) v.findViewById(R.id.tv_header)).setText(getString(R.string.welcome_form_title,
                         WritingSessionHelper.getInstance().getSessionName()));
         mTfUsername = (EditText) v.findViewById(R.id.tf_user_name);
         mBtValid = (Button) v.findViewById(R.id.bt_valid);

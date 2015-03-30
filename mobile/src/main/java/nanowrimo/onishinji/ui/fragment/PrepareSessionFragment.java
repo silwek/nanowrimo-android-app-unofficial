@@ -37,7 +37,7 @@ public class PrepareSessionFragment  extends SlidingFragment {
         ViewGroup v = (ViewGroup) inflater.inflate(R.layout.fragment_prepare_session, container, false);
 
         mTvLoading = (TextView) v.findViewById(R.id.tv_loading);
-        mTvLoading.setText(String.format("Préparation de la session d'écriture pour %s...", WritingSessionHelper.getInstance().getUserName()));
+        mTvLoading.setText(getString(R.string.welcome_prepare_session, WritingSessionHelper.getInstance().getUserName()));
 
         return v;
     }
@@ -62,7 +62,7 @@ public class PrepareSessionFragment  extends SlidingFragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("error", error.toString());
-                Toast.makeText(getActivity(),error.toString(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),R.string.bad_request,Toast.LENGTH_SHORT).show();
                 onWantPreviousSlide();
             }
         });

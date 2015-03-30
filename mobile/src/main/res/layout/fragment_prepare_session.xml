@@ -26,8 +26,7 @@
             android:textStyle="bold"
             android:textSize="24sp"
             android:textColor="@android:color/white"
-            android:gravity="center_horizontal"
-            android:text="Préparation de la session..."/>
+            android:gravity="center_horizontal"/>
 
 
         <ProgressBar

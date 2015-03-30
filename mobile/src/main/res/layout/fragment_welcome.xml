@@ -25,7 +25,7 @@
             android:textStyle="bold"
             android:textSize="24sp"
             android:textColor="@android:color/white"
-            android:text="Je suis Wrimo Companion,\nvotre partenaire d\'écriture." />
+            android:text="@string/welcome_title" />
 
         <TextView
             android:layout_width="match_parent"
@@ -34,7 +34,7 @@
             android:textStyle="bold"
             android:textSize="24sp"
             android:textColor="@android:color/white"
-            android:text="Que voulez-vous faire ?" />
+            android:text="@string/welcome_question" />
 
         <Button
             android:id="@+id/bt_campnano"
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:background="?android:attr/selectableItemBackground"
-            android:text="Je veux participer au Camp Nanowrimo 2015"
+            android:text="@string/welcome_choice_camp"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:gravity="left"
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:background="?android:attr/selectableItemBackground"
-            android:text="Je veux participer au Nanowrimo 2015"
+            android:text="@string/welcome_choice_nano"
             android:textColor="@color/wrimo_color_secondary_dark"
             android:textSize="20sp"
             android:gravity="left"

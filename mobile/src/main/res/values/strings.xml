@@ -8,7 +8,7 @@
     <string name="default_username">username</string>
     <string name="default_wordcount">0</string>
     <string name="name_invalid">Invalid name</string>
-    <string name="dialog_add_user_title">Follow an NaNoWrimo\'s user</string>
+    <string name="dialog_add_user_title">Follow an Camp NaNoWrimo\'s user</string>
     <string name="please_loading">Loading..Wait..</string>
     <string name="unfollow_people">Unfollow</string>
     <string name="follow_people">Follow</string>
@@ -45,7 +45,17 @@
     <string name="title_compare_activity">%1$s vs %2$s</string>
     <string name="linear_progress_label">Theoretically progression</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="bad_request">Invalid name or network error</string>
+    <string name="menu_playstore">Vote for your app</string>
+
+    <string name="welcome_title">I am Wrimo Companion,\nyour writing partner.</string>
+    <string name="welcome_question">What do you want to do?</string>
+    <string name="welcome_choice_camp">I want participate to NaNoWriMo Camp 2015</string>
+    <string name="welcome_choice_nano">I want participate to Nanowrimo 2015</string>
+    <string name="welcome_form_title">Please enter your login on the %s website</string>
+    <string name="welcome_start">Start session</string>
+    <string name="welcome_prepare_session">Initialize writing session for %s...</string>
+
+    <string name="camp_session_name">Camp Nanowrimo 2015</string>
 
 </resources>

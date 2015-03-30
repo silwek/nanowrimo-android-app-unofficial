@@ -33,7 +33,7 @@ public class WelcomeFragment extends SlidingFragment {
             public void onClick(View v) {
                 Calendar c = Calendar.getInstance();
                 c.set(2015,3,1);
-                WritingSessionHelper.getInstance().setNewSession("Camp Nanowrimo 2015",c.getTime());
+                WritingSessionHelper.getInstance().setNewSession(getString(R.string.camp_session_name),c.getTime());
                 onWantNextSlide();
             }
         });

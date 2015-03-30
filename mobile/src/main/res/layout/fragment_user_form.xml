@@ -46,7 +46,7 @@
             android:layout_marginTop="32dp"
             android:padding="8dp"
             android:background="?android:attr/selectableItemBackground"
-            android:text="Commencer"
+            android:text="@string/welcome_start"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:layout_gravity="right"/>
