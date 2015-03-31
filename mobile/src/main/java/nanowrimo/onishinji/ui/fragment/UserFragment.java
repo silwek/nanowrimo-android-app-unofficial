@@ -53,6 +53,7 @@ import nanowrimo.onishinji.ui.widget.MyBarMarkerView;
 import nanowrimo.onishinji.ui.widget.MyMarkerView;
 import nanowrimo.onishinji.ui.widget.WordCountProgress;
 import nanowrimo.onishinji.utils.StringUtils;
+import nanowrimo.onishinji.utils.WritingSessionHelper;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -64,8 +65,8 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
     private TextView mTextViewUsername;
-    private String mId;
     private OnRemoveListener mOnRemoveListener;
+    private TextView mTextViewGoal;
     private TextView mTextViewWordcount;
     private TextView mTextViewWordcountToday;
     private TextView mTextViewDailyTarget;
@@ -78,13 +79,18 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
     private BarChart mChartBar;
     private BarData mBarData;
     private Button mButtonBuddies;
-    private String mUsername;
     private ProgressBar mProgressBar;
 
     private int nbLoad = 2;
     private Button mButtonAction;
     private Database mDatabase;
     private int position;
+
+    protected boolean mIsSessionStarted = true;
+
+    private String mId;
+    private String mUsername;
+    protected User mUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,6 +108,9 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
         }
 
         mDatabase = new Database(getActivity());
+
+        mIsSessionStarted = Calendar.getInstance().before(WritingSessionHelper.getInstance().getSessionStart());
+
     }
 
     @Override
@@ -176,6 +185,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
         mButtonAction = (Button) getView().findViewById(R.id.button_action);
         mProgressBar = (ProgressBar) getView().findViewById(R.id.progressBar);
         mTextViewUsername = (TextView) getView().findViewById(R.id.section_label);
+        mTextViewGoal = (TextView) getView().findViewById(R.id.goal);
         mTextViewWordcount = (TextView) getView().findViewById(R.id.wordcount);
         mTextViewWordcountToday = (TextView) getView().findViewById(R.id.wordCountToday);
         mTextViewDailyTarget = (TextView) getView().findViewById(R.id.dailyTarget);
@@ -291,7 +301,10 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
     private void refreshActionButton() {
 
         if(getActivity() != null) {
-            if (canRemoveUser()) {
+            if(isCurrentUser()){
+                mButtonAction.setVisibility(View.GONE);
+            }else if (canRemoveUser()) {
+                mButtonAction.setVisibility(View.VISIBLE);
                 mButtonAction.setText(getString(R.string.btn_action_remove));
                 mButtonAction.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -300,6 +313,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
                     }
                 });
             } else {
+                mButtonAction.setVisibility(View.VISIBLE);
                 mButtonAction.setText(getString(R.string.btn_action_add));
                 mButtonAction.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -311,68 +325,69 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
         }
     }
 
+    private boolean isCurrentUser() {
+        return mDatabase.isCurrentUser(mId);
+    }
     private boolean canRemoveUser() {
         return mDatabase.userIsMarkedAsFavorite(mId);
     }
 
     private void initializeGraphics() {
-        ArrayList<String> defaultLineValues = new ArrayList<String>();
+        if(mUser != null) {
+            ArrayList<String> defaultLineValues = new ArrayList<String>();
 
-        Calendar c = Calendar.getInstance();
+            Calendar c = Calendar.getInstance();
 
-        // start november
-        c.set(Calendar.MONTH, 10);
-        c.set(Calendar.DAY_OF_MONTH, 1);
+            // start
+            c.setTime(WritingSessionHelper.getInstance().getSessionStart());
 
-        SimpleDateFormat f = new SimpleDateFormat("dd-MM");
-        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM); // use MEDIUM or SHORT according to your needs
+            SimpleDateFormat f = new SimpleDateFormat("dd-MM");
+            DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.MEDIUM); // use MEDIUM or SHORT according to your needs
 
-        String data = dateFormatter.format(c.getTime());
-        // remove year
-        String year = String.valueOf(c.get(Calendar.YEAR));
-        data = data.replace(year, "").trim();
+            String year;
+            String strDate;
 
-        defaultLineValues.add(data);
+            final int lastDay = WritingSessionHelper.getInstance().getSessionLastDay();
+            for(int i = 1; i <= lastDay; i++) {
+                c.set(Calendar.DAY_OF_MONTH, i);
 
-        for (int i = 2; i <= 30; i++) {
-            c.set(Calendar.DAY_OF_MONTH, i);
+                Date date = c.getTime();
 
-            Date date = c.getTime();
+                strDate = dateFormatter.format(date);
+                // remove year
+                year = String.valueOf(c.get(Calendar.YEAR));
+                strDate = strDate.replace(year, "").trim();
 
-            data = dateFormatter.format(date);
-            // remove year
-            year = String.valueOf(c.get(Calendar.YEAR));
-            data = data.replace(year, "").trim();
+                defaultLineValues.add(strDate);
 
-            defaultLineValues.add(data);
+            }
 
+
+            ArrayList<Entry> defaultLineEntries = new ArrayList<Entry>();
+            defaultLineEntries.add(new Entry(0, 0));
+            defaultLineEntries.add(new Entry(mUser != null ? mUser.getGoal() : 50000, defaultLineValues.size() - 1));
+
+
+            LineDataSet linearProgressionDataSet = new LineDataSet(defaultLineEntries, "naive linear progression");
+            linearProgressionDataSet.enableDashedLine(10, 10, 0);
+            linearProgressionDataSet.setCircleSize(0);
+
+            linearProgressionDataSet.setColor(getResources().getColor(android.R.color.holo_orange_dark));
+            linearProgressionDataSet.setCircleColor(getResources().getColor(android.R.color.holo_orange_dark));
+
+            mLineData = new LineData(defaultLineValues, linearProgressionDataSet);
+            mChart.setData(mLineData);
+
+
+            mBarData = new BarData(defaultLineValues, new BarDataSet(new ArrayList<BarEntry>(), "default"));
+            LimitLine ll = new LimitLine(mUser != null ? mUser.getDailyTarget() : 1667);
+            ll.setLineColor(getResources().getColor(android.R.color.holo_orange_dark));
+            ll.enableDashedLine(10, 10, 0);
+
+
+            mBarData.addLimitLine(ll);
+            mChartBar.setData(mBarData);
         }
-
-
-        ArrayList<Entry> defaultLineEntries = new ArrayList<Entry>();
-        defaultLineEntries.add(new Entry(0, 0));
-        defaultLineEntries.add(new Entry(50000, defaultLineValues.size() - 1));
-
-
-        LineDataSet linearProgressionDataSet = new LineDataSet(defaultLineEntries, "naive linear progression");
-        linearProgressionDataSet.enableDashedLine(10, 10, 0);
-        linearProgressionDataSet.setCircleSize(0);
-
-        linearProgressionDataSet.setColor(getResources().getColor(android.R.color.holo_orange_dark));
-        linearProgressionDataSet.setCircleColor(getResources().getColor(android.R.color.holo_orange_dark));
-
-        mLineData = new LineData(defaultLineValues, linearProgressionDataSet);
-        mChart.setData(mLineData);
-
-
-        mBarData = new BarData(defaultLineValues, new BarDataSet(new ArrayList<BarEntry>(), "default"));
-        LimitLine ll = new LimitLine(1667);
-        ll.setLineColor(getResources().getColor(android.R.color.holo_orange_dark));
-        ll.enableDashedLine(10, 10, 0);
-
-
-        mBarData.addLimitLine(ll);
-        mChartBar.setData(mBarData);
     }
 
     private void updateUI() {
@@ -401,8 +416,6 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
             nbLoad = 2;
             final String url = StringUtils.getUserUrl(mId);
-
-            getHistoricRemoteData(url + "/history");
 
             JSONObject params = new JSONObject();
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
@@ -527,20 +540,24 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
     private void handleResponse(JSONObject response) {
 
-        User user = new User(response);
+        mUser = new User(response);
 
         if (getActivity() != null) {
 
-            mTextViewWordcount.setText(user.getWordcount() + "");
-            mTextViewWordcountToday.setText(user.getWordCountToday() + "");
-            mTextViewDailyTarget.setText(user.getDailyTarget() + "");
-            mTextViewDailyTargetRemaining.setText(user.getDailyTargetRemaining() + "");
-            mTextViewNbDayRemaining.setText(user.getNbDayRemaining() + "");
+            mTextViewGoal.setText(String.valueOf(mUser.getGoal()));
+            mTextViewWordcount.setText(mUser.getWordcount() + "");
+            mTextViewWordcountToday.setText(mUser.getWordCountToday() + "");
+            mTextViewDailyTarget.setText(mIsSessionStarted ? mUser.getDailyTarget() + "" : "0");
+            mTextViewDailyTargetRemaining.setText(mIsSessionStarted?mUser.getDailyTargetRemaining() + "" : "0");
+            mTextViewNbDayRemaining.setText(mUser.getNbDayRemaining() + "");
 
-            mProgressDaily.compute(user.getWordCountToday(), user.getDailyTarget(), true);
-            mProgressGlobal.compute(user.getWordcount(), 50000.0f, true);
+            mProgressDaily.compute(mUser.getWordCountToday(), mIsSessionStarted?mUser.getDailyTarget():0, true);
+            mProgressGlobal.compute(mUser.getWordcount(), mUser.getGoal(), true);
 
         }
+
+        final String url = StringUtils.getUserUrl(mId);
+        getHistoricRemoteData(url + "/history");
     }
 
     private void HandleHistoryResponse(JSONObject response) {
@@ -553,7 +570,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
             initializeGraphics();
 
             Log.d("HISTORY", "HandleHistoryResponse called with " + response.toString());
-            Historic user = new Historic(response);
+            Historic user = new Historic(WritingSessionHelper.getInstance().getSessionStart(), response);
 
             //ArrayList<LineDataSet> dataSets = new ArrayList<LineDataSet>();
             LineDataSet historyDataSet = new LineDataSet(user.getValuesCumul(), "Your progression");

@@ -5,15 +5,23 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerTitleStrip;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -39,7 +47,7 @@ import nanowrimo.onishinji.ui.fragment.UserFragment;
 import nanowrimo.onishinji.utils.StringUtils;
 
 
-public class MyActivity extends ActionBarActivity implements UserFragment.OnRemoveListener {
+public class MyActivity extends DrawerActivity implements UserFragment.OnRemoveListener {
 
     SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -47,7 +55,6 @@ public class MyActivity extends ActionBarActivity implements UserFragment.OnRemo
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
-    private Database mDatabase;
     private ActionBar.Tab mLastTab;
     private boolean mTurnOff = false;
     private PagerTitleStrip mPagerTitleStrip;
@@ -57,17 +64,7 @@ public class MyActivity extends ActionBarActivity implements UserFragment.OnRemo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_my);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-        }
-
-        Crashlytics.start(this);
-        BusManager.getInstance();
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
 
@@ -76,7 +73,6 @@ public class MyActivity extends ActionBarActivity implements UserFragment.OnRemo
         mPagerTitleStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip);
 
         checkEmptyDatabase();
-        HttpClient.getInstance().setContext(this);
 
         if (getIntent() != null) {
             int index = mDatabase.getUsers().indexOf(getIntent().getStringExtra("from_widget_id"));
@@ -95,94 +91,36 @@ public class MyActivity extends ActionBarActivity implements UserFragment.OnRemo
     private void checkEmptyDatabase() {
         ArrayList<String> users = mDatabase.getUsers();
         if (users.size() == 0) {
-            displayAddUserDialog(false);
+            //displayAddUserDialog(false);
         }
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.my, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.my, menu);
+//        return true;
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        if (id == R.id.add_user) {
+//            displayAddUserDialog(true);
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
-        if (id == R.id.add_user) {
-            displayAddUserDialog(true);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
-    private void displayAddUserDialog(final boolean canCloseDialog) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-        alert.setTitle(getString(R.string.dialog_add_user_title));
-
-        // Set an EditText view to get user input
-        final EditText input = new EditText(this);
-        input.setHint(getString(R.string.default_username));
-        alert.setView(input);
-
-        alert.setPositiveButton(getString(R.string.follow), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                final String value = input.getText().toString().trim();
-
-                final ProgressDialog progressDialog = ProgressDialog.show(MyActivity.this, "", getString(R.string.please_loading), true);
-                progressDialog.show();
-
-                // Test username
-                RequestQueue queue = Volley.newRequestQueue(MyActivity.this);
-                final String url = StringUtils.getUserUrl(value);
-                JSONObject params = new JSONObject();
-                JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        User user = new User(response);
-
-                        mDatabase.addUser(user.getId(), user.getName());
-                        onAddTab(user.getId(), true);
-                        progressDialog.dismiss();
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-
-                        Log.e("error", error.toString());
-
-                        progressDialog.dismiss();
-                        Toast alert = Toast.makeText(MyActivity.this, getString(R.string.name_invalid), Toast.LENGTH_SHORT);
-                        alert.show();
-
-                        if (!canCloseDialog) {
-                            displayAddUserDialog(canCloseDialog);
-                        }
-                    }
-                });
-                queue.add(request);
-
-            }
-        });
-
-        if (canCloseDialog) {
-            alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    // Canceled.
-                }
-            });
-        }
-
-        alert.setCancelable(canCloseDialog);
-
-        alert.show();
+    protected void onAddUser(User user){
+        onAddTab(user.getId(), true);
     }
 
     @Override

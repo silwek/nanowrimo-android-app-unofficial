@@ -5,10 +5,12 @@
         <!-- Customize your theme here. -->
         <item name="android:actionBarStyle">@style/MyActionBar</item>
 
-        <item name="colorPrimary">@color/nanowrimo_background_color</item>
-        <item name="colorPrimaryDark">@color/nanowrimo_background_color</item>
+        <item name="colorPrimary">@color/wrimo_color</item>
+        <item name="colorPrimaryDark">@color/wrimo_color_dark</item>
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+
+        <item name="colorAccent">@color/wrimo_color_secondary</item>
 
     </style>
 
@@ -17,8 +19,27 @@
     </style>
 
     <style name="MyActionBar"
-        parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/nanowrimo_background_color</item>
+        parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">@color/wrimo_color</item>
+
+        <item name="colorPrimary">@color/wrimo_color</item>
+        <item name="colorPrimaryDark">@color/wrimo_color_dark</item>
+        <item name="colorAccent">@color/wrimo_color_highlight</item>
+
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+
+        <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="drawerArrowStyle">@style/Theme.Test.DrawerArrowStyle</item>
+    </style>
+
+    <style name="Theme.Test.DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
+    </style>
+
+    <style name="TextRegular">
+        <item name="android:textColor">@color/wrimo_color_dark_text</item>
     </style>
 
 </resources>

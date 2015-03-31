@@ -55,6 +55,7 @@ import nanowrimo.onishinji.ui.widget.MyBarMarkerView;
 import nanowrimo.onishinji.ui.widget.MyMarkerView;
 import nanowrimo.onishinji.ui.widget.WordCountProgress;
 import nanowrimo.onishinji.utils.StringUtils;
+import nanowrimo.onishinji.utils.WritingSessionHelper;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -407,7 +408,7 @@ public class CompareFragment extends Fragment {
             WordCountProgress progressGlobal = u == 1 ? mProgressGlobal1 : mProgressGlobal2;
 
             progressDaily.compute(user.getWordCountToday(), user.getDailyTarget(), true);
-            progressGlobal.compute(user.getWordcount(), 50000.0f, true);
+            progressGlobal.compute(user.getWordcount(), user.getGoal(), true);
 
         }
     }
@@ -417,7 +418,7 @@ public class CompareFragment extends Fragment {
         if (getActivity() != null) {
 
             Log.d("HISTORY", "HandleHistoryResponse called with " + response.toString());
-            Historic user = new Historic(response);
+            Historic user = new Historic(WritingSessionHelper.getInstance().getSessionStart(),response);
 
             LineDataSet historyDataSet = null;
             BarDataSet set1 = null;
