@@ -1,8 +1,8 @@
 package nanowrimo.onishinji.ui.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -18,7 +18,7 @@ import nanowrimo.onishinji.utils.WritingSessionHelper;
 /**
  * Created by Silwek on 29/03/2015.
  */
-public class SplashscreenActivity extends Activity {
+public class SplashscreenActivity extends AppCompatActivity {
 
     Database mDatabase;
 

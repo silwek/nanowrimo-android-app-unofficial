@@ -12,11 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/activity_toolbar_height"
-            android:background="?attr/colorPrimaryDark" />
+        <include layout="@layout/include_toolbar" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/pager"
@@ -37,14 +33,17 @@
     </LinearLayout>
 
     <!-- The navigation drawer -->
-    <FrameLayout android:id="@+id/left_drawer"
-              android:layout_width="240dp"
-              android:layout_height="match_parent"
-              android:layout_gravity="start"
-              android:background="@android:color/white">
-            <include layout="@layout/include_drawer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+    <FrameLayout
+        android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white">
+
+        <include
+            layout="@layout/include_drawer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </FrameLayout>
 
 </android.support.v4.widget.DrawerLayout>

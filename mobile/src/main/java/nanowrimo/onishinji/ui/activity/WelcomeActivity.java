@@ -2,9 +2,9 @@ package nanowrimo.onishinji.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 
 import nanowrimo.onishinji.R;
@@ -17,7 +17,7 @@ import nanowrimo.onishinji.utils.PreferencesHelper;
 /**
  * Created by Silwek on 29/03/2015.
  */
-public class WelcomeActivity extends FragmentActivity implements SlidingFragment.SlidingListener {
+public class WelcomeActivity extends AppCompatActivity implements SlidingFragment.SlidingListener {
 
     ViewGroup mFragmentContainer;
 
