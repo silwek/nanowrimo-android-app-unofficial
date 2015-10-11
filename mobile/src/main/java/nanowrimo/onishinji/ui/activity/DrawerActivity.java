@@ -6,15 +6,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,13 +28,14 @@ import org.json.JSONObject;
 import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.Database;
 import nanowrimo.onishinji.model.User;
-import nanowrimo.onishinji.utils.StringUtils;
+import nanowrimo.onishinji.model.WritingSession;
+import nanowrimo.onishinji.utils.URLUtils;
 import nanowrimo.onishinji.utils.WritingSessionHelper;
 
 /**
  * Created by Silwek on 29/03/2015.
  */
-public abstract class DrawerActivity extends ActionBarActivity {
+public abstract class DrawerActivity extends ToolbarActivity {
 
     protected DrawerLayout mDrawerLayout;
     protected ActionBarDrawerToggle mDrawerToggle;
@@ -49,16 +48,10 @@ public abstract class DrawerActivity extends ActionBarActivity {
         initDrawer();
     }
 
-    protected void initDrawer(){
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            ViewCompat.setElevation(toolbar, 3);
-        }
+    protected void initDrawer() {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.app_name, R.string.app_name) {
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.app_name, R.string.app_name) {
 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
@@ -81,21 +74,32 @@ public abstract class DrawerActivity extends ActionBarActivity {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        final ImageView drawerLogo = ((ImageView) mDrawerLayout.findViewById(R.id.drawer_decor));
+
+        final int sessionType = WritingSessionHelper.getInstance().getSessionType();
+        if (sessionType == WritingSession.CAMP) {
+            drawerLogo.setImageResource(R.drawable.drawer_header_campnano);
+        } else if (sessionType == WritingSession.NANOWRIMO) {
+            drawerLogo.setImageResource(R.drawable.drawer_header_nanowrimo);
+        }
+
+        ((Button) mDrawerLayout.findViewById(R.id.bt_update_wordcount)).setVisibility(View.GONE);
+        ((Button) mDrawerLayout.findViewById(R.id.bt_follow)).setText(getString(R.string.dialog_add_user_title, WritingSessionHelper.getInstance().getSessionName()));
+
         ((TextView) mDrawerLayout.findViewById(R.id.drawer_user_name)).setText(WritingSessionHelper.getInstance().getUserName());
-        ((TextView) mDrawerLayout.findViewById(R.id.drawer_session_name)).setText(WritingSessionHelper.getInstance().getSessionName());
-        ((Button) mDrawerLayout.findViewById(R.id.bt_follow)).setOnClickListener(new View.OnClickListener() {
+        ((TextView) mDrawerLayout.findViewById(R.id.drawer_session_name)).setText(WritingSessionHelper.getInstance().getRelativeSessionTime(this));
+        mDrawerLayout.findViewById(R.id.bt_follow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 displayAddUserDialog(true);
             }
         });
-        ((Button) mDrawerLayout.findViewById(R.id.bt_playstore)).setOnClickListener(new View.OnClickListener() {
+        mDrawerLayout.findViewById(R.id.bt_playstore).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPlaystore();
             }
         });
-
 
 
         mDatabase = new Database(this);
@@ -104,7 +108,7 @@ public abstract class DrawerActivity extends ActionBarActivity {
     public void displayAddUserDialog(final boolean canCloseDialog) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-        alert.setTitle(getString(R.string.dialog_add_user_title));
+        alert.setTitle(getString(R.string.dialog_add_user_title, WritingSessionHelper.getInstance().getSessionName()));
 
         // Set an EditText view to get user input
         final EditText input = new EditText(this);
@@ -120,7 +124,7 @@ public abstract class DrawerActivity extends ActionBarActivity {
 
                 // Test username
                 RequestQueue queue = Volley.newRequestQueue(DrawerActivity.this);
-                final String url = StringUtils.getUserUrl(value);
+                final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), value);
                 JSONObject params = new JSONObject();
                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
                     @Override
@@ -168,7 +172,7 @@ public abstract class DrawerActivity extends ActionBarActivity {
 
     protected abstract void onAddUser(User user);
 
-    protected void showPlaystore(){
+    protected void showPlaystore() {
         final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));

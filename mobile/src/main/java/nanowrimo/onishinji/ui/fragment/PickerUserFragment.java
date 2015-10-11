@@ -1,20 +1,10 @@
 package nanowrimo.onishinji.ui.fragment;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
-import android.appwidget.AppWidgetManager;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Cache;
@@ -38,11 +27,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import nanowrimo.onishinji.R;
-import nanowrimo.onishinji.model.Database;
 import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
-import nanowrimo.onishinji.utils.StringUtils;
-import nanowrimo.onishinji.widget.WidgetDailyWordCountRemaining;
+import nanowrimo.onishinji.utils.URLUtils;
+import nanowrimo.onishinji.utils.WritingSessionHelper;
 
 public class PickerUserFragment extends DialogFragment {
 
@@ -123,7 +111,7 @@ public class PickerUserFragment extends DialogFragment {
 
                     mLoader.setVisibility(View.VISIBLE);
                     // Test username
-                    final String url = StringUtils.getUserUrl(mCurrentUser);
+                    final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), mCurrentUser);
                     JSONObject params = new JSONObject();
                     mLoader.setVisibility(View.VISIBLE);
                     mButtonValid.setClickable(false);

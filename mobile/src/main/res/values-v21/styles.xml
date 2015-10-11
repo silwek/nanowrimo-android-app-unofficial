@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="_Wrimo">
+    <style name="AppTheme" parent="Wrimo">
         <!-- Customize your theme here. -->
         <item name="android:toolbarStyle">@style/MyActionBar</item>
 
@@ -20,8 +20,7 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
-    <style name="MyActionBar"
-        parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="MyActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="background">@color/wrimo_color</item>
 
         <item name="colorPrimary">@color/wrimo_color</item>

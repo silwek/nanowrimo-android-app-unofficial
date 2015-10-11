@@ -7,8 +7,6 @@
 
         <item name="colorPrimary">@color/wrimo_color</item>
         <item name="colorPrimaryDark">@color/wrimo_color_dark</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
 
         <item name="colorAccent">@color/wrimo_color_secondary</item>
 
@@ -18,16 +16,12 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
-    <style name="MyActionBar"
-        parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="MyActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:background">@color/wrimo_color</item>
 
         <item name="colorPrimary">@color/wrimo_color</item>
         <item name="colorPrimaryDark">@color/wrimo_color_dark</item>
         <item name="colorAccent">@color/wrimo_color_highlight</item>
-
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
 
         <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="drawerArrowStyle">@style/Theme.Test.DrawerArrowStyle</item>
@@ -40,6 +34,31 @@
 
     <style name="TextRegular">
         <item name="android:textColor">@color/wrimo_color_dark_text</item>
+    </style>
+
+    <style name="Drawer_item">
+        <item name="android:textColor">@color/wrimo_color_dark_text</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:drawablePadding">8dp</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="Drawer_item_secondary">
+        <item name="android:textColor">@color/wrimo_color_dark_text</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:paddingLeft">48dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
 </resources>

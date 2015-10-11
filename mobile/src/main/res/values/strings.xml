@@ -8,7 +8,8 @@
     <string name="default_username">username</string>
     <string name="default_wordcount">0</string>
     <string name="name_invalid">Invalid name</string>
-    <string name="dialog_add_user_title">Follow an Camp NaNoWrimo\'s user</string>
+    <string name="dialog_add_user_title">Follow an Camp %1$s\'s user</string>
+    <string name="dialog_update_wordcount">Update your word count</string>
     <string name="please_loading">Loading..Wait..</string>
     <string name="unfollow_people">Unfollow</string>
     <string name="follow_people">Follow</string>
@@ -46,16 +47,27 @@
     <string name="linear_progress_label">Theoretically progression</string>
 
     <string name="bad_request">Invalid name or network error</string>
-    <string name="menu_playstore">Vote for your app</string>
+    <string name="menu_playstore">Vote for your companion</string>
 
     <string name="welcome_title">I am Wrimo Companion,\nyour writing partner.</string>
     <string name="welcome_question">What do you want to do?</string>
-    <string name="welcome_choice_camp">I want participate to NaNoWriMo Camp 2015</string>
-    <string name="welcome_choice_nano">I want participate to Nanowrimo 2015</string>
+    <string name="welcome_choice_camp">I want participate to NaNoWriMo Camp</string>
+    <string name="welcome_choice_nano">I want participate to Nanowrimo</string>
     <string name="welcome_form_title">Please enter your login on the %s website</string>
     <string name="welcome_start">Start session</string>
     <string name="welcome_prepare_session">Initialize writing session for %s...</string>
 
-    <string name="camp_session_name">Camp Nanowrimo 2015</string>
+    <string name="camp_session_name">Camp Nanowrimo</string>
+    <string name="nano_session_name">Nanowrimo</string>
+
+    <string name="relative_time_days_remaining_to_start">Start in %d days</string>
+    <string name="relative_time_start_tomorrow">%s starts tomorrow!</string>
+    <string name="relative_time_start_today">Let\'s go!</string>
+    <string name="relative_time_days_remaining_to_end">End in %d days</string>
+    <string name="relative_time_end_tomorrow">%s finish tomorrow!</string>
+    <string name="relative_time_end_today">Last day!</string>
+
+    <string name="info_session_not_started">%1$s not started yet, %2$d days remaining. Take the time to make a plan!</string>
+    <string name="info_session_not_started_last_day">%1$s start tomorrow.\nAre you ready?</string>
 
 </resources>

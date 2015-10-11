@@ -1,7 +1,6 @@
 package nanowrimo.onishinji.ui.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,17 +27,43 @@ public class WelcomeFragment extends SlidingFragment {
         ViewGroup v = (ViewGroup) inflater.inflate(R.layout.fragment_welcome, container, false);
 
         mBtCampNano = (Button) v.findViewById(R.id.bt_campnano);
-        mBtCampNano.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar c = Calendar.getInstance();
-                c.set(2015,3,1);
-                WritingSessionHelper.getInstance().setNewSession(getString(R.string.camp_session_name),c.getTime());
-                onWantNextSlide();
-            }
-        });
+
+        Calendar nextCampSession = WritingSessionHelper.getNextCampSession();
+        Calendar nextNanowrimoSession = WritingSessionHelper.getNextNanowrimoSession();
+        if (WritingSessionHelper.isSessionAvailableToInscription(nextCampSession)) {
+            mBtCampNano.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Calendar c = WritingSessionHelper.getNextCampSession();
+                    WritingSessionHelper.getInstance().setNewSession(getString(R.string.camp_session_name), c.getTime(), WritingSession.CAMP);
+                    onWantNextSlide();
+                }
+            });
+        } else {
+            disableButton(mBtCampNano);
+        }
+
+        mBtNanowrimo = (Button) v.findViewById(R.id.bt_nano);
+
+        if (WritingSessionHelper.isSessionAvailableToInscription(nextNanowrimoSession)) {
+            mBtNanowrimo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Calendar c = WritingSessionHelper.getNextNanowrimoSession();
+                    WritingSessionHelper.getInstance().setNewSession(getString(R.string.nano_session_name), c.getTime(), WritingSession.NANOWRIMO);
+                    onWantNextSlide();
+                }
+            });
+        } else {
+            disableButton(mBtNanowrimo);
+        }
 
 
         return v;
+    }
+
+    protected void disableButton(Button bt) {
+        bt.setTextColor(getResources().getColor(R.color.welcome_button_text_inactive));
+        bt.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.ic_send_disabled), null);
     }
 }

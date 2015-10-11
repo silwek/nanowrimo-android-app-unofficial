@@ -7,8 +7,12 @@ import java.util.Date;
  */
 public class WritingSession {
 
+    public static final int NANOWRIMO = 1;
+    public static final int CAMP = 2;
+
     protected String mName;
     protected Date mStartDate;
+    protected int mType;
 
     public String getName() {
         return mName;
@@ -24,5 +28,13 @@ public class WritingSession {
 
     public void setStartDate(Date startDate) {
         mStartDate = startDate;
+    }
+
+    public int getType() {
+        return mType;
+    }
+
+    public void setType(int type) {
+        mType = type;
     }
 }

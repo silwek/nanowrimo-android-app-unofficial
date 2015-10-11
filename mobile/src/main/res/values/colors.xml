@@ -10,4 +10,7 @@
     <color name="small_widget_progress_win">@color/wrimo_color_highlight</color>
     <color name="nanowrimo_background_color">@color/wrimo_color</color>
 
+    <color name="welcome_button_text_active">@android:color/white</color>
+    <color name="welcome_button_text_inactive">@color/wrimo_color_secondary_dark</color>
+
 </resources>

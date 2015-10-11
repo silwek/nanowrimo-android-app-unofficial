@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <ProgressBar
-        android:layout_width="match_parent"
-        android:layout_alignParentTop="true"
-        android:indeterminate="true"
-        android:layout_height="wrap_content"
         android:id="@+id/progressBar"
-        style="@style/ProgressBarWrimo" />
+        style="@style/ProgressBarWrimo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:indeterminate="true" />
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="wrap_content"
+        android:divider="@color/wrimo_color_light_grey"
+        android:dividerHeight="1dp">
+
+    </ListView>
 
 </RelativeLayout>
