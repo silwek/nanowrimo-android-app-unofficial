@@ -317,6 +317,7 @@
 
                 <Button
                     android:id="@+id/show_friends"
+                    style="@style/ButtonColoredWrimo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -324,12 +325,14 @@
 
                 <Button
                     android:id="@+id/button_action"
+                    style="@style/ButtonColoredWrimo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
                 <Button
                     android:id="@+id/button_compare"
+                    style="@style/ButtonColoredWrimo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

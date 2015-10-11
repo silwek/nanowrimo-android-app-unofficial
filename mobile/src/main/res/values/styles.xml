@@ -7,8 +7,6 @@
 
         <item name="colorPrimary">@color/wrimo_color</item>
         <item name="colorPrimaryDark">@color/wrimo_color_dark</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
 
         <item name="colorAccent">@color/wrimo_color_secondary</item>
 
@@ -24,9 +22,6 @@
         <item name="colorPrimary">@color/wrimo_color</item>
         <item name="colorPrimaryDark">@color/wrimo_color_dark</item>
         <item name="colorAccent">@color/wrimo_color_highlight</item>
-
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
 
         <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="drawerArrowStyle">@style/Theme.Test.DrawerArrowStyle</item>
