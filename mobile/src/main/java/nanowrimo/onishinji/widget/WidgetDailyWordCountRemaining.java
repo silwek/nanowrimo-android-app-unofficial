@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Request;
@@ -31,9 +30,9 @@ import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
 import nanowrimo.onishinji.ui.widget.WordCountProgress;
 import nanowrimo.onishinji.utils.ProgressPieDailyUtils;
-import nanowrimo.onishinji.utils.ProgressPieGlobalUtils;
 import nanowrimo.onishinji.utils.ProgressPieUtils;
-import nanowrimo.onishinji.utils.StringUtils;
+import nanowrimo.onishinji.utils.URLUtils;
+import nanowrimo.onishinji.utils.WritingSessionHelper;
 
 
 /**
@@ -98,7 +97,7 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
 
         // Configure http request
         HttpClient.getInstance().setContext(context);
-        final String url = StringUtils.getUserUrl((String) widgetText);
+        final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), (String) widgetText);
 
         if (widgetText != null && !TextUtils.isEmpty(widgetText)) {
             JSONObject params = new JSONObject();

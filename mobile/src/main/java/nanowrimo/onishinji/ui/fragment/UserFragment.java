@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,7 +53,7 @@ import nanowrimo.onishinji.ui.activity.FriendsActivity;
 import nanowrimo.onishinji.ui.widget.MyBarMarkerView;
 import nanowrimo.onishinji.ui.widget.MyMarkerView;
 import nanowrimo.onishinji.ui.widget.WordCountProgress;
-import nanowrimo.onishinji.utils.StringUtils;
+import nanowrimo.onishinji.utils.URLUtils;
 import nanowrimo.onishinji.utils.WritingSessionHelper;
 
 /**
@@ -80,6 +81,8 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
     private BarData mBarData;
     private Button mButtonBuddies;
     private ProgressBar mProgressBar;
+
+    private CardView mNotStartedCard, mStatisticsCard;
 
     private int nbLoad = 2;
     private Button mButtonAction;
@@ -109,7 +112,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
         mDatabase = new Database(getActivity());
 
-        mIsSessionStarted = Calendar.getInstance().before(WritingSessionHelper.getInstance().getSessionStart());
+        mIsSessionStarted = WritingSessionHelper.getInstance().isSessionStarted();
 
     }
 
@@ -196,6 +199,26 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
         mButtonBuddies = (Button) getView().findViewById(R.id.show_friends);
 
+        mStatisticsCard = (CardView) getView().findViewById(R.id.card_statistics);
+        mNotStartedCard = (CardView) getView().findViewById(R.id.card_not_started_yet);
+
+        if (WritingSessionHelper.getInstance().isSessionStarted()) {
+            mStatisticsCard.setVisibility(View.VISIBLE);
+            mNotStartedCard.setVisibility(View.GONE);
+        } else {
+            mStatisticsCard.setVisibility(View.GONE);
+            if (isCurrentUser()) {
+                mNotStartedCard.setVisibility(View.VISIBLE);
+                final int timeRemaining = WritingSessionHelper.getInstance().getTimeRemaining();
+                if (timeRemaining == 1) {
+                    ((TextView) getView().findViewById(R.id.info_session_not_started)).setText(getString(R.string.info_session_not_started_last_day, WritingSessionHelper.getInstance().getSessionName()));
+                } else {
+                    ((TextView) getView().findViewById(R.id.info_session_not_started)).setText(getString(R.string.info_session_not_started, WritingSessionHelper.getInstance().getSessionName(), timeRemaining));
+                }
+            } else {
+                mNotStartedCard.setVisibility(View.GONE);
+            }
+        }
 
         mChart.setDescription("");
         mChart.setDrawLegend(false);
@@ -300,10 +323,10 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
     private void refreshActionButton() {
 
-        if(getActivity() != null) {
-            if(isCurrentUser()){
+        if (getActivity() != null) {
+            if (isCurrentUser()) {
                 mButtonAction.setVisibility(View.GONE);
-            }else if (canRemoveUser()) {
+            } else if (canRemoveUser()) {
                 mButtonAction.setVisibility(View.VISIBLE);
                 mButtonAction.setText(getString(R.string.btn_action_remove));
                 mButtonAction.setOnClickListener(new View.OnClickListener() {
@@ -328,12 +351,13 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
     private boolean isCurrentUser() {
         return mDatabase.isCurrentUser(mId);
     }
+
     private boolean canRemoveUser() {
         return mDatabase.userIsMarkedAsFavorite(mId);
     }
 
     private void initializeGraphics() {
-        if(mUser != null) {
+        if (mUser != null) {
             ArrayList<String> defaultLineValues = new ArrayList<String>();
 
             Calendar c = Calendar.getInstance();
@@ -348,7 +372,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
             String strDate;
 
             final int lastDay = WritingSessionHelper.getInstance().getSessionLastDay();
-            for(int i = 1; i <= lastDay; i++) {
+            for (int i = 1; i <= lastDay; i++) {
                 c.set(Calendar.DAY_OF_MONTH, i);
 
                 Date date = c.getTime();
@@ -415,7 +439,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
         if (mId != null && !TextUtils.isEmpty(mId)) {
 
             nbLoad = 2;
-            final String url = StringUtils.getUserUrl(mId);
+            final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), mId);
 
             JSONObject params = new JSONObject();
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
@@ -548,15 +572,15 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
             mTextViewWordcount.setText(mUser.getWordcount() + "");
             mTextViewWordcountToday.setText(mUser.getWordCountToday() + "");
             mTextViewDailyTarget.setText(mIsSessionStarted ? mUser.getDailyTarget() + "" : "0");
-            mTextViewDailyTargetRemaining.setText(mIsSessionStarted?mUser.getDailyTargetRemaining() + "" : "0");
+            mTextViewDailyTargetRemaining.setText(mIsSessionStarted ? mUser.getDailyTargetRemaining() + "" : "0");
             mTextViewNbDayRemaining.setText(mUser.getNbDayRemaining() + "");
 
-            mProgressDaily.compute(mUser.getWordCountToday(), mIsSessionStarted?mUser.getDailyTarget():0, true);
+            mProgressDaily.compute(mUser.getWordCountToday(), mIsSessionStarted ? mUser.getDailyTarget() : 0, true);
             mProgressGlobal.compute(mUser.getWordcount(), mUser.getGoal(), true);
 
         }
 
-        final String url = StringUtils.getUserUrl(mId);
+        final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), mId);
         getHistoricRemoteData(url + "/history");
     }
 
@@ -634,7 +658,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
     public void onFinishEditDialog(User user) {
         Log.d("user", "start compare with " + user.getId() + " " + user.getName());
 
-       Intent i = new Intent(getActivity(), CompareActivity.class);
+        Intent i = new Intent(getActivity(), CompareActivity.class);
         i.putExtra("id_user_1", mId);
         i.putExtra("id_user_2", user.getId());
         i.putExtra("username_user_1", mUsername);

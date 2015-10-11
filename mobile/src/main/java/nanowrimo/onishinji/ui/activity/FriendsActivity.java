@@ -3,7 +3,6 @@ package nanowrimo.onishinji.ui.activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.android.volley.Cache;
@@ -21,10 +20,10 @@ import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.BusManager;
 import nanowrimo.onishinji.model.Friends;
 import nanowrimo.onishinji.model.HttpClient;
-import nanowrimo.onishinji.model.User;
-import nanowrimo.onishinji.utils.StringUtils;
+import nanowrimo.onishinji.utils.URLUtils;
+import nanowrimo.onishinji.utils.WritingSessionHelper;
 
-public class FriendsActivity  extends FragmentActivity {
+public class FriendsActivity extends FragmentActivity {
 
     private String mUsername;
     private String mId;
@@ -60,7 +59,7 @@ public class FriendsActivity  extends FragmentActivity {
         // Configure http request
 
         if (mUsername != null && !TextUtils.isEmpty(mId)) {
-            final String url = StringUtils.getFriendUserUrl(mId);
+            final String url = URLUtils.getFriendUserUrl(WritingSessionHelper.getInstance().getSessionType(), mId);
 
 
             JSONObject params = new JSONObject();
