@@ -84,7 +84,9 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
     private CardView mNotStartedCard, mStatisticsCard;
 
-    private int nbLoad = 2;
+    protected boolean mIsUserLoading = false;
+    protected boolean mIsHistoryLoading = false;
+
     private Button mButtonAction;
     private Database mDatabase;
     private int position;
@@ -438,13 +440,15 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
         if (mId != null && !TextUtils.isEmpty(mId)) {
 
-            nbLoad = 2;
+            mIsUserLoading = true;
+            checkLoader();
             final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), mId);
 
             JSONObject params = new JSONObject();
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
+                    mIsUserLoading = false;
                     checkLoader();
                     handleResponse(response);
                 }
@@ -452,6 +456,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
                 @Override
                 public void onErrorResponse(VolleyError error) {
 
+                    mIsUserLoading = false;
                     checkLoader();
 
                     if (getActivity() != null) {
@@ -508,17 +513,19 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
     protected void getHistoricRemoteData(final String url) {
 
+        mIsHistoryLoading = true;
         JSONObject params = new JSONObject();
         final JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                mIsHistoryLoading = false;
                 checkLoader();
                 HandleHistoryResponse(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                mIsHistoryLoading = false;
                 checkLoader();
                 Cache c = HttpClient.getInstance().getQueue().getCache();
                 Cache.Entry entry = c.get(url);
@@ -581,7 +588,9 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
         }
 
         final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), mId);
-        getHistoricRemoteData(url + "/history");
+        if (mIsSessionStarted) {
+            getHistoricRemoteData(url + "/history");
+        }
     }
 
     private void HandleHistoryResponse(JSONObject response) {
@@ -674,13 +683,15 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
     }
 
-    private void checkLoader() {
-        nbLoad--;
+    protected boolean isLoading() {
+        return mIsUserLoading || mIsHistoryLoading;
+    }
 
-        if (nbLoad == 0) {
-            mProgressBar.setVisibility(View.GONE);
-        } else {
+    private void checkLoader() {
+        if (isLoading()) {
             mProgressBar.setVisibility(View.VISIBLE);
+        } else {
+            mProgressBar.setVisibility(View.GONE);
         }
     }
 }
