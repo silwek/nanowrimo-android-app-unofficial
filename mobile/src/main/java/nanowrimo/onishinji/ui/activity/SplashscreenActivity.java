@@ -64,7 +64,7 @@ public class SplashscreenActivity extends AppCompatActivity {
     }
 
     protected void mainActivity() {
-        Intent intent = new Intent(this, MyActivity.class);
+        Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);
         finish();
     }

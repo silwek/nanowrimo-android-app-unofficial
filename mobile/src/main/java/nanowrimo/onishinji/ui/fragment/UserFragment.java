@@ -82,7 +82,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
     private Button mButtonBuddies;
     private ProgressBar mProgressBar;
 
-    private CardView mNotStartedCard, mStatisticsCard;
+    private CardView mStatisticsCard;
 
     protected boolean mIsUserLoading = false;
     protected boolean mIsHistoryLoading = false;
@@ -202,24 +202,11 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
         mButtonBuddies = (Button) getView().findViewById(R.id.show_friends);
 
         mStatisticsCard = (CardView) getView().findViewById(R.id.card_statistics);
-        mNotStartedCard = (CardView) getView().findViewById(R.id.card_not_started_yet);
 
         if (WritingSessionHelper.getInstance().isSessionStarted()) {
             mStatisticsCard.setVisibility(View.VISIBLE);
-            mNotStartedCard.setVisibility(View.GONE);
         } else {
             mStatisticsCard.setVisibility(View.GONE);
-            if (isCurrentUser()) {
-                mNotStartedCard.setVisibility(View.VISIBLE);
-                final int timeRemaining = WritingSessionHelper.getInstance().getTimeRemaining();
-                if (timeRemaining == 1) {
-                    ((TextView) getView().findViewById(R.id.info_session_not_started)).setText(getString(R.string.info_session_not_started_last_day, WritingSessionHelper.getInstance().getSessionName()));
-                } else {
-                    ((TextView) getView().findViewById(R.id.info_session_not_started)).setText(getString(R.string.info_session_not_started, WritingSessionHelper.getInstance().getSessionName(), timeRemaining));
-                }
-            } else {
-                mNotStartedCard.setVisibility(View.GONE);
-            }
         }
 
         mChart.setDescription("");

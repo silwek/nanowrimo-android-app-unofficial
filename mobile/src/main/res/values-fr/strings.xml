@@ -69,5 +69,12 @@
 
     <string name="info_session_not_started">Le %1$s n\'est pas encore commencé. Vous avez encore %2$d jours à patienter.\nPrenez le temps de vous préparer !</string>
     <string name="info_session_not_started_last_day">Le %1$s commence demain.\nTenez-vous prêt !</string>
+    <string name="info_session_ended">Le %1$s est terminé !</string>
+
+    <string name="dashboard_my_favories">Mes favoris</string>
+
+    <string name="action_params">Paramètres</string>
+    <string name="action_vote">Votez pour l\'application</string>
+    <string name="action_about">A propos</string>
 
 </resources>

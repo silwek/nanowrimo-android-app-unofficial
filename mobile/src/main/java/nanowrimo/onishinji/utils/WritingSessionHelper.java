@@ -95,6 +95,13 @@ public class WritingSessionHelper {
         return now.after(session);
     }
 
+    public boolean isSessionEnded() {
+        Calendar session = Calendar.getInstance();
+        session.setTime(mWritingSession.getStartDate());
+        Calendar now = Calendar.getInstance();
+        return now.after(session) && !equalSessions(session, now);
+    }
+
     public String getRelativeSessionTime(Context context) {
         Calendar session = Calendar.getInstance();
         session.setTime(mWritingSession.getStartDate());

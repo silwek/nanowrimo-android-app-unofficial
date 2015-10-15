@@ -33,6 +33,7 @@
     </style>
 
     <style name="TextRegular">
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/wrimo_color_dark_text</item>
     </style>
 

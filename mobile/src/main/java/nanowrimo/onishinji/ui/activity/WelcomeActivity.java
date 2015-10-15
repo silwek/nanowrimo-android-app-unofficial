@@ -46,7 +46,7 @@ public class WelcomeActivity extends AppCompatActivity implements SlidingFragmen
             showNewFragment(frag);
         } else if (fragment instanceof PrepareSessionFragment) {
             PreferencesHelper.setFirstLaunch(this, false);
-            Intent intent = new Intent(this, MyActivity.class);
+            Intent intent = new Intent(this, DashboardActivity.class);
             startActivity(intent);
             finish();
         }
