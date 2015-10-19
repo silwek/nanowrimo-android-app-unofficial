@@ -91,21 +91,21 @@ public class WritingSessionHelper {
     public boolean isSessionStarted() {
         Calendar session = Calendar.getInstance();
         session.setTime(mWritingSession.getStartDate());
-        Calendar now = Calendar.getInstance();
+        Calendar now = getNow();
         return now.after(session);
     }
 
     public boolean isSessionEnded() {
         Calendar session = Calendar.getInstance();
         session.setTime(mWritingSession.getStartDate());
-        Calendar now = Calendar.getInstance();
+        Calendar now = getNow();
         return now.after(session) && !equalSessions(session, now);
     }
 
     public String getRelativeSessionTime(Context context) {
         Calendar session = Calendar.getInstance();
         session.setTime(mWritingSession.getStartDate());
-        Calendar now = Calendar.getInstance();
+        Calendar now = getNow();
         final boolean isStarted = now.after(session);
         final boolean isEnded = !equalSessions(session, now);
         if (!isStarted) {
@@ -135,7 +135,7 @@ public class WritingSessionHelper {
     public int getTimeRemaining() {
         Calendar session = Calendar.getInstance();
         session.setTime(mWritingSession.getStartDate());
-        Calendar now = Calendar.getInstance();
+        Calendar now = getNow();
 
         return getTimeRemaining(now, session);
     }
@@ -167,7 +167,7 @@ public class WritingSessionHelper {
         PreferencesHelper.setSessionStart(context, mWritingSession.getStartDate());
         PreferencesHelper.setSessionType(context, mWritingSession.getType());
         PreferencesHelper.setUserName(context, mUser.getName());
-        new Database(context).addUser(mUser.getId(), mUser.getName());
+        Database.getInstance(context).addUser(mUser.getId(), mUser.getName());
     }
 
     public void restoreConfig(Context context) {
@@ -177,13 +177,22 @@ public class WritingSessionHelper {
         WritingSessionHelper.getInstance().setUserName(PreferencesHelper.getUserName(context));
     }
 
+    public void clearConfig(Context context) {
+        Database.getInstance(context).clearUsers();
+        PreferencesHelper.clearAllData(context);
+    }
+
     //==================================
     // Global
     //==================================
 
+    public static Calendar getNow() {
+        return Calendar.getInstance();
+    }
+
     public static Calendar getNanowrimoSession() {
 
-        Calendar c = Calendar.getInstance();
+        Calendar c = getNow();
         final int curMonth = c.get(Calendar.MONTH);
         if (curMonth >= Calendar.JANUARY && curMonth <= Calendar.SEPTEMBER) {
             c.add(Calendar.YEAR, -1);
@@ -196,7 +205,7 @@ public class WritingSessionHelper {
 
     public static Calendar getNextNanowrimoSession() {
 
-        Calendar c = Calendar.getInstance();
+        Calendar c = getNow();
         final int curMonth = c.get(Calendar.MONTH);
         if (curMonth >= Calendar.DECEMBER) {
             c.add(Calendar.YEAR, 1);
@@ -209,7 +218,7 @@ public class WritingSessionHelper {
 
     public static Calendar getCampSession() {
 
-        Calendar c = Calendar.getInstance();
+        Calendar c = getNow();
         final int curMonth = c.get(Calendar.MONTH);
         if (curMonth >= Calendar.JANUARY && curMonth <= Calendar.FEBRUARY) {
             c.add(Calendar.YEAR, -1);
@@ -226,7 +235,7 @@ public class WritingSessionHelper {
 
     public static Calendar getNextCampSession() {
 
-        Calendar c = Calendar.getInstance();
+        Calendar c = getNow();
         final int curMonth = c.get(Calendar.MONTH);
         if (curMonth >= Calendar.JANUARY && curMonth <= Calendar.APRIL) {
             c.set(Calendar.MONTH, Calendar.APRIL);
@@ -250,7 +259,7 @@ public class WritingSessionHelper {
         c.add(Calendar.MONTH, 1);
         c.set(Calendar.DAY_OF_MONTH, 1);
         final long sessionEnd = c.getTime().getTime();
-        c = Calendar.getInstance();
+        c = getNow();
         final long now = c.getTime().getTime();
         if (now >= sessionStart && now < sessionEnd)
             return true;

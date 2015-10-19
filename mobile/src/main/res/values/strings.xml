@@ -72,10 +72,43 @@
     <string name="info_session_ended">%1$s is finished!</string>
 
     <string name="dashboard_my_favories">My favories</string>
+    <string name="dashboard_my_favories_link">All my favories</string>
+    <string name="dashboard_my_favories_empty">You don\'t have any favories.\nKeep an eye on your friends</string>
+
+    <string name="dashboard_hotstuff_update_wordcount_success">To Translate Nombre de mots mis à jour</string>
+    <string name="dashboard_hotstuff_update_wordcount_error">To Translate Impossible de mettre à jour votre nombre de mots</string>
+    <string name="dashboard_hotstuff_missing_secretkey_title">To Translate Clé secrète</string>
+    <string name="dashboard_hotstuff_missing_secretkey_message">To Translate Vous devez renseigner votre clé secrète pour mettre à jour votre nombre de mots. Plus d\'informations dans vos paramètres.</string>
+    <string name="dashboard_hotstuff_missing_secretkey_positive">To Translate Paramètres</string>
+
+    <string name="dashboard_hotstuff_advice_remaining_a_lot">To translate Courage ! %d mots à écrire aujourd\'hui</string>
+    <string name="dashboard_hotstuff_advice_remaining">To translate Plus que %d mots à écrire aujourd\'hui</string>
+    <string name="dashboard_hotstuff_advice_remaining_one">To translate Un dernier mot à écrire aujourd\'hui</string>
+    <string name="dashboard_hotstuff_advice_exact_wordcount">To translate Vous êtes parfaitement dans les temps</string>
+    <string name="dashboard_hotstuff_advice_bonus_wordcount">To translate Bien joué ! %d mots supplémentaire aujourd\'hui</string>
 
     <string name="action_params">Parameters</string>
     <string name="action_vote">Vote for the app</string>
     <string name="action_about">About us</string>
+
+    <string name="ranking_title">All</string>
+
+    <string name="settings_title">Settings</string>
+
+    <string name="secretkey_title">Secret key NaNoWriMo</string>
+    <string name="secretkey_short_description">To Translate Un code personnel fourni par le site officielle du NaNoWriMo</string>
+    <string name="secretkey_long_description">To Translate Cette clé se trouve sur la site officielle et vous permet de soumettre votre Nombre de mots directement depuis Wrimo Companion. Ne vous en faite pas, cette clé est stocké sur votre téléphone uniquement et n\'est transmise à aucun tiers.</string>
+    <string name="secretkey_hint">Your secret key</string>
+    <string name="secretkey_link">Open officiel website to get your secret key</string>
+
+
+    <string name="setting_account_title">To Translate Mon compte Wrimo Companion</string>
+    <string name="setting_account_shortdescription">To Translate %1$s qui participe au %2$s</string>
+    <string name="setting_account_cleardata">To Translate Effacer mes données sur Wrimo Companion</string>
+    <string name="setting_account_cleardata_popup_title">To Translate Effacer mes données</string>
+    <string name="setting_account_cleardata_popup_message">To Translate Vous perdrez vos données enregistrées dans l\'application comme les favoris ou votre clé secrète. Êtes vous sûr ?</string>
+    <string name="dashboard_my_favories_more">And %d other</string>
+    <string name="dashboard_my_favories_more_one">And %d others</string>
 
 
 </resources>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:id="@+id/settings_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_default"
+            android:layout_marginTop="@dimen/margin_large"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TextRegular_Title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/secretkey_title" />
+
+            <ImageButton
+                android:id="@+id/bt_help_secretkey"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_help_black_36dp" />
+        </LinearLayout>
+
+        <TextView
+            style="@style/TextRegular_Subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_default"
+            android:layout_marginLeft="@dimen/margin_default"
+            android:layout_marginRight="@dimen/margin_default"
+            android:text="@string/secretkey_short_description" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_default"
+            android:layout_marginRight="@dimen/margin_default">
+
+            <EditText
+                android:id="@+id/et_secretkey"
+                style="@style/TextRegular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:hint="@string/secretkey_hint"
+                android:imeOptions="actionDone"
+                android:inputType="text|textNoSuggestions"
+                android:lines="1"
+                android:maxLines="1"
+                android:nextFocusLeft="@id/et_secretkey"
+                android:nextFocusUp="@id/et_secretkey"
+                android:paddingRight="@dimen/button_small"
+                android:textColorHint="@color/wrimo_color_light_grey" />
+
+            <ImageButton
+                android:id="@+id/bt_clear_secretkey"
+                android:layout_width="@dimen/button_small"
+                android:layout_height="@dimen/button_small"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_clear_black_36dp" />
+        </RelativeLayout>
+
+
+        <Button
+            android:id="@+id/bt_secretkey_link"
+            style="@style/ButtonWrimo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_default"
+            android:layout_marginRight="@dimen/margin_default"
+            android:gravity="left|center_vertical"
+            android:text="@string/secretkey_link" />
+
+        <include layout="@layout/sep" />
+
+        <TextView
+            style="@style/TextRegular_Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_default"
+            android:layout_marginRight="@dimen/margin_default"
+            android:text="@string/setting_account_title" />
+
+        <TextView
+            android:id="@+id/account_session"
+            style="@style/TextRegular_Subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_default"
+            android:layout_marginLeft="@dimen/margin_default"
+            android:layout_marginRight="@dimen/margin_default"
+            android:text="@string/setting_account_shortdescription" />
+
+        <Button
+            android:id="@+id/bt_clear_my_account"
+            style="@style/ButtonColoredWrimo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_default"
+            android:layout_marginRight="@dimen/margin_default"
+            android:gravity="center"
+            android:text="@string/setting_account_cleardata" />
+
+    </LinearLayout>
+</ScrollView>

@@ -10,6 +10,8 @@ import java.util.HashMap;
  */
 public class User {
 
+    public static final int NO_DATA_WORDCOUNT = -1;
+
     private String mId = "";
     private String mName = "";
     private int mGoal = 50000;

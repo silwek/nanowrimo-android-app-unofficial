@@ -37,6 +37,17 @@
         <item name="android:textColor">@color/wrimo_color_dark_text</item>
     </style>
 
+    <style name="TextRegular_Title">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/wrimo_color_dark_text</item>
+    </style>
+
+    <style name="TextRegular_Subtitle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/wrimo_color_dark_text</item>
+    </style>
+
     <style name="Drawer_item">
         <item name="android:textColor">@color/wrimo_color_dark_text</item>
         <item name="android:textSize">16sp</item>
@@ -60,6 +71,13 @@
         <item name="android:paddingBottom">16dp</item>
         <item name="android:gravity">left|center_vertical</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="TextEmpty">
+        <item name="android:padding">16dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/wrimo_color_light_grey</item>
     </style>
 
 </resources>

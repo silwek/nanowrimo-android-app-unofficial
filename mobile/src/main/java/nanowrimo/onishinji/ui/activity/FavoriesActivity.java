@@ -1,9 +1,10 @@
 package nanowrimo.onishinji.ui.activity;
 
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
@@ -12,10 +13,13 @@ import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.adapter.SectionsPagerAdapter;
 import nanowrimo.onishinji.model.Database;
 import nanowrimo.onishinji.model.User;
+import nanowrimo.onishinji.ui.fragment.RankingFragment;
 import nanowrimo.onishinji.ui.fragment.UserFragment;
+import nanowrimo.onishinji.utils.DialogUtils;
+import nanowrimo.onishinji.utils.StringUtils;
 
 
-public class FavoriesActivity extends ToolbarActivity implements UserFragment.OnRemoveListener {
+public class FavoriesActivity extends ToolbarActivity implements UserFragment.OnRemoveListener, RankingFragment.RankingListener {
 
 
     protected Database mDatabase;
@@ -26,10 +30,10 @@ public class FavoriesActivity extends ToolbarActivity implements UserFragment.On
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
-    private ActionBar.Tab mLastTab;
-    private boolean mTurnOff = false;
     private PagerTitleStrip mPagerTitleStrip;
-    private String mKnowsUsers = null;
+    private String mKnowsUsers;
+    private ArrayList<User> mUsers;
+    private ArrayList<String> mUsersIds;
     private int mLastPosition;
 
     @Override
@@ -38,12 +42,12 @@ public class FavoriesActivity extends ToolbarActivity implements UserFragment.On
         setContentView(R.layout.activity_favories);
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
-
-        reloadViewPager();
-
         mPagerTitleStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip);
 
-        checkEmptyDatabase();
+        mKnowsUsers = null;
+        mUsersIds = new ArrayList<>(0);
+
+        reloadViewPager();
 
         if (getIntent() != null) {
             int index = mDatabase.getUsers().indexOf(getIntent().getStringExtra("from_widget_id"));
@@ -60,39 +64,40 @@ public class FavoriesActivity extends ToolbarActivity implements UserFragment.On
 
     private void reloadViewPager() {
         mDatabase = Database.getInstance(this);
-        mSectionsPagerAdapter = new SectionsPagerAdapter(mDatabase, this, getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(mDatabase, mUsersIds, this, this, getSupportFragmentManager(), this);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-    }
-
-    private void checkEmptyDatabase() {
-        ArrayList<String> users = mDatabase.getUsers();
-        if (users.size() == 0) {
-            //displayAddUserDialog(false);
+        if (mLastPosition >= 0 && mLastPosition < mSectionsPagerAdapter.getCount()) {
+            mViewPager.setCurrentItem(mLastPosition);
         }
     }
 
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.my, menu);
-//        return true;
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_favories, menu);
+        return true;
+    }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        if (id == R.id.add_user) {
-//            displayAddUserDialog(true);
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.add_user:
+                DialogUtils.displayAddUserDialog(this, new DialogUtils.CallbackWithUser() {
+                    @Override
+                    public void onSuccess(User user) {
+                        onAddUser(user);
+                    }
+                });
+                return true;
 
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     protected void onAddUser(User user) {
         onAddTab(user.getId(), true);
@@ -112,30 +117,34 @@ public class FavoriesActivity extends ToolbarActivity implements UserFragment.On
     }
 
 
-    public void onAddTab(String text, Boolean selectLastTab) {
+    public void onAddTab(String username, Boolean selectTab) {
 
         reloadViewPager();
 
-        if (selectLastTab) {
-            mViewPager.setCurrentItem(mDatabase.getUsers().size());
+        if (selectTab) {
+            mViewPager.setCurrentItem(0);
         }
     }
 
     public void onRemoveTab(int position) {
 
+        final String username = mSectionsPagerAdapter.getUserId(position);
+        mUsersIds.remove(username);
+
         reloadViewPager();
 
-        if (position - 1 >= 0 && position - 1 < mDatabase.getUsers().size()) {
-            mViewPager.setCurrentItem(position--);
+        if (position - 1 >= 0 && position - 1 < mSectionsPagerAdapter.getCount()) {
+            mViewPager.setCurrentItem(position - 1);
+        } else {
+            mViewPager.setCurrentItem(0);
         }
-
-        checkEmptyDatabase();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
 
         mKnowsUsers = mDatabase.getUsersString();
+        outState.putStringArrayList("users", mUsersIds);
         outState.putString("knowUsers", mDatabase.getUsersString());
         outState.putInt("currentItem", mViewPager.getCurrentItem());
 
@@ -147,20 +156,12 @@ public class FavoriesActivity extends ToolbarActivity implements UserFragment.On
         super.onRestoreInstanceState(savedInstanceState);
 
         if (savedInstanceState != null) {
-            mDatabase = new Database(this);
-            if (!savedInstanceState.getString("knowUsers").equals(mDatabase.getUsersString())) {
+            mDatabase = Database.getInstance(this);
 
-                mSectionsPagerAdapter = new SectionsPagerAdapter(mDatabase, this, getSupportFragmentManager());
-                mViewPager.setAdapter(mSectionsPagerAdapter);
-
-                int lastPosition = savedInstanceState.getInt("currentItem");
-                if (lastPosition < mDatabase.getUsers().size() && lastPosition >= 0) {
-                    mViewPager.setCurrentItem(lastPosition);
-                }
-
-
-                checkEmptyDatabase();
-            }
+            mKnowsUsers = savedInstanceState.getString("knowUsers");
+            mUsersIds = savedInstanceState.getStringArrayList("users");
+            mLastPosition = savedInstanceState.getInt("currentItem");
+            reloadViewPager();
         }
     }
 
@@ -174,8 +175,9 @@ public class FavoriesActivity extends ToolbarActivity implements UserFragment.On
     @Override
     protected void onResume() {
         super.onResume();
-        mDatabase = new Database(this);
+        mDatabase = Database.getInstance(this);
 
+        /*
         if (mKnowsUsers != null && !mKnowsUsers.equals(mDatabase.getUsersString())) {
 
             reloadViewPager();
@@ -185,19 +187,39 @@ public class FavoriesActivity extends ToolbarActivity implements UserFragment.On
             }
 
             checkEmptyDatabase();
-        }
+        }*/
 
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
+    public void onSelectUser(String username) {
+        final int position = mSectionsPagerAdapter.getPosition(username);
+        if (position >= 0)
+            mViewPager.setCurrentItem(position);
+    }
 
-            default:
-                return super.onOptionsItemSelected(item);
+    @Override
+    public void onSortUsers(ArrayList<User> users) {
+        mUsers = users;
+        final String currentUser = Database.getInstance(this).getUsers().get(0);
+        ArrayList<String> list = new ArrayList<>(users.size() - 1);
+        for (int i = 0; i < users.size(); i++) {
+            User u = users.get(i);
+            if (!StringUtils.safeEquals(currentUser, u.getId())) {
+                list.add(u.getId());
+            }
         }
+        String newUsers = TextUtils.join(",", list);
+        if (!StringUtils.safeEquals(newUsers, mKnowsUsers)) {
+            mKnowsUsers = newUsers;
+            mUsersIds = list;
+            mLastPosition = mViewPager.getCurrentItem();
+            reloadViewPager();
+        }
+    }
+
+    @Override
+    public ArrayList<User> getDefaultUsers() {
+        return mUsers;
     }
 }

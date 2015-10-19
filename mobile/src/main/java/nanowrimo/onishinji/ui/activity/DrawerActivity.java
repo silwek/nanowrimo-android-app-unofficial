@@ -102,7 +102,7 @@ public abstract class DrawerActivity extends ToolbarActivity {
         });
 
 
-        mDatabase = new Database(this);
+        mDatabase = Database.getInstance(this);
     }
 
     public void displayAddUserDialog(final boolean canCloseDialog) {

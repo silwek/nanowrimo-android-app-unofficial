@@ -7,10 +7,43 @@
 
 
     <android.support.v7.widget.CardView
-        android:id="@+id/card_not_started_yet"
+        android:id="@+id/card_no_fav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:visibility="gone"
+        app:cardCornerRadius="0dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/ic_person_add_black_48dp"
+                android:tint="@color/wrimo_color_light_grey" />
+
+            <TextView
+                style="@style/TextEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dashboard_my_favories_empty" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_ranking"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
         app:cardCornerRadius="0dp">
 
         <LinearLayout
@@ -48,15 +81,25 @@
 
             </LinearLayout>
 
-
             <include layout="@layout/sep" />
 
+            <ProgressBar
+                android:id="@+id/fav_progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/wrimo_color_secondary" />
+
             <LinearLayout
+                android:id="@+id/rank_one"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
+                    android:id="@+id/rank_one_wordcount"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -67,6 +110,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/rank_one_name"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="3"
@@ -76,14 +120,20 @@
                     android:textSize="18sp" />
             </LinearLayout>
 
-            <include layout="@layout/sep" />
+            <include
+                android:id="@+id/rank_two_separator"
+                layout="@layout/sep"
+                android:visibility="gone" />
 
             <LinearLayout
+                android:id="@+id/rank_two"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
+                    android:id="@+id/rank_two_wordcount"
                     style="@style/TextRegular"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -93,6 +143,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/rank_two_name"
                     style="@style/TextRegular"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -101,14 +152,20 @@
                     android:text="User 2" />
             </LinearLayout>
 
-            <include layout="@layout/sep" />
+            <include
+                android:id="@+id/rank_three_separator"
+                layout="@layout/sep"
+                android:visibility="gone" />
 
             <LinearLayout
+                android:id="@+id/rank_three"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
+                    android:id="@+id/rank_three_wordcount"
                     style="@style/TextRegular"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -118,6 +175,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/rank_three_name"
                     style="@style/TextRegular"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -125,6 +183,22 @@
                     android:gravity="center_vertical|left"
                     android:text="User 3" />
             </LinearLayout>
+
+            <include
+                android:id="@+id/rank_more_separator"
+                layout="@layout/sep"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/rank_more"
+                style="@style/TextRegular"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/margin_huge"
+                android:gravity="center_vertical|left"
+                android:text="Et 7 autres"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <include layout="@layout/sep" />
 
@@ -136,11 +210,11 @@
                 android:drawableRight="@drawable/ic_chevron_right_black_48dp"
                 android:drawableTint="@color/wrimo_color"
                 android:gravity="left|center_vertical"
-                android:paddingLeft="32dp"
-                android:text="+ 7 autres favoris"
+                android:paddingLeft="@dimen/margin_huge"
+                android:text="@string/dashboard_my_favories_link"
                 android:textAllCaps="false"
                 android:textColor="@color/wrimo_color_dark_text"
-                android:textSize="16sp" />
+                android:textSize="@dimen/text_large" />
 
         </LinearLayout>
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="nanowrimo.onishinji"
+<manifest package="nanowrimo.onishinji"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:installLocation="auto">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -53,7 +53,7 @@
 
         <activity android:name=".ui.activity.DashboardActivity"></activity>
 
-        <activity android:name=".ui.activity.ParamsActivity"></activity>
+        <activity android:name=".ui.activity.SettingsActivity"></activity>
 
         <activity android:name=".ui.activity.AboutActivity"></activity>
 

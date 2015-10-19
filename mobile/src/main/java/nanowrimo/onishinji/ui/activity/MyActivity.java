@@ -1,50 +1,17 @@
 package nanowrimo.onishinji.ui.activity;
 
 import android.app.ActionBar;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerTitleStrip;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-
-import com.crashlytics.android.Crashlytics;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.adapter.SectionsPagerAdapter;
-import nanowrimo.onishinji.model.BusManager;
 import nanowrimo.onishinji.model.Database;
-import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
 import nanowrimo.onishinji.ui.fragment.UserFragment;
-import nanowrimo.onishinji.utils.StringUtils;
 
 
 public class MyActivity extends DrawerActivity implements UserFragment.OnRemoveListener {
@@ -83,8 +50,8 @@ public class MyActivity extends DrawerActivity implements UserFragment.OnRemoveL
     }
 
     private void reloadViewPager() {
-        mDatabase = new Database(this);
-        mSectionsPagerAdapter = new SectionsPagerAdapter(mDatabase, this, getSupportFragmentManager());
+        mDatabase = Database.getInstance(this);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(mDatabase, mDatabase.getUsers(), this, null, getSupportFragmentManager(), this);
         mViewPager.setAdapter(mSectionsPagerAdapter);
     }
 
@@ -118,8 +85,7 @@ public class MyActivity extends DrawerActivity implements UserFragment.OnRemoveL
 //    }
 
 
-
-    protected void onAddUser(User user){
+    protected void onAddUser(User user) {
         onAddTab(user.getId(), true);
     }
 
@@ -150,7 +116,7 @@ public class MyActivity extends DrawerActivity implements UserFragment.OnRemoveL
 
         reloadViewPager();
 
-        if (position - 1 >= 0 && position-1 < mDatabase.getUsers().size()) {
+        if (position - 1 >= 0 && position - 1 < mDatabase.getUsers().size()) {
             mViewPager.setCurrentItem(position--);
         }
 
@@ -160,7 +126,7 @@ public class MyActivity extends DrawerActivity implements UserFragment.OnRemoveL
     @Override
     protected void onSaveInstanceState(Bundle outState) {
 
-        mKnowsUsers =  mDatabase.getUsersString();
+        mKnowsUsers = mDatabase.getUsersString();
         outState.putString("knowUsers", mDatabase.getUsersString());
         outState.putInt("currentItem", mViewPager.getCurrentItem());
 
@@ -171,15 +137,15 @@ public class MyActivity extends DrawerActivity implements UserFragment.OnRemoveL
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-        if(savedInstanceState != null) {
-            mDatabase = new Database(this);
-            if(!savedInstanceState.getString("knowUsers").equals(mDatabase.getUsersString())) {
+        if (savedInstanceState != null) {
+            mDatabase = Database.getInstance(this);
+            if (!savedInstanceState.getString("knowUsers").equals(mDatabase.getUsersString())) {
 
-                mSectionsPagerAdapter = new SectionsPagerAdapter(mDatabase, this, getSupportFragmentManager());
+                mSectionsPagerAdapter = new SectionsPagerAdapter(mDatabase, mDatabase.getUsers(), this, null, getSupportFragmentManager(), this);
                 mViewPager.setAdapter(mSectionsPagerAdapter);
 
                 int lastPosition = savedInstanceState.getInt("currentItem");
-                if(lastPosition < mDatabase.getUsers().size() && lastPosition >= 0) {
+                if (lastPosition < mDatabase.getUsers().size() && lastPosition >= 0) {
                     mViewPager.setCurrentItem(lastPosition);
                 }
 
@@ -192,20 +158,20 @@ public class MyActivity extends DrawerActivity implements UserFragment.OnRemoveL
     @Override
     protected void onPause() {
         super.onPause();
-        mKnowsUsers =  mDatabase.getUsersString();
+        mKnowsUsers = mDatabase.getUsersString();
         mLastPosition = mViewPager.getCurrentItem();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mDatabase = new Database(this);
+        mDatabase = Database.getInstance(this);
 
-        if(mKnowsUsers != null && !mKnowsUsers.equals(mDatabase.getUsersString())) {
+        if (mKnowsUsers != null && !mKnowsUsers.equals(mDatabase.getUsersString())) {
 
             reloadViewPager();
 
-            if(mLastPosition < mDatabase.getUsers().size() && mLastPosition >= 0) {
+            if (mLastPosition < mDatabase.getUsers().size() && mLastPosition >= 0) {
                 mViewPager.setCurrentItem(mLastPosition);
             }
 

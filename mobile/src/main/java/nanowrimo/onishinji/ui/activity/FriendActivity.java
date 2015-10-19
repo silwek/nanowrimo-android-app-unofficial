@@ -4,8 +4,12 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import nanowrimo.onishinji.R;
+import nanowrimo.onishinji.ui.fragment.UserFragment;
 
 public class FriendActivity extends ToolbarActivity {
+
+    public final static String EXTRA_ID = UserFragment.EXTRA_ID;
+    public final static String EXTRA_USERNAME = UserFragment.EXTRA_USERNAME;
 
     private String mUsername;
 
@@ -15,7 +19,7 @@ public class FriendActivity extends ToolbarActivity {
 
         setContentView(R.layout.activity_friend);
 
-        setTitle(getIntent().getStringExtra("username"));
+        setTitle(getIntent().getStringExtra(EXTRA_USERNAME));
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

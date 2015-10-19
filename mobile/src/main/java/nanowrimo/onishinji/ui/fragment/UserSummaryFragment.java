@@ -1,31 +1,20 @@
 package nanowrimo.onishinji.ui.fragment;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.android.volley.Cache;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
-
 import nanowrimo.onishinji.R;
-import nanowrimo.onishinji.model.Database;
-import nanowrimo.onishinji.model.HttpClient;
+import nanowrimo.onishinji.event.UserEvent;
+import nanowrimo.onishinji.model.BusManager;
 import nanowrimo.onishinji.model.User;
-import nanowrimo.onishinji.utils.URLUtils;
+import nanowrimo.onishinji.ui.activity.FriendActivity;
 import nanowrimo.onishinji.utils.WritingSessionHelper;
 
 /**
@@ -43,32 +32,18 @@ public class UserSummaryFragment extends Fragment {
 
     protected boolean mIsUserLoading = false;
 
-    private Database mDatabase;
-
     protected boolean mIsSessionStarted = true;
 
     private String mId;
-    private String mUsername;
     protected User mUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            this.mId = savedInstanceState.getString("id");
-            this.mUsername = savedInstanceState.getString("username");
-        } else {
-            String usernameByIntent = getActivity().getIntent().getStringExtra("id");
-            if (usernameByIntent != null && !usernameByIntent.isEmpty()) {
-                this.mId = usernameByIntent;
-                this.mUsername = getActivity().getIntent().getStringExtra("username");
-            }
-        }
-
-        mDatabase = new Database(getActivity());
-
+        this.mId = WritingSessionHelper.getInstance().getUserName();
         mIsSessionStarted = WritingSessionHelper.getInstance().isSessionStarted();
+        mIsUserLoading = true;
 
     }
 
@@ -76,7 +51,22 @@ public class UserSummaryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_user_dashboard, container, false);
+        rootView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            if (getActivity() != null) {
+                                                Intent intent = new Intent(getActivity(), FriendActivity.class);
+                                                intent.putExtra(FriendActivity.EXTRA_ID, mId);
+                                                intent.putExtra(FriendActivity.EXTRA_USERNAME, mId);
+                                                startActivity(intent);
+                                            }
+                                        }
+                                    }
+
+        );
+
         setHasOptionsMenu(true);
+
         return rootView;
     }
 
@@ -97,109 +87,12 @@ public class UserSummaryFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        getRemoteData();
-    }
-
-    private void getRemoteData() {
-        // Configure http request
-
-        if (mId != null && !TextUtils.isEmpty(mId)) {
-
-            mIsUserLoading = true;
-            checkLoader();
-            final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), mId);
-
-            JSONObject params = new JSONObject();
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    mIsUserLoading = false;
-                    checkLoader();
-                    handleResponse(response);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-
-                    mIsUserLoading = false;
-                    checkLoader();
-
-                    if (getActivity() != null) {
-
-                        Log.e("error", error.toString());
-
-                        Cache c = HttpClient.getInstance().getQueue().getCache();
-                        Cache.Entry entry = c.get(url);
-                        if (entry != null) {
-                            // fetch the data from cache
-                            try {
-                                String data = new String(entry.data, "UTF-8");
-                                handleResponse(new JSONObject(data));
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-            });
-
-
-            // Search from cache first, make request in second
-            Cache c = HttpClient.getInstance().getQueue().getCache();
-            Cache.Entry entry = c.get(url);
-            if (entry != null) {
-                // fetch the data from cache
-                try {
-                    String data = new String(entry.data, "UTF-8");
-                    handleResponse(new JSONObject(data));
-
-                    c.invalidate(url, true);
-
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            HttpClient.getInstance().add(request, true);
-        }
-    }
-
-
-    private void handleResponse(JSONObject response) {
-
-        mUser = new User(response);
-
-        if (getActivity() != null) {
-
-            mTextViewGoal.setText(String.valueOf(mUser.getGoal()));
-            mTextViewWordcount.setText(mUser.getWordcount() + "");
-            mTextViewWordcountToday.setText(mUser.getWordCountToday() + "");
-            mTextViewDailyTarget.setText(mIsSessionStarted ? mUser.getDailyTarget() + "" : "0");
-            mTextViewDailyTargetRemaining.setText(mIsSessionStarted ? mUser.getDailyTargetRemaining() + "" : "0");
-            mTextViewNbDayRemaining.setText(mUser.getNbDayRemaining() + "");
-
-        }
+        checkLoader();
     }
 
     public void setId(String s) {
         this.mId = s;
 
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("id", mId);
-        outState.putString("username", mUsername);
-    }
-
-    public void setUsername(CharSequence pageTitle) {
-        mUsername = (String) pageTitle;
     }
 
     protected boolean isLoading() {
@@ -211,6 +104,36 @@ public class UserSummaryFragment extends Fragment {
             mProgressBar.setVisibility(View.VISIBLE);
         } else {
             mProgressBar.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        BusManager.getInstance().getBus().register(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        BusManager.getInstance().getBus().unregister(this);
+    }
+
+    @SuppressWarnings("unused")
+    public void onEvent(UserEvent event) {
+        mIsUserLoading = false;
+        checkLoader();
+
+        mUser = event.getUser();
+
+        if (getActivity() != null) {
+            mTextViewGoal.setText(String.valueOf(mUser.getGoal()));
+            mTextViewWordcount.setText(mUser.getWordcount() + "");
+            mTextViewWordcountToday.setText(mUser.getWordCountToday() + "");
+            mTextViewDailyTarget.setText(mIsSessionStarted ? mUser.getDailyTarget() + "" : "0");
+            mTextViewDailyTargetRemaining.setText(mIsSessionStarted ? mUser.getDailyTargetRemaining() + "" : "0");
+            mTextViewNbDayRemaining.setText(mUser.getNbDayRemaining() + "");
+
         }
     }
 }

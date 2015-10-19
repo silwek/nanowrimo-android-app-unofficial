@@ -7,7 +7,7 @@ import android.support.v7.widget.Toolbar;
 import nanowrimo.onishinji.R;
 
 /**
- * Created by Amandine Ferrand for Freemo on 11/10/15.
+ * Created by Silwek on 11/10/15.
  */
 public class ToolbarActivity extends AppCompatActivity {
 

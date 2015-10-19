@@ -1,8 +1,6 @@
 package nanowrimo.onishinji.ui.fragment;
 
-import android.app.AlertDialog;
 import android.app.FragmentManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -53,6 +51,7 @@ import nanowrimo.onishinji.ui.activity.FriendsActivity;
 import nanowrimo.onishinji.ui.widget.MyBarMarkerView;
 import nanowrimo.onishinji.ui.widget.MyMarkerView;
 import nanowrimo.onishinji.ui.widget.WordCountProgress;
+import nanowrimo.onishinji.utils.DialogUtils;
 import nanowrimo.onishinji.utils.URLUtils;
 import nanowrimo.onishinji.utils.WritingSessionHelper;
 
@@ -60,6 +59,9 @@ import nanowrimo.onishinji.utils.WritingSessionHelper;
  * A placeholder fragment containing a simple view.
  */
 public class UserFragment extends Fragment implements PickerUserFragment.EditNameDialogListener {
+
+    public final static String EXTRA_ID = "id";
+    public final static String EXTRA_USERNAME = "username";
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -102,17 +104,17 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            this.mId = savedInstanceState.getString("id");
-            this.mUsername = savedInstanceState.getString("username");
+            this.mId = savedInstanceState.getString(EXTRA_ID);
+            this.mUsername = savedInstanceState.getString(EXTRA_USERNAME);
         } else {
-            String usernameByIntent = getActivity().getIntent().getStringExtra("id");
+            String usernameByIntent = getActivity().getIntent().getStringExtra(EXTRA_ID);
             if (usernameByIntent != null && !usernameByIntent.isEmpty()) {
                 this.mId = usernameByIntent;
-                this.mUsername = getActivity().getIntent().getStringExtra("username");
+                this.mUsername = getActivity().getIntent().getStringExtra(EXTRA_USERNAME);
             }
         }
 
-        mDatabase = new Database(getActivity());
+        mDatabase = Database.getInstance(getActivity());
 
         mIsSessionStarted = WritingSessionHelper.getInstance().isSessionStarted();
 
@@ -128,57 +130,27 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
     private void onWantRemoveUser() {
 
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-
-        alert.setTitle(getString(R.string.dialog_remove_user_title));
-        alert.setMessage(getString(R.string.dialog_remove_user_message, mId));
-
-        alert.setPositiveButton(getActivity().getString(R.string.yes), new DialogInterface.OnClickListener() {
-
+        DialogUtils.displayRemoveUserDialog(getActivity(), mId, mUsername, new DialogUtils.Callback() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onSuccess() {
 
                 if (mOnRemoveListener != null) {
                     mOnRemoveListener.remove(mId);
-                } else {
-                    mDatabase.deleteUser(mId);
                 }
 
                 refreshActionButton();
             }
         });
-
-        alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Canceled.
-            }
-        });
-
-        alert.show();
     }
 
     private void onWantAddUser() {
 
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-
-        alert.setTitle(getString(R.string.dialog_add_user_title));
-
-        alert.setPositiveButton(getActivity().getString(R.string.yes), new DialogInterface.OnClickListener() {
-
+        DialogUtils.displayAddUserDialog(getActivity(), mUser, new DialogUtils.CallbackWithUser() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mDatabase.addUser(mId, mUsername);
+            public void onSuccess(User user) {
                 refreshActionButton();
             }
         });
-
-        alert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-
-            }
-        });
-
-        alert.show();
 
     }
 
@@ -324,7 +296,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
                         onWantRemoveUser();
                     }
                 });
-            } else {
+            } else if (canAddUser()) {
                 mButtonAction.setVisibility(View.VISIBLE);
                 mButtonAction.setText(getString(R.string.btn_action_add));
                 mButtonAction.setOnClickListener(new View.OnClickListener() {
@@ -333,6 +305,8 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
                         onWantAddUser();
                     }
                 });
+            } else {
+                mButtonAction.setVisibility(View.GONE);
             }
         }
     }
@@ -343,6 +317,10 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
     private boolean canRemoveUser() {
         return mDatabase.userIsMarkedAsFavorite(mId);
+    }
+
+    private boolean canAddUser() {
+        return mUser != null;
     }
 
     private void initializeGraphics() {

@@ -37,7 +37,6 @@ public class Database {
 
     public Database(Context ctx) {
         this.context = ctx;
-
         String[] spliced = TextUtils.split(getUsersString(), ",");
         for (int i = 0; i < spliced.length; i++) {
             this.users.add(spliced[i]);
@@ -47,6 +46,7 @@ public class Database {
     }
 
     public void addUser(String username, String name) {
+        username = username.toLowerCase();
         if (!this.users.contains(username)) {
             this.users.add(username);
             userInfos.put(username, name);
@@ -71,7 +71,7 @@ public class Database {
     }
 
     public boolean isCurrentUser(String username) {
-        if (this.users.indexOf(username) == 0) {
+        if (this.users.indexOf(username.toLowerCase()) == 0) {
             return true;
         }
 
@@ -136,5 +136,14 @@ public class Database {
 
     public String getNiceTitle(String username) {
         return userInfos.get(username);
+    }
+
+    public void clearUsers() {
+        Log.d("DB", "will be cleared ");
+        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
+        prefs.remove(PREF_PREFIX_KEY);
+        prefs.remove(PREF_PREFIX_KEY_USERS_INFOS);
+        prefs.commit();
+        mInstance = null;
     }
 }
