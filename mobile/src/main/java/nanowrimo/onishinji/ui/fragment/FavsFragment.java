@@ -85,7 +85,7 @@ public class FavsFragment extends Fragment implements GetFavoriesRankingTask.OnF
         mCardRanking = view.findViewById(R.id.card_ranking);
         mCardNoFav = view.findViewById(R.id.card_no_fav);
 
-        mCardNoFav.setOnClickListener(new View.OnClickListener() {
+        mCardNoFav.findViewById(R.id.bt_no_fav).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 displayAddUserDialog();

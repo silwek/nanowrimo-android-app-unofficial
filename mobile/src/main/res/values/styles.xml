@@ -33,51 +33,45 @@
     </style>
 
     <style name="TextRegular">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/text_normal</item>
         <item name="android:textColor">@color/wrimo_color_dark_text</item>
     </style>
 
     <style name="TextRegular_Title">
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">@dimen/text_veryhuge</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/wrimo_color_dark_text</item>
     </style>
 
     <style name="TextRegular_Subtitle">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/text_large</item>
         <item name="android:textColor">@color/wrimo_color_dark_text</item>
-    </style>
-
-    <style name="Drawer_item">
-        <item name="android:textColor">@color/wrimo_color_dark_text</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:paddingRight">8dp</item>
-        <item name="android:paddingTop">16dp</item>
-        <item name="android:paddingBottom">16dp</item>
-        <item name="android:drawablePadding">8dp</item>
-        <item name="android:gravity">left|center_vertical</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
-    </style>
-
-    <style name="Drawer_item_secondary">
-        <item name="android:textColor">@color/wrimo_color_dark_text</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:paddingLeft">48dp</item>
-        <item name="android:paddingRight">8dp</item>
-        <item name="android:paddingTop">16dp</item>
-        <item name="android:paddingBottom">16dp</item>
-        <item name="android:gravity">left|center_vertical</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
     <style name="TextEmpty">
-        <item name="android:padding">16dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">@dimen/text_huge</item>
         <item name="android:textColor">@color/wrimo_color_light_grey</item>
+    </style>
+
+    <style name="Rank_name" parent="TextRegular">
+        <item name="android:gravity">center_vertical|left</item>
+        <item name="android:textSize">@dimen/text_normal</item>
+    </style>
+
+    <style name="Rank_wordcount" parent="Rank_name">
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="WrimoCardView" parent="Rank_name">
+        <item name="cardCornerRadius">0dp</item>
+    </style>
+
+    <style name="ClickableView">
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
 </resources>

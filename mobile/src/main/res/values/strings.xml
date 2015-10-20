@@ -110,8 +110,11 @@
     <string name="dashboard_my_favories_more">And %d other</string>
     <string name="dashboard_my_favories_more_one">And %d others</string>
 
-    <string name="about_us_message">To Translate Vous voulez en savoir plus sur Wrimo Companion et ses concepteurs ?\nAvant toute chose, merci d\'avoir télécharger notre application ! Nous espérons qu\'elle vous plait. Nous, c'est Amandine et Guillaume. La première écrit souvent et le second lit beaucoup, mais nous sommes l\'un comme l'autre des professionnels de la programmation mobile.\nCette application est développé sur notre temps libre, nous faisons de notre mieux pour en faire une application simple et pratique pour tous les auteurs souhaitant participer à ces merveilleux défis que sont le NaNoWriMo et le Camp NaNoWriMo. Si toute fois vous rencontriez des problèmes ou que vous vouliez nous faire part d\'une bonne idée, contactez nous à l\'email ci-dessous.</string>
-    <string name="about_us_contact_email">nekotoneko.apps@gmail.com</string>
+    <string name="about_us_message">To Translate</string>
+    <string name="about_us_contact_email" translatable="false">nekotoneko.apps@gmail.com</string>
+    <string name="dashboard_summary_title">My stats</string>
+    <string name="dashboard_hotstuff_ended_win">To translate Bravo ! Vous avez remporté le défi du %s</string>
+    <string name="dashboard_hotstuff_ended">To translate Le %s est terminé !</string>
 
 
 </resources>

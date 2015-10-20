@@ -51,17 +51,17 @@ public class UserSummaryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_user_dashboard, container, false);
-        rootView.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            if (getActivity() != null) {
-                                                Intent intent = new Intent(getActivity(), FriendActivity.class);
-                                                intent.putExtra(FriendActivity.EXTRA_ID, mId);
-                                                intent.putExtra(FriendActivity.EXTRA_USERNAME, mId);
-                                                startActivity(intent);
-                                            }
-                                        }
-                                    }
+        rootView.findViewById(R.id.bt_my_stats).setOnClickListener(new View.OnClickListener() {
+                                                                       @Override
+                                                                       public void onClick(View v) {
+                                                                           if (getActivity() != null) {
+                                                                               Intent intent = new Intent(getActivity(), FriendActivity.class);
+                                                                               intent.putExtra(FriendActivity.EXTRA_ID, mId);
+                                                                               intent.putExtra(FriendActivity.EXTRA_USERNAME, mId);
+                                                                               startActivity(intent);
+                                                                           }
+                                                                       }
+                                                                   }
 
         );
 

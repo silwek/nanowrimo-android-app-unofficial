@@ -16,6 +16,7 @@
     <dimen name="text_large">16sp</dimen>
     <dimen name="text_verylarge">18sp</dimen>
     <dimen name="text_huge">20sp</dimen>
+    <dimen name="text_veryhuge">22sp</dimen>
 
     <dimen name="padding_small">4dp</dimen>
     <dimen name="padding_default">8dp</dimen>
@@ -29,5 +30,8 @@
     <dimen name="button_small">36dp</dimen>
     <dimen name="button_default">48dp</dimen>
     <dimen name="button_large">64dp</dimen>
+
+    <dimen name="row_default">48dp</dimen>
+    <dimen name="row_large">64dp</dimen>
 
 </resources>
