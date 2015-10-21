@@ -88,6 +88,11 @@ public class WritingSessionHelper {
         return true;
     }
 
+    public int getSessionDay() {
+        Calendar now = getNow();
+        return now.get(Calendar.DAY_OF_MONTH);
+    }
+
     public boolean isSessionStarted() {
         Calendar session = Calendar.getInstance();
         session.setTime(mWritingSession.getStartDate());

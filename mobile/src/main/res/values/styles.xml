@@ -74,4 +74,12 @@
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
+    <style name="TabStrip">
+        <item name="android:background">@color/wrimo_color</item>
+        <item name="android:textColor">@drawable/selector_text_tab</item>
+        <item name="android:paddingTop">@dimen/padding_small</item>
+        <item name="android:paddingBottom">@dimen/padding_small</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>

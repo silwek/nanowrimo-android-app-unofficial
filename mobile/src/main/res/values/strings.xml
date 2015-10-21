@@ -81,6 +81,7 @@
     <string name="dashboard_hotstuff_missing_secretkey_message">To Translate Vous devez renseigner votre clé secrète pour mettre à jour votre nombre de mots. Plus d\'informations dans vos paramètres.</string>
     <string name="dashboard_hotstuff_missing_secretkey_positive">To Translate Paramètres</string>
 
+    <string name="dashboard_hotstuff_day">Day %d</string>
     <string name="dashboard_hotstuff_advice_remaining_a_lot">To translate Courage ! %d mots à écrire aujourd\'hui</string>
     <string name="dashboard_hotstuff_advice_remaining">To translate Plus que %d mots à écrire aujourd\'hui</string>
     <string name="dashboard_hotstuff_advice_remaining_one">To translate Un dernier mot à écrire aujourd\'hui</string>

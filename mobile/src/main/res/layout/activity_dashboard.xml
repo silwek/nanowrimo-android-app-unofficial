@@ -10,7 +10,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="8dp"
+        android:layout_height="@dimen/dashboard_decor_top"
         android:background="@color/wrimo_color_secondary" />
 
     <ScrollView

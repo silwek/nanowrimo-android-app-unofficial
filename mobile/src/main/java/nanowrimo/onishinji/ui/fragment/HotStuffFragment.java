@@ -37,7 +37,7 @@ public class HotStuffFragment extends Fragment {
     protected boolean mIsInit;
     protected User mUser;
 
-    protected TextView mRemainingWords, mEndPrompt;
+    protected TextView mRemainingWords, mEndPrompt, mSessionDay;
     protected boolean mIsSessionEnded, mIsSessionStarted;
 
     @Nullable
@@ -53,6 +53,7 @@ public class HotStuffFragment extends Fragment {
         mWordCountSubmit = (ImageButton) view.findViewById(R.id.bt_wordcount);
         mRemainingWords = (TextView) view.findViewById(R.id.tv_advice);
         mEndPrompt = ((TextView) view.findViewById(R.id.info_session_ended));
+        mSessionDay = (TextView) view.findViewById(R.id.session_day);
 
         mIsSessionStarted = WritingSessionHelper.getInstance().isSessionStarted();
         mIsSessionEnded = WritingSessionHelper.getInstance().isSessionEnded();
@@ -84,6 +85,8 @@ public class HotStuffFragment extends Fragment {
                     onWantSubmit();
                 }
             });
+
+            mSessionDay.setText(getString(R.string.dashboard_hotstuff_day, WritingSessionHelper.getInstance().getSessionDay()));
         } else {
             cardNotStarted.setVisibility(View.VISIBLE);
             final int timeRemaining = WritingSessionHelper.getInstance().getTimeRemaining();

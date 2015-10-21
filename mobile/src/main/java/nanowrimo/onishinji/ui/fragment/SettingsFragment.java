@@ -122,6 +122,7 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        mEditTextSecretKey.setText("");
         final String secretKey = PreferencesHelper.getSecretKey(getActivity());
         mEditTextSecretKey.append(secretKey);
         mIsSecretKeyFieldInit = true;
