@@ -8,6 +8,7 @@ import com.crashlytics.android.Crashlytics;
 
 import java.util.ArrayList;
 
+import io.fabric.sdk.android.Fabric;
 import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.BusManager;
 import nanowrimo.onishinji.model.Database;
@@ -27,7 +28,7 @@ public class SplashscreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splashscreen);
 
-        Crashlytics.start(getApplicationContext());
+        Fabric.with(getApplicationContext(), new Crashlytics());
         BusManager.getInstance();
         HttpClient.getInstance().setContext(getApplicationContext());
     }
@@ -40,7 +41,7 @@ public class SplashscreenActivity extends AppCompatActivity {
     }
 
     private void checkEmptyDatabase() {
-        mDatabase = new Database(this);
+        mDatabase = Database.getInstance(this);
         ArrayList<String> users = mDatabase.getUsers();
 
         if (users.size() == 0 || PreferencesHelper.isFirstLaunch(this)) {
@@ -64,7 +65,7 @@ public class SplashscreenActivity extends AppCompatActivity {
     }
 
     protected void mainActivity() {
-        Intent intent = new Intent(this, MyActivity.class);
+        Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);
         finish();
     }

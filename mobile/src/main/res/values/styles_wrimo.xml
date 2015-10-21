@@ -4,16 +4,23 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="ButtonWrimo" parent="Base.Widget.AppCompat.Button">
-        <item name="android:background">@drawable/wrimo_btn_default_holo_light</item>
+        <item name="android:background">@drawable/wrimo_btn_default</item>
+        <item name="android:textColor">@drawable/selector_text_button</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">@dimen/text_large</item>
     </style>
 
     <style name="ButtonColoredWrimo" parent="Base.Widget.AppCompat.Button.Colored">
-        <item name="android:background">@drawable/wrimo_btn_default_holo_light</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@drawable/wrimo_btn_colored_default</item>
+        <item name="android:textColor">@drawable/selector_text_button_colored</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="ImageButtonWrimo" parent="android:Widget.Holo.Light.ImageButton">
-        <item name="android:background">@drawable/wrimo_btn_default_holo_light</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:tint">@color/wrimo_color</item>
+        <item name="android:padding">@dimen/padding_default</item>
+        <item name="android:textColor">@color/wrimo_color_dark_text</item>
     </style>
 
     <style name="ProgressBarWrimo" parent="Base.Widget.AppCompat.ProgressBar.Horizontal">
@@ -33,6 +40,14 @@
 
     <style name="SpinnerItemWrimo" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
         <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="ToolTipLayoutCustomStyle">
+        <item name="ttlm_padding">@dimen/padding_large</item>
+        <item name="ttlm_strokeColor">@color/wrimo_color_secondary</item>
+        <item name="ttlm_backgroundColor">@color/wrimo_color_secondary</item>
+        <item name="ttlm_strokeWeight">0dip</item>
+        <item name="ttlm_cornerRadius">8dip</item>
     </style>
 
 

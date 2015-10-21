@@ -1,17 +1,17 @@
 package nanowrimo.onishinji.adapter;
 
 
+import android.content.Context;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.util.Log;
-import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.Database;
+import nanowrimo.onishinji.ui.fragment.RankingFragment;
 import nanowrimo.onishinji.ui.fragment.UserFragment;
 
 /**
@@ -20,84 +20,110 @@ import nanowrimo.onishinji.ui.fragment.UserFragment;
  */
 public class SectionsPagerAdapter extends SortableFragmentStatePagerAdapter {
 
-    private  UserFragment.OnRemoveListener listener;
+    protected static final int POSITION_OFFSET = 1; //Ranking tab
+
+    private UserFragment.OnRemoveListener mOnRemoveListener;
+    protected RankingFragment.RankingListener mRankingListener;
     private Database dataSource;
 
-    private ArrayList<UserFragment> tabInfos;
+    private RankingFragment mRankingFragment;
+    private String mRankingTitle;
+    protected ArrayList<String> mUsers;
 
-    public SectionsPagerAdapter(FragmentManager fm) {
-        super(fm);
-    }
 
-    public SectionsPagerAdapter(Database dataSource, UserFragment.OnRemoveListener listener, FragmentManager fm) {
+    public SectionsPagerAdapter(Database dataSource, ArrayList<String> users, UserFragment.OnRemoveListener listener, RankingFragment.RankingListener rankingListener, FragmentManager fm, Context context) {
         super(fm);
-        this.listener = listener;
+        this.mOnRemoveListener = listener;
+        this.mRankingListener = rankingListener;
         this.dataSource = dataSource;
-        tabInfos = new ArrayList<UserFragment>();
-
+        mRankingTitle = context.getString(R.string.ranking_title);
+        mUsers = users;
     }
 
+    public int getPosition(String username) {
+        return mUsers.indexOf(username) + POSITION_OFFSET;//
+    }
 
     @Override
     public Fragment getItem(int position) {
-        // getItem is called to instantiate the fragment for the given page.
-        // Return a PlaceholderFragment (defined as a static inner class below).
+        Fragment f;
 
-        String id = dataSource.getUsers().get(position);
+        if (position == 0) {
+            if (mRankingFragment == null) {
+                mRankingFragment = new RankingFragment();
+                mRankingFragment.setRankingListener(mRankingListener);
+            }
+            f = mRankingFragment;
+        } else {
+            String id = mUsers.get(position - POSITION_OFFSET);
 
-        UserFragment f = new UserFragment();
-        f.setId(id);
-        f.setUsername(getPageTitle(position));
-        f.setOnRemoveListener(listener);
-        f.setPosition(position);
+            f = new UserFragment();
+            ((UserFragment) f).setId(id);
+            ((UserFragment) f).setUsername(getPageTitle(position));
+            ((UserFragment) f).setOnRemoveListener(mOnRemoveListener);
+            ((UserFragment) f).setPosition(position);
 
-        Log.d("fragment", " getItem " + position + " " + id);
+            Log.d("fragment", " getItem " + position + " " + id);
+        }
 
         return f;
     }
 
     @Override
     public long getItemId(int position) {
-        return dataSource.getUsers().get(position).toString().hashCode();
+        if (position == 0) {
+            return -1;
+        } else
+            return mUsers.get(position - POSITION_OFFSET).hashCode();
     }
 
     @Override
     public int getCount() {
         // Show 3 total pages.
-       // Log.d("fragment", " getCount " + dataSource.getUsers().size());
+        // Log.d("fragment", " getCount " + dataSource.getUsers().size());
 
-        if(dataSource != null) {
-            return dataSource.getUsers().size();
+        if (dataSource != null) {
+            return mUsers.size() + POSITION_OFFSET;
         }
 
-        return 0;
+        return POSITION_OFFSET;
     }
 
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return dataSource.getNiceTitle(position);
+        if (position == 0) {
+            return mRankingTitle;
+        } else
+            return dataSource.getNiceTitle(mUsers.get(position - POSITION_OFFSET));
     }
-/*
-    @Override
-    public int getItemPosition(Object object){
 
-        UserFragment fragment = (UserFragment) object;
+    /*
+        @Override
+        public int getItemPosition(Object object){
 
-        int newPos = dataSource.getUsers().indexOf(fragment.getUserId());
+            UserFragment fragment = (UserFragment) object;
 
-        if(fragment.getPosition() == newPos) {
-            Log.d("fragment", " alors l'ancienne position du fragment " + fragment.getPosition() + " est encore à la bonne place" + newPos);
-            return POSITION_UNCHANGED;
+            int newPos = dataSource.getUsers().indexOf(fragment.getUserId());
+
+            if(fragment.getPosition() == newPos) {
+                Log.d("fragment", " alors l'ancienne position du fragment " + fragment.getPosition() + " est encore à la bonne place" + newPos);
+                return POSITION_UNCHANGED;
+            }
+
+            Log.d("fragment", " le fragment n'est plus le même pour " + newPos + " vs " + fragment.getPosition());
+
+            return POSITION_NONE;
         }
-
-        Log.d("fragment", " le fragment n'est plus le même pour " + newPos + " vs " + fragment.getPosition());
-
-        return POSITION_NONE;
-    }
-*/
+    */
     public void setDatabase(Database database) {
         this.dataSource = database;
     }
 
+    public String getUserId(int position) {
+        if (position >= POSITION_OFFSET) {
+            return mUsers.get(position - POSITION_OFFSET);
+        }
+        return null;
+    }
 }

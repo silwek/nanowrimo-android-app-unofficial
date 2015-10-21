@@ -13,4 +13,6 @@
     <color name="welcome_button_text_active">@android:color/white</color>
     <color name="welcome_button_text_inactive">@color/wrimo_color_secondary_dark</color>
 
+    <color name="app_background">#eee</color>
+
 </resources>

@@ -20,6 +20,7 @@ public class PreferencesHelper {
     private static final String PREFS_SESSION_START = "nanowrimo.onishinji.app.prefs.PREFS_SESSION_START";
     private static final String PREFS_SESSION_TYPE = "nanowrimo.onishinji.app.prefs.PREFS_SESSION_TYPE";
     private static final String PREFS_USER_NAME = "nanowrimo.onishinji.app.prefs.PREFS_USER_NAME";
+    private static final String PREFS_SECRET_KEY = "nanowrimo.onishinji.app.prefs.PREFS_SECRET_KEY";
 
 
     public static boolean isFirstLaunch(Context context) {
@@ -88,5 +89,26 @@ public class PreferencesHelper {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PREFS_USER_NAME, userName);
         editor.commit();
+    }
+
+    public static String getSecretKey(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        String userName = prefs.getString(PREFS_SECRET_KEY, "");
+        return userName;
+    }
+
+    public static void setSecretKey(Context context, String secretKey) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = prefs.edit();
+        if (TextUtils.isEmpty(secretKey)) {
+            editor.remove(PREFS_SECRET_KEY);
+        } else {
+            editor.putString(PREFS_SECRET_KEY, secretKey);
+        }
+        editor.commit();
+    }
+
+    public static void clearAllData(Context context) {
+        context.getSharedPreferences(PREFS_NAME, 0).edit().clear().commit();
     }
 }

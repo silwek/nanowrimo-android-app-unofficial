@@ -10,14 +10,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import nanowrimo.onishinji.R;
+import nanowrimo.onishinji.event.FriendsEvent;
 import nanowrimo.onishinji.model.BusManager;
-import nanowrimo.onishinji.model.Friends;
+import nanowrimo.onishinji.model.Friend;
 import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.utils.URLUtils;
 import nanowrimo.onishinji.utils.WritingSessionHelper;
@@ -114,8 +117,19 @@ public class FriendsActivity extends ToolbarActivity {
     }
 
     private void handleResponse(JSONObject response) {
-        Friends friends = new Friends(response);
-        BusManager.getInstance().getBus().post(friends);
+        ArrayList<Friend> list = new ArrayList<>();
+        JSONArray items;
+        try {
+            items = response.getJSONArray("items");
+            for (int i = 0; i < items.length(); i++) {
+                JSONObject o = items.getJSONObject(i);
+                list.add(new Friend(o.getString("id"), o.getString("name")));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        BusManager.getInstance().getBus().post(new FriendsEvent(list));
     }
 
 }

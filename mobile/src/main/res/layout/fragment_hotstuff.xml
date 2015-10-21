@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_ended"
+        style="@style/WrimoCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_default">
+
+            <ImageView
+                android:id="@+id/illu_ended"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/padding_large"
+                android:src="@drawable/ic_book"
+                android:tint="@color/wrimo_color_light_grey" />
+
+            <TextView
+                android:id="@+id/info_session_ended"
+                style="@style/TextEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/illu_ended"
+                android:padding="@dimen/padding_large"
+                android:text="@string/info_session_ended" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_not_started_yet"
+        style="@style/WrimoCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_default">
+
+            <ImageView
+                android:id="@+id/illu_not_started"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/padding_large"
+                android:src="@drawable/ic_book"
+                android:tint="@color/wrimo_color_light_grey" />
+
+            <TextView
+                android:id="@+id/info_session_not_started"
+                style="@style/TextEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/illu_not_started"
+                android:padding="@dimen/padding_large"
+                android:text="@string/info_session_not_started" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_hotstuff"
+        style="@style/WrimoCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_large">
+
+            <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+
+            <TextView
+                android:id="@+id/session_day"
+                style="@style/TextRegular_Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jour 17" />
+
+            <include layout="@layout/sep" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/ed_wordcount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:imeOptions="actionSend"
+                    android:inputType="number"
+                    android:nextFocusLeft="@id/ed_wordcount"
+                    android:nextFocusUp="@id/ed_wordcount"
+                    android:text="16390"
+                    android:textColor="@color/wrimo_color_dark_text"
+                    android:textSize="20sp" />
+
+                <ImageButton
+                    android:id="@+id/bt_wordcount"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_edit_black_36dp"
+                    android:tint="@color/wrimo_color" />
+            </LinearLayout>
+
+            <include layout="@layout/sep" />
+
+            <TextView
+                android:id="@+id/tv_advice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="Plus que 246 mots à écrire aujourd'hui"
+                android:textColor="@color/wrimo_color_light_grey"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

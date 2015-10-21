@@ -1,19 +1,16 @@
 package nanowrimo.onishinji.model;
 
-import com.squareup.otto.Bus;
+import de.greenrobot.event.EventBus;
 
 public class BusManager {
     private static BusManager objLogger;
-    private final Bus mBus;
+    private final EventBus mBus;
 
     private BusManager() {
-
-        //ToDo here
-        mBus = new Bus();
-
+        mBus = new EventBus();
     }
 
-    public Bus getBus() {
+    public EventBus getBus() {
         return mBus;
     }
 

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:installLocation="auto"
-    package="nanowrimo.onishinji" >
+<manifest
+    package="nanowrimo.onishinji"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:installLocation="auto">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
 
 
         <activity
@@ -24,41 +25,40 @@
 
         <activity
             android:name=".ui.activity.WelcomeActivity"
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|screenSize|keyboardHidden" >
-        </activity>
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"></activity>
 
-        <activity
-            android:name=".ui.activity.MyActivity"
-            android:theme="@style/noAnimTheme"
-            android:label="@string/app_name" >
-        </activity>
-
-        <activity android:name=".widget.WidgetDailyWordCountRemainingConfigureActivity" >
+        <activity android:name=".widget.WidgetDailyWordCountRemainingConfigureActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".widget.WidgetWordCountRemainingConfigureActivity" >
+        <activity android:name=".widget.WidgetWordCountRemainingConfigureActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activity.FriendsActivity" >
-        </activity>
+        <activity android:name=".ui.activity.FriendsActivity"></activity>
 
 
-        <activity android:name=".ui.activity.FriendActivity" >
-        </activity>
+        <activity android:name=".ui.activity.FriendActivity"></activity>
 
-        <activity android:name=".ui.activity.CompareActivity" >
-        </activity>
+        <activity android:name=".ui.activity.CompareActivity"></activity>
+
+        <activity android:name=".ui.activity.DashboardActivity"></activity>
+
+        <activity android:name=".ui.activity.SettingsActivity"></activity>
+
+        <activity android:name=".ui.activity.AboutActivity"></activity>
+
+        <activity android:name=".ui.activity.FavoriesActivity"></activity>
 
 
-
-        <receiver android:name=".widget.WidgetDailyWordCountRemaining" android:label="@string/widget_title" >
+        <receiver
+            android:name=".widget.WidgetDailyWordCountRemaining"
+            android:label="@string/widget_title">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
 
@@ -69,7 +69,9 @@
                 android:resource="@xml/widget_daily_word_count_remaining_info" />
         </receiver>
 
-        <receiver android:name=".widget.WidgetWordCountRemaining" android:label="@string/widget_title_global" >
+        <receiver
+            android:name=".widget.WidgetWordCountRemaining"
+            android:label="@string/widget_title_global">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
 
@@ -80,7 +82,9 @@
                 android:resource="@xml/widget_word_count_remaining_info" />
         </receiver>
 
-        <meta-data android:name="com.crashlytics.ApiKey" android:value="b764f108892a2f4f8117d92e650403590400bc8c"/>
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="b764f108892a2f4f8117d92e650403590400bc8c" />
 
     </application>
 

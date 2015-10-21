@@ -99,7 +99,7 @@ public class CompareFragment extends Fragment {
             }
         }
 
-        mDatabase = new Database(getActivity());
+        mDatabase = Database.getInstance(getActivity());
     }
 
     @Override
