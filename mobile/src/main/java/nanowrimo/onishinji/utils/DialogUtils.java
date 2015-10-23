@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.text.InputType;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -31,6 +32,10 @@ public class DialogUtils {
 
     public interface CallbackWithUser {
         void onSuccess(User user);
+    }
+
+    public interface CallbackWithInteger {
+        void onSuccess(int response);
     }
 
     public interface Callback {
@@ -166,6 +171,35 @@ public class DialogUtils {
 
         alert.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
+            }
+        });
+
+        alert.show();
+    }
+
+    public static void displayAddWordcountDialog(final Context context, final CallbackWithInteger callback) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+
+        alert.setTitle("Ajouter des mots à mon compteur");
+
+        // Set an EditText view to get user input
+        final EditText input = new EditText(context);
+        input.setHint("Nombre de mots");
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        alert.setView(input);
+
+        alert.setPositiveButton(context.getString(R.string.yes), new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final String value = input.getText().toString().trim();
+                callback.onSuccess(Integer.parseInt(value));
+            }
+        });
+
+        alert.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
             }
         });
 

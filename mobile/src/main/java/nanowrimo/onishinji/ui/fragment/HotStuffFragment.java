@@ -33,7 +33,7 @@ import nanowrimo.onishinji.utils.WritingSessionHelper;
 public class HotStuffFragment extends Fragment {
 
     protected EditText mWordCount;
-    protected ImageButton mWordCountSubmit;
+    protected ImageButton mAddToWordcount;
     protected boolean mIsInit;
     protected User mUser;
 
@@ -50,7 +50,7 @@ public class HotStuffFragment extends Fragment {
         View cardHotstuff = view.findViewById(R.id.card_hotstuff);
 
         mWordCount = (EditText) view.findViewById(R.id.ed_wordcount);
-        mWordCountSubmit = (ImageButton) view.findViewById(R.id.bt_wordcount);
+        mAddToWordcount = (ImageButton) view.findViewById(R.id.bt_add_to_wordcount);
         mRemainingWords = (TextView) view.findViewById(R.id.tv_advice);
         mEndPrompt = ((TextView) view.findViewById(R.id.info_session_ended));
         mSessionDay = (TextView) view.findViewById(R.id.session_day);
@@ -79,10 +79,10 @@ public class HotStuffFragment extends Fragment {
                 }
             });
 
-            mWordCountSubmit.setOnClickListener(new View.OnClickListener() {
+            mAddToWordcount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onWantSubmit();
+                    onWantAddToWordCount();
                 }
             });
 
@@ -148,11 +148,17 @@ public class HotStuffFragment extends Fragment {
         }
     }
 
-    protected void onWantSubmit() {
-        if (mWordCount.isFocused()) {
-            submitWordcount();
-        } else {
-            mWordCount.requestFocus();
+    protected void onWantAddToWordCount() {
+        if (canSubmit()) {
+            DialogUtils.displayAddWordcountDialog(getActivity(), new DialogUtils.CallbackWithInteger() {
+                @Override
+                public void onSuccess(int response) {
+                    final int oldWorcount = mUser.getWordcount();
+                    final int newWordcount = oldWorcount + response;
+                    mWordCount.setText(String.valueOf(newWordcount));
+                    submitWordcount();
+                }
+            });
         }
     }
 
@@ -178,7 +184,7 @@ public class HotStuffFragment extends Fragment {
 
                 @Override
                 public void onError() {
-                    mWordCount.setText(oldWorcount);
+                    mWordCount.setText(String.valueOf(oldWorcount));
                     AlertUtils.displayError(getActivity(), R.string.dashboard_hotstuff_update_wordcount_error);
                 }
             });
