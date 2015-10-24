@@ -44,6 +44,8 @@
                 android:layout_height="@dimen/button_default"
                 android:layout_marginLeft="@dimen/margin_default"
                 android:background="@null"
+                android:clickable="false"
+                android:focusable="false"
                 android:src="@drawable/ic_stats_black_36dp" />
 
         </LinearLayout>
