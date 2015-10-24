@@ -16,7 +16,12 @@ import java.util.Map;
  */
 public class StringUtils {
 
-    final static String baseUrl = "https://campnanowrimo.herokuapp.com/users/";//"http://new-class.com:1234/users/";
+    public static boolean safeEquals(String s1, String s2) {
+        if (s1 == null || s2 == null) {
+            return false;
+        }
+        return s1.equals(s2);
+    }
 
     public static String removeAccents(String text) {
         return text == null ? null :
@@ -24,15 +29,11 @@ public class StringUtils {
                         .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
 
-    public static String getUserUrl(String username) {
-        return baseUrl + removeAccents(username).replace(" ", "-");
-    }
-
 
     public static Map jsonToMap(JSONObject json) throws JSONException {
         Map<String, Object> retMap = new HashMap<String, Object>();
 
-        if(json != JSONObject.NULL) {
+        if (json != JSONObject.NULL) {
             retMap = toMap(json);
         }
         return retMap;
@@ -42,15 +43,13 @@ public class StringUtils {
         Map<String, Object> map = new HashMap<String, Object>();
 
         Iterator<String> keysItr = object.keys();
-        while(keysItr.hasNext()) {
+        while (keysItr.hasNext()) {
             String key = keysItr.next();
             Object value = object.get(key);
 
-            if(value instanceof JSONArray) {
+            if (value instanceof JSONArray) {
                 value = toList((JSONArray) value);
-            }
-
-            else if(value instanceof JSONObject) {
+            } else if (value instanceof JSONObject) {
                 value = toMap((JSONObject) value);
             }
             map.put(key, value);
@@ -60,21 +59,15 @@ public class StringUtils {
 
     public static List toList(JSONArray array) throws JSONException {
         List<Object> list = new ArrayList<Object>();
-        for(int i = 0; i < array.length(); i++) {
+        for (int i = 0; i < array.length(); i++) {
             Object value = array.get(i);
-            if(value instanceof JSONArray) {
+            if (value instanceof JSONArray) {
                 value = toList((JSONArray) value);
-            }
-
-            else if(value instanceof JSONObject) {
+            } else if (value instanceof JSONObject) {
                 value = toMap((JSONObject) value);
             }
             list.add(value);
         }
         return list;
-    }
-
-    public static String getFriendUserUrl(String username) {
-        return baseUrl + removeAccents(username).replace(" ", "-")+"/friends";
     }
 }

@@ -1,30 +1,15 @@
 package nanowrimo.onishinji.ui.activity;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 
-import com.android.volley.Cache;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
-
 import nanowrimo.onishinji.R;
-import nanowrimo.onishinji.model.BusManager;
-import nanowrimo.onishinji.model.Friends;
-import nanowrimo.onishinji.model.HttpClient;
-import nanowrimo.onishinji.model.User;
-import nanowrimo.onishinji.utils.StringUtils;
+import nanowrimo.onishinji.ui.fragment.UserFragment;
 
-public class FriendActivity  extends FragmentActivity {
+public class FriendActivity extends ToolbarActivity {
+
+    public final static String EXTRA_ID = UserFragment.EXTRA_ID;
+    public final static String EXTRA_USERNAME = UserFragment.EXTRA_USERNAME;
 
     private String mUsername;
 
@@ -34,9 +19,10 @@ public class FriendActivity  extends FragmentActivity {
 
         setContentView(R.layout.activity_friend);
 
-        setTitle(getIntent().getStringExtra("username"));
+        setTitle(getIntent().getStringExtra(EXTRA_USERNAME));
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

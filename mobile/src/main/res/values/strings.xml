@@ -2,60 +2,125 @@
 <resources>
 
     <string name="app_name">Wrimo Companion</string>
-    <string name="configure">Display daily word count remaining for</string>
-    <string name="configure_global">Display current word count for</string>
-    <string name="add_widget">Save widget</string>
-    <string name="default_username">username</string>
-    <string name="default_wordcount">0</string>
-    <string name="name_invalid">Invalid name</string>
-    <string name="dialog_add_user_title">Follow an Camp NaNoWrimo\'s user</string>
-    <string name="please_loading">Loading..Wait..</string>
-    <string name="unfollow_people">Unfollow</string>
+    <string name="configure">Display daily word count left for current user:</string>
+    <string name="configure_global">Display word written count for current user</string>
+    <string name="add_widget">Add widget</string>
+    <string name="default_username">Username</string>
+    <string name="default_wordcount" translatable="false">0</string>
+    <string name="name_invalid">Wrong login or user not registered yet</string>
+    <string name="dialog_add_user_title">Follow user %1$s</string>
+    <string name="dialog_update_wordcount">Update your wordcount</string>
+    <string name="please_loading">Please wait...</string>
+    <string name="unfollow_people">Stop following</string>
     <string name="follow_people">Follow</string>
     <string name="error_network_widget">Error</string>
     <string name="stats_goal">Goal</string>
-    <string name="stats_wordcount">Global word count</string>
-    <string name="stats_wordcount_today">Today word count</string>
-    <string name="stats_daily_target">Daily target</string>
-    <string name="stats_daily_target_remaining">Daily target word count remaining</string>
-    <string name="stats_nb_day_remaining">Days remaining</string>
-    <string name="stats_empty">...</string>
-    <string name="error_network_widget_toast">Network error for %1$s (%2$s)</string>
+    <string name="stats_wordcount">Word count</string>
+    <string name="stats_wordcount_today">Today\'s Word count</string>
+    <string name="stats_daily_target">Today\'s goal</string>
+    <string name="stats_daily_target_remaining">Remaining words today</string>
+    <string name="stats_nb_day_remaining">Days left</string>
+    <string name="stats_empty" translatable="false">...</string>
+    <string name="error_network_widget_toast">%1$s had a network error (%2$s)</string>
     <string name="error_network_fragment_bottom">network</string>
     <string name="yes">Yes</string>
     <string name="follow">Follow</string>
     <string name="cancel">Cancel</string>
-    <string name="dialog_remove_user_title">Are you sure ?</string>
-    <string name="dialog_remove_user_message">Do you really want unfollow %1$s\'s progression ?</string>
+    <string name="dialog_remove_user_title">Are you sure?</string>
+    <string name="dialog_remove_user_message">Do you really want to stop following %1$s\'s work ?</string>
     <string name="title_graph">Statistics</string>
-    <string name="stats_marker_view">%1$s words at %2$s\n%3$s words this day</string>
-    <string name="stats_bar_marker_view">%1$s words at %2$s</string>
+    <string name="stats_marker_view">%1$s words on %2$s\n%3$s words today</string>
+    <string name="stats_bar_marker_view">%1$s words on %2$s</string>
 
-    <string name="widget_title_global">Global wordcount</string>
-    <string name="widget_title">Daily wordcount</string>
-    <string name="show_friends">show friends</string>
-    <string name="title_friends_activity">Buddies of %1$s</string>
-    <string name="btn_action_remove">Unfollow</string>
-    <string name="btn_action_add">follow</string>
-    <string name="compare_with">compare with</string>
-    <string name="dialog_picker_default">Enter Name</string>
-    <string name="dialog_picker_title">Some Title</string>
-    <string name="btn_valid_compare_with">Save</string>
-    <string name="choose_favorite_user">Select favorite</string>
+    <string name="widget_title_global">Amount of words lefts</string>
+    <string name="widget_title">Daily objective</string>
+    <string name="show_friends">See your friends</string>
+    <string name="title_friends_activity">Friends of %1$s</string>
+    <string name="btn_action_remove">Stop following</string>
+    <string name="btn_action_add">Follow</string>
+    <string name="compare_with">Compare with</string>
+    <string name="dialog_picker_default">Choose someone</string>
+    <string name="dialog_picker_title">Compare your stats</string>
+    <string name="choose_favorite_user">Pick someone from your followed people</string>
+    <string name="btn_valid_compare_with">Begin comparison</string>
     <string name="title_compare_activity">%1$s vs %2$s</string>
-    <string name="linear_progress_label">Theoretically progression</string>
+    <string name="linear_progress_label">Theorical progress</string>
 
-    <string name="bad_request">Invalid name or network error</string>
-    <string name="menu_playstore">Vote for your app</string>
+    <string name="bad_request">Network error or invalid login</string>
+    <string name="menu_playstore">Vote for your companion</string>
 
-    <string name="welcome_title">I am Wrimo Companion,\nyour writing partner.</string>
-    <string name="welcome_question">What do you want to do?</string>
-    <string name="welcome_choice_camp">I want participate to NaNoWriMo Camp 2015</string>
-    <string name="welcome_choice_nano">I want participate to Nanowrimo 2015</string>
-    <string name="welcome_form_title">Please enter your login on the %s website</string>
-    <string name="welcome_start">Start session</string>
-    <string name="welcome_prepare_session">Initialize writing session for %s...</string>
+    <string name="welcome_title">I am Wrimo Companion,\nyour writing parter.</string>
+    <string name="welcome_question">What do you wish to do ?</string>
+    <string name="welcome_choice_camp">I wish to take part of Camp Nanowrimo</string>
+    <string name="welcome_choice_nano">I wish to take part to Nanowrimo</string>
+    <string name="welcome_form_title">Please enter your username on this website: %s</string>
+    <string name="welcome_start">Begin session</string>
+    <string name="welcome_prepare_session">Preparing writing session for %s...</string>
 
-    <string name="camp_session_name">Camp Nanowrimo 2015</string>
+    <string name="camp_session_name">Camp Nanowrimo</string>
+    <string name="nano_session_name">Nanowrimo</string>
 
+    <string name="relative_time_days_remaining_to_start">Beginning in %d days</string>
+    <string name="relative_time_start_tomorrow">%s begins tommorrow!</string>
+    <string name="relative_time_start_today">Let\'s go!</string>
+    <string name="relative_time_days_remaining_to_end">Ends in %d days</string>
+    <string name="relative_time_end_tomorrow">%s ends tommorrow!</string>
+    <string name="relative_time_end_today">Final day!</string>
+
+    <string name="info_session_not_started">%1$s hasn\'t begun yet. Still %2$d days left to wait.\nTake some time to prepare!</string>
+    <string name="info_session_not_started_last_day">%1$s begins tomorrow.\nGet ready!</string>
+    <string name="info_session_ended">%1$s is now over!</string>
+
+    <string name="dashboard_summary_title">My stats</string>
+
+    <string name="dashboard_my_favories">My favorites</string>
+    <string name="dashboard_my_favories_more_one">And %d other</string>
+    <string name="dashboard_my_favories_more">And %d others</string>
+    <string name="dashboard_my_favories_link">All my favorites</string>
+    <string name="dashboard_my_favories_empty">You currently have no one in your favorite list.\nKeep an eye over your friends</string>
+
+    <string name="dialog_add_to_wordcount_title">Add words to my wordcount</string>
+    <string name="dialog_add_to_wordcount_hint">Words written today</string>
+    <string name="dialog_add_to_wordcount_positive">Add</string>
+    <string name="dashboard_hotstuff_update_wordcount_success">Word count updated</string>
+    <string name="dashboard_hotstuff_update_wordcount_error">Unable to update your word count</string>
+
+    <string name="dashboard_hotstuff_missing_secretkey_title">Secret key</string>
+    <string name="dashboard_hotstuff_missing_secretkey_message">You should fill in a secret key to update your word count. More about this in the settings panel.</string>
+    <string name="dashboard_hotstuff_missing_secretkey_positive">Settings</string>
+
+    <string name="dashboard_hotstuff_advice_remaining_a_lot">Hang on! %d words to write for today</string>
+    <string name="dashboard_hotstuff_advice_remaining">Only %d days left for today</string>
+    <string name="dashboard_hotstuff_advice_remaining_one">One final word for today</string>
+    <string name="dashboard_hotstuff_advice_exact_wordcount">You\'re exactly on time</string>
+    <string name="dashboard_hotstuff_advice_bonus_wordcount">Nice one! %d additional words for today</string>
+
+    <string name="dashboard_hotstuff_ended_win">Congratulations! You won %s\'s challenge</string>
+    <string name="dashboard_hotstuff_ended">%s is now over!</string>
+
+    <string name="dashboard_hotstuff_day">Day %d</string>
+
+
+    <string name="action_params">Settings</string>
+    <string name="action_vote">Vote for this app</string>
+    <string name="action_about">About</string>
+
+    <string name="ranking_title">All</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="secretkey_title">Secret NaNoWriMo Key</string>
+    <string name="secretkey_short_description">A personal key provides by the official website nanowrimo.org</string>
+    <string name="secretkey_long_description">This key can be found on the official website and allows you to submit your word count from Wrimo Companion. Don\'t worry, this key stay in your phone\'s storage and we don\'t share it.</string>
+    <string name="secretkey_hint">Your secret key</string>
+    <string name="secretkey_link">Open the official website to get your key</string>
+
+    <string name="setting_account_title">My Wrimo Companion account</string>
+    <string name="setting_account_shortdescription">%1$s taking part in %2$s</string>
+    <string name="setting_account_cleardata">Erase data on Wrimo Companion</string>
+    <string name="setting_account_cleardata_popup_title">Erase my data</string>
+    <string name="setting_account_cleardata_popup_message">You\'re about to loose all data on the app including your secret key and your favorite list. Are you sure?</string>
+
+    <string name="about_us_message">Wish to know more about Wrimo Companion and its makers?\nFirst and foremost,  thank you for downloading our app! We hope it is to your taste. We\'re Amandine and Guillaume. The first writes often while the second reads a lot, but we\'re both mobile programming professionals.\n This app was made on our spare time, and we\'re doing our best to make it both pratical and easy to use for every writer wanted to take part in those wonderful challenges that are NaNoWriMo and Camp NaNoWriMo. Should you encouter any issues with the app or just wish to give us feedback or ideas feel free to contact us at the email address bellow.</string>
+
+    <string name="about_us_contact_email" translatable="false">nekotoneko.apps@gmail.com</string>
 </resources>

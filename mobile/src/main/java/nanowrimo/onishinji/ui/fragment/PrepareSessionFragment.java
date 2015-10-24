@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -19,15 +18,14 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONObject;
 
 import nanowrimo.onishinji.R;
-import nanowrimo.onishinji.model.Database;
 import nanowrimo.onishinji.model.User;
-import nanowrimo.onishinji.utils.StringUtils;
+import nanowrimo.onishinji.utils.URLUtils;
 import nanowrimo.onishinji.utils.WritingSessionHelper;
 
 /**
  * Created by Silwek on 29/03/2015.
  */
-public class PrepareSessionFragment  extends SlidingFragment {
+public class PrepareSessionFragment extends SlidingFragment {
 
     protected TextView mTvLoading;
 
@@ -48,7 +46,7 @@ public class PrepareSessionFragment  extends SlidingFragment {
 
         // Test username
         RequestQueue queue = Volley.newRequestQueue(getActivity());
-        final String url = StringUtils.getUserUrl(WritingSessionHelper.getInstance().getUserName());
+        final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), WritingSessionHelper.getInstance().getUserName());
         JSONObject params = new JSONObject();
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
             @Override
@@ -62,7 +60,7 @@ public class PrepareSessionFragment  extends SlidingFragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("error", error.toString());
-                Toast.makeText(getActivity(),R.string.bad_request,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.bad_request, Toast.LENGTH_SHORT).show();
                 onWantPreviousSlide();
             }
         });

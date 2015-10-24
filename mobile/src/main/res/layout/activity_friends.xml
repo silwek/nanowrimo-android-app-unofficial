@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_toolbar" />
 
     <fragment
+        android:id="@+id/fragment"
+        android:name="nanowrimo.onishinji.ui.fragment.UsersListFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="nanowrimo.onishinji.ui.fragment.UsersListFragment"
-        android:id="@+id/fragment"
         android:layout_gravity="center_horizontal"
         tools:layout="@layout/fragment_users_list" />
 </LinearLayout>

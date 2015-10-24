@@ -1,14 +1,14 @@
 package nanowrimo.onishinji.ui.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 
 import com.crashlytics.android.Crashlytics;
 
 import java.util.ArrayList;
 
+import io.fabric.sdk.android.Fabric;
 import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.BusManager;
 import nanowrimo.onishinji.model.Database;
@@ -19,7 +19,7 @@ import nanowrimo.onishinji.utils.WritingSessionHelper;
 /**
  * Created by Silwek on 29/03/2015.
  */
-public class SplashscreenActivity extends Activity {
+public class SplashscreenActivity extends AppCompatActivity {
 
     Database mDatabase;
 
@@ -28,7 +28,7 @@ public class SplashscreenActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splashscreen);
 
-        Crashlytics.start(getApplicationContext());
+        Fabric.with(getApplicationContext(), new Crashlytics());
         BusManager.getInstance();
         HttpClient.getInstance().setContext(getApplicationContext());
     }
@@ -41,21 +41,31 @@ public class SplashscreenActivity extends Activity {
     }
 
     private void checkEmptyDatabase() {
-        mDatabase = new Database(this);
+        mDatabase = Database.getInstance(this);
         ArrayList<String> users = mDatabase.getUsers();
 
-        final Intent intent;
         if (users.size() == 0 || PreferencesHelper.isFirstLaunch(this)) {
-            intent = new Intent(SplashscreenActivity.this,WelcomeActivity.class);
-        }else{
+            newSession();
+        } else {
             //init WritingSessionHelper
-            WritingSessionHelper.getInstance().setSessionName(PreferencesHelper.getSessionName(this));
-            WritingSessionHelper.getInstance().setSessionStart(PreferencesHelper.getSessionStart(this));
-            WritingSessionHelper.getInstance().setUserName(PreferencesHelper.getUserName(this));
+            WritingSessionHelper.getInstance().restoreConfig(this);
 
-            intent = new Intent(SplashscreenActivity.this,MyActivity.class);
+            if (WritingSessionHelper.getInstance().isSessionExpired()) {
+                newSession();
+            } else {
+                mainActivity();
+            }
         }
+    }
 
+    protected void newSession() {
+        Intent intent = new Intent(this, WelcomeActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    protected void mainActivity() {
+        Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);
         finish();
     }

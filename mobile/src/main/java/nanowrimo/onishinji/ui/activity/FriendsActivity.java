@@ -1,9 +1,7 @@
 package nanowrimo.onishinji.ui.activity;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.android.volley.Cache;
@@ -12,19 +10,22 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import nanowrimo.onishinji.R;
+import nanowrimo.onishinji.event.FriendsEvent;
 import nanowrimo.onishinji.model.BusManager;
-import nanowrimo.onishinji.model.Friends;
+import nanowrimo.onishinji.model.Friend;
 import nanowrimo.onishinji.model.HttpClient;
-import nanowrimo.onishinji.model.User;
-import nanowrimo.onishinji.utils.StringUtils;
+import nanowrimo.onishinji.utils.URLUtils;
+import nanowrimo.onishinji.utils.WritingSessionHelper;
 
-public class FriendsActivity  extends FragmentActivity {
+public class FriendsActivity extends ToolbarActivity {
 
     private String mUsername;
     private String mId;
@@ -41,7 +42,8 @@ public class FriendsActivity  extends FragmentActivity {
 
         setContentView(R.layout.activity_friends);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -60,7 +62,7 @@ public class FriendsActivity  extends FragmentActivity {
         // Configure http request
 
         if (mUsername != null && !TextUtils.isEmpty(mId)) {
-            final String url = StringUtils.getFriendUserUrl(mId);
+            final String url = URLUtils.getFriendUserUrl(WritingSessionHelper.getInstance().getSessionType(), mId);
 
 
             JSONObject params = new JSONObject();
@@ -115,8 +117,19 @@ public class FriendsActivity  extends FragmentActivity {
     }
 
     private void handleResponse(JSONObject response) {
-        Friends friends = new Friends(response);
-        BusManager.getInstance().getBus().post(friends);
+        ArrayList<Friend> list = new ArrayList<>();
+        JSONArray items;
+        try {
+            items = response.getJSONArray("items");
+            for (int i = 0; i < items.length(); i++) {
+                JSONObject o = items.getJSONObject(i);
+                list.add(new Friend(o.getString("id"), o.getString("name")));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        BusManager.getInstance().getBus().post(new FriendsEvent(list));
     }
 
 }

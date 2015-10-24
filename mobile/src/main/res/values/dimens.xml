@@ -11,4 +11,29 @@
     <dimen name="progress_pie_separator_height">2dp</dimen>
     <dimen name="progress_pie_line_space">3dp</dimen>
 
+    <dimen name="text_small">12sp</dimen>
+    <dimen name="text_normal">14sp</dimen>
+    <dimen name="text_large">16sp</dimen>
+    <dimen name="text_verylarge">18sp</dimen>
+    <dimen name="text_huge">20sp</dimen>
+    <dimen name="text_veryhuge">22sp</dimen>
+
+    <dimen name="padding_small">4dp</dimen>
+    <dimen name="padding_default">8dp</dimen>
+    <dimen name="padding_large">16dp</dimen>
+
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_default">16dp</dimen>
+    <dimen name="margin_large">24dp</dimen>
+    <dimen name="margin_huge">32dp</dimen>
+
+    <dimen name="button_small">36dp</dimen>
+    <dimen name="button_default">48dp</dimen>
+    <dimen name="button_large">64dp</dimen>
+
+    <dimen name="row_default">48dp</dimen>
+    <dimen name="row_large">64dp</dimen>
+
+    <dimen name="dashboard_decor_top">8dp</dimen>
+
 </resources>

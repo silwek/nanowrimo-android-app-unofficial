@@ -7,8 +7,6 @@
 
         <item name="colorPrimary">@color/wrimo_color</item>
         <item name="colorPrimaryDark">@color/wrimo_color_dark</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
 
         <item name="colorAccent">@color/wrimo_color_secondary</item>
 
@@ -18,16 +16,12 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
-    <style name="MyActionBar"
-        parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="MyActionBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:background">@color/wrimo_color</item>
 
         <item name="colorPrimary">@color/wrimo_color</item>
         <item name="colorPrimaryDark">@color/wrimo_color_dark</item>
         <item name="colorAccent">@color/wrimo_color_highlight</item>
-
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
 
         <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="drawerArrowStyle">@style/Theme.Test.DrawerArrowStyle</item>
@@ -39,7 +33,53 @@
     </style>
 
     <style name="TextRegular">
+        <item name="android:textSize">@dimen/text_normal</item>
         <item name="android:textColor">@color/wrimo_color_dark_text</item>
+    </style>
+
+    <style name="TextRegular_Title">
+        <item name="android:textSize">@dimen/text_veryhuge</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/wrimo_color_dark_text</item>
+    </style>
+
+    <style name="TextRegular_Subtitle">
+        <item name="android:textSize">@dimen/text_large</item>
+        <item name="android:textColor">@color/wrimo_color_dark_text</item>
+    </style>
+
+    <style name="TextEmpty">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/text_huge</item>
+        <item name="android:textColor">@color/wrimo_color_light_grey</item>
+    </style>
+
+    <style name="Rank_name" parent="TextRegular">
+        <item name="android:gravity">center_vertical|left</item>
+        <item name="android:textSize">@dimen/text_normal</item>
+    </style>
+
+    <style name="Rank_wordcount" parent="Rank_name">
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="WrimoCardView" parent="Rank_name">
+        <item name="cardCornerRadius">0dp</item>
+    </style>
+
+    <style name="ClickableView">
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="TabStrip">
+        <item name="android:background">@color/wrimo_color</item>
+        <item name="android:textColor">@drawable/selector_text_tab</item>
+        <item name="android:paddingTop">@dimen/padding_small</item>
+        <item name="android:paddingBottom">@dimen/padding_small</item>
+        <item name="android:gravity">center</item>
     </style>
 
 </resources>

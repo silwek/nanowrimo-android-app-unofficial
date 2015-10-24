@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_no_fav"
+        style="@style/WrimoCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone">
+
+
+        <LinearLayout
+            android:id="@+id/bt_no_fav"
+            style="@style/ClickableView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_default">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_default"
+                android:src="@drawable/ic_person_add_black_48dp"
+                android:tint="@color/wrimo_color_light_grey" />
+
+            <TextView
+                style="@style/TextEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_default"
+                android:text="@string/dashboard_my_favories_empty" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_ranking"
+        style="@style/WrimoCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_large">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/section_label_favs"
+                    style="@style/TextRegular_Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left|center_vertical"
+                    android:text="@string/dashboard_my_favories" />
+
+                <ImageButton
+                    android:id="@+id/bt_add_user"
+                    style="@style/ImageButtonWrimo"
+                    android:layout_width="@dimen/button_default"
+                    android:layout_height="@dimen/button_default"
+                    android:layout_marginLeft="@dimen/margin_default"
+                    android:src="@drawable/ic_person_add_black_36dp" />
+
+            </LinearLayout>
+
+            <include layout="@layout/sep" />
+
+            <ProgressBar
+                android:id="@+id/fav_progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/wrimo_color_secondary" />
+
+            <LinearLayout
+                android:id="@+id/rank_one"
+                style="@style/ClickableView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/row_default"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/rank_one_wordcount"
+                    style="@style/Rank_wordcount"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/rank_one_name"
+                    style="@style/Rank_name"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3" />
+            </LinearLayout>
+
+            <include
+                android:id="@+id/rank_two_separator"
+                layout="@layout/sep"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/rank_two"
+                style="@style/ClickableView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/row_default"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/rank_two_wordcount"
+                    style="@style/Rank_wordcount"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/rank_two_name"
+                    style="@style/Rank_name"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3" />
+            </LinearLayout>
+
+            <include
+                android:id="@+id/rank_three_separator"
+                layout="@layout/sep"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/rank_three"
+                style="@style/ClickableView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/row_default"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/rank_three_wordcount"
+                    style="@style/Rank_wordcount"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/rank_three_name"
+                    style="@style/Rank_name"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3" />
+            </LinearLayout>
+
+            <include
+                android:id="@+id/rank_more_separator"
+                layout="@layout/sep"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/rank_more"
+                style="@style/TextRegular"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/row_default"
+                android:layout_marginLeft="@dimen/margin_huge"
+                android:gravity="center_vertical|left"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <include layout="@layout/sep" />
+
+            <Button
+                android:id="@+id/bt_see_all"
+                style="@style/ButtonWrimo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/ic_chevron_right_black_48dp"
+                android:drawableTint="@color/wrimo_color"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/margin_huge"
+                android:text="@string/dashboard_my_favories_link" />
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

@@ -1,9 +1,5 @@
 package nanowrimo.onishinji.ui.fragment;
 
-import android.app.AlertDialog;
-import android.app.FragmentManager;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -11,8 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -49,12 +43,10 @@ import nanowrimo.onishinji.model.Database;
 import nanowrimo.onishinji.model.Historic;
 import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
-import nanowrimo.onishinji.ui.activity.CompareActivity;
-import nanowrimo.onishinji.ui.activity.FriendsActivity;
 import nanowrimo.onishinji.ui.widget.MyBarMarkerView;
 import nanowrimo.onishinji.ui.widget.MyMarkerView;
 import nanowrimo.onishinji.ui.widget.WordCountProgress;
-import nanowrimo.onishinji.utils.StringUtils;
+import nanowrimo.onishinji.utils.URLUtils;
 import nanowrimo.onishinji.utils.WritingSessionHelper;
 
 /**
@@ -107,7 +99,7 @@ public class CompareFragment extends Fragment {
             }
         }
 
-        mDatabase = new Database(getActivity());
+        mDatabase = Database.getInstance(getActivity());
     }
 
     @Override
@@ -269,7 +261,7 @@ public class CompareFragment extends Fragment {
         if (userId != null && !TextUtils.isEmpty(userId)) {
 
             nbLoad = 4;
-            final String url = StringUtils.getUserUrl(userId);
+            final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), userId);
 
             getHistoricRemoteData(user, url + "/history");
 
@@ -418,7 +410,7 @@ public class CompareFragment extends Fragment {
         if (getActivity() != null) {
 
             Log.d("HISTORY", "HandleHistoryResponse called with " + response.toString());
-            Historic user = new Historic(WritingSessionHelper.getInstance().getSessionStart(),response);
+            Historic user = new Historic(WritingSessionHelper.getInstance().getSessionStart(), response);
 
             LineDataSet historyDataSet = null;
             BarDataSet set1 = null;

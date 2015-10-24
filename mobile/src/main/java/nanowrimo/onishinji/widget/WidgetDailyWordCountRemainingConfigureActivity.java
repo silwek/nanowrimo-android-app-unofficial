@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,18 +13,17 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
 import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
-import nanowrimo.onishinji.utils.StringUtils;
+import nanowrimo.onishinji.utils.URLUtils;
+import nanowrimo.onishinji.utils.WritingSessionHelper;
 
 
 /**
@@ -58,7 +56,7 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
         mButtonValid = (Button) findViewById(R.id.add_button);
         mButtonValid.setOnClickListener(mOnClickListener);
 
-         mLoader = (ProgressBar) findViewById(R.id.loader);
+        mLoader = (ProgressBar) findViewById(R.id.loader);
 
         // Find the widget id from the intent.
         Intent intent = getIntent();
@@ -91,7 +89,7 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
             String username = mAppWidgetText.getText().toString();
 
             // Test username
-            final String url = StringUtils.getUserUrl(username);
+            final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), username);
             JSONObject params = new JSONObject();
             mLoader.setVisibility(View.VISIBLE);
             mButtonValid.setClickable(false);
@@ -122,7 +120,7 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
 
                     mButtonValid.setClickable(true);
                     mLoader.setVisibility(View.GONE);
-                    Toast alert = Toast.makeText(WidgetDailyWordCountRemainingConfigureActivity.this,getString(R.string.name_invalid), Toast.LENGTH_SHORT);
+                    Toast alert = Toast.makeText(WidgetDailyWordCountRemainingConfigureActivity.this, getString(R.string.name_invalid), Toast.LENGTH_SHORT);
                     alert.show();
                 }
             });
@@ -140,7 +138,7 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
     static void saveTitlePref(Context context, int appWidgetId, String text) {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
         prefs.putString(PREF_PREFIX_KEY + appWidgetId, text);
-        prefs.commit();
+        prefs.apply();
     }
 
     // Read the prefix from the SharedPreferences object for this widget.
@@ -158,7 +156,7 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
     static void deleteTitlePref(Context context, int appWidgetId) {
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
         prefs.remove(PREF_PREFIX_KEY + appWidgetId);
-        prefs.commit();
+        prefs.apply();
     }
 }
 
