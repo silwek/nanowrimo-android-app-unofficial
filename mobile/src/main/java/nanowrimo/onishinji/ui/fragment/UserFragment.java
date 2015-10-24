@@ -550,12 +550,15 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
             mProgressDaily.compute(mUser.getWordCountToday(), mIsSessionStarted ? mUser.getDailyTarget() : 0, true);
             mProgressGlobal.compute(mUser.getWordcount(), mUser.getGoal(), true);
 
+            updateUI();
+            refreshActionButton();
+
+            if (mIsSessionStarted) {
+                final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), mId);
+                getHistoricRemoteData(url + "/history");
+            }
         }
 
-        final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), mId);
-        if (mIsSessionStarted) {
-            getHistoricRemoteData(url + "/history");
-        }
     }
 
     private void HandleHistoryResponse(JSONObject response) {
