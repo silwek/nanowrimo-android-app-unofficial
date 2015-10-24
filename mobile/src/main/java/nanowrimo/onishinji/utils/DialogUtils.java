@@ -180,15 +180,15 @@ public class DialogUtils {
     public static void displayAddWordcountDialog(final Context context, final CallbackWithInteger callback) {
         AlertDialog.Builder alert = new AlertDialog.Builder(context);
 
-        alert.setTitle("Ajouter des mots à mon compteur");
+        alert.setTitle(context.getString(R.string.dialog_add_to_wordcount_title));
 
         // Set an EditText view to get user input
         final EditText input = new EditText(context);
-        input.setHint("Nombre de mots");
+        input.setHint(context.getString(R.string.dialog_add_to_wordcount_hint));
         input.setInputType(InputType.TYPE_CLASS_NUMBER);
         alert.setView(input);
 
-        alert.setPositiveButton(context.getString(R.string.yes), new DialogInterface.OnClickListener() {
+        alert.setPositiveButton(context.getString(R.string.dialog_add_to_wordcount_positive), new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {

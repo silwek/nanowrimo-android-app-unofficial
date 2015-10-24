@@ -6,7 +6,6 @@
     <string name="configure_global">Afficher le nombre de mots écrits pour l\'utilisateur</string>
     <string name="add_widget">Ajouter le widget</string>
     <string name="default_username">Pseudonyme</string>
-    <string name="default_wordcount">0</string>
     <string name="name_invalid">Pseudo invalide ou utilisateur non inscrit</string>
     <string name="dialog_add_user_title">Suivre un utilisateur %1$s</string>
     <string name="dialog_update_wordcount">Mettre à jour son compteur</string>
@@ -20,7 +19,6 @@
     <string name="stats_daily_target">Objectif du jour</string>
     <string name="stats_daily_target_remaining">Nombre de mots restant ce jour</string>
     <string name="stats_nb_day_remaining">Jours restants</string>
-    <string name="stats_empty">...</string>
     <string name="error_network_widget_toast">Erreur réseau pour %1$s (%2$s)</string>
     <string name="error_network_fragment_bottom">réseau</string>
     <string name="yes">Oui</string>
@@ -77,6 +75,9 @@
     <string name="dashboard_my_favories_link">Tous mes favoris</string>
     <string name="dashboard_my_favories_empty">Vous n\'avez aucun utilisateur favoris.\nGardez un oeil sur vos amis.</string>
 
+    <string name="dialog_add_to_wordcount_title">Ajouter des mots à mon compteur</string>
+    <string name="dialog_add_to_wordcount_hint">Nombre de mots</string>
+    <string name="dialog_add_to_wordcount_positive">Ajouter</string>
     <string name="dashboard_hotstuff_update_wordcount_success">Nombre de mots mis à jour</string>
     <string name="dashboard_hotstuff_update_wordcount_error">Impossible de mettre à jour votre nombre de mots</string>
 
