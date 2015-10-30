@@ -167,6 +167,10 @@ public class WritingSessionHelper {
         return mUser.getName();
     }
 
+    public User getUser() {
+        return mUser;
+    }
+
     public void saveConfig(Context context) {
         PreferencesHelper.setSessionName(context, mWritingSession.getName());
         PreferencesHelper.setSessionStart(context, mWritingSession.getStartDate());

@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import org.json.JSONObject;
 
 import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.User;
+import nanowrimo.onishinji.model.WritingSession;
 import nanowrimo.onishinji.utils.URLUtils;
 import nanowrimo.onishinji.utils.WritingSessionHelper;
 
@@ -28,6 +30,7 @@ import nanowrimo.onishinji.utils.WritingSessionHelper;
 public class PrepareSessionFragment extends SlidingFragment {
 
     protected TextView mTvLoading;
+    protected ImageView mImageView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,6 +39,7 @@ public class PrepareSessionFragment extends SlidingFragment {
 
         mTvLoading = (TextView) v.findViewById(R.id.tv_loading);
         mTvLoading.setText(getString(R.string.welcome_prepare_session, WritingSessionHelper.getInstance().getUserName()));
+        mImageView = (ImageView) v.findViewById(R.id.iv_session_logo);
 
         return v;
     }
@@ -43,6 +47,17 @@ public class PrepareSessionFragment extends SlidingFragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        final int sessionType = WritingSessionHelper.getInstance().getSessionType();
+        switch (sessionType) {
+            case WritingSession.NANOWRIMO:
+                mImageView.setImageResource(R.drawable.drawer_header_nanowrimo);
+                break;
+            case WritingSession.CAMP:
+                mImageView.setImageResource(R.drawable.drawer_header_campnano);
+                break;
+        }
+
 
         // Test username
         RequestQueue queue = Volley.newRequestQueue(getActivity());

@@ -312,6 +312,8 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
     }
 
     private boolean isCurrentUser() {
+        if (TextUtils.isEmpty(mId))
+            return false;
         return mDatabase.isCurrentUser(mId);
     }
 

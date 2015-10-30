@@ -1,21 +1,23 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="48dp"
+        android:orientation="vertical"
         android:paddingBottom="48dp"
         android:paddingLeft="32dp"
-        android:paddingRight="32dp">
+        android:paddingRight="32dp"
+        android:paddingTop="48dp">
 
         <ImageView
+            android:id="@+id/iv_session_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/drawer_header_campnano"
+            android:layout_gravity="center_horizontal"
             android:scaleType="centerInside"
-            android:layout_gravity="center_horizontal"/>
+            android:src="@drawable/drawer_header_campnano" />
 
 
         <TextView
@@ -23,20 +25,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textStyle="bold"
-            android:textSize="24sp"
+            android:gravity="center_horizontal"
             android:textColor="@android:color/white"
-            android:gravity="center_horizontal"/>
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
 
         <ProgressBar
-            android:layout_marginTop="16dp"
+            android:id="@+id/progressBar3"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/progressBar3"
             android:layout_gravity="center_horizontal"
-            android:indeterminate="true"            />
+            android:layout_marginTop="16dp"
+            android:indeterminate="true" />
 
     </LinearLayout>
 </ScrollView>
