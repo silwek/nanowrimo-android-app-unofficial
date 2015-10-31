@@ -45,41 +45,41 @@ public class Database {
         this.userInfos = getUsersInfo();
     }
 
-    public void addUser(String username, String name) {
-        username = username.toLowerCase();
-        if (!this.users.contains(username)) {
-            this.users.add(username);
-            userInfos.put(username, name);
+    public void addUser(String id, String name) {
+        id = id.toLowerCase();
+        if (!this.users.contains(id)) {
+            this.users.add(id);
+            userInfos.put(id, name);
         }
         saveUsersString();
 
     }
 
-    public void deleteUser(String username) {
+    public void deleteUser(String id) {
 
-        Log.d("DB", "want to delete " + username + " (local " + getUsersString());
+        Log.d("DB", "want to delete " + id + " (local " + getUsersString());
 
-        if (this.users.contains(username)) {
-            Log.d("DB", "removeeeee " + username);
-            this.users.remove(username);
-            this.userInfos.remove(username);
+        if (this.users.contains(id)) {
+            Log.d("DB", "removeeeee " + id);
+            this.users.remove(id);
+            this.userInfos.remove(id);
         }
 
-        Log.d("DB", "has delete " + username + " (local " + this.users.toString());
+        Log.d("DB", "has delete " + id + " (local " + this.users.toString());
 
         saveUsersString();
     }
 
-    public boolean isCurrentUser(String username) {
-        if (this.users.indexOf(username.toLowerCase()) == 0) {
+    public boolean isCurrentUser(String id) {
+        if (this.users.indexOf(id.toLowerCase()) == 0) {
             return true;
         }
 
         return false;
     }
 
-    public boolean userIsMarkedAsFavorite(String username) {
-        if (this.users.contains(username)) {
+    public boolean userIsMarkedAsFavorite(String id) {
+        if (this.users.contains(id)) {
             return true;
         }
 
@@ -126,16 +126,10 @@ public class Database {
         prefs.putString(PREF_PREFIX_KEY_USERS_INFOS, infos);
 
         prefs.commit();
-
-        // BusManager.getInstance().getBus().post("userSaved");
     }
 
-    public CharSequence getNiceTitle(int position) {
-        return userInfos.get(this.users.get(position));
-    }
-
-    public String getNiceTitle(String username) {
-        return userInfos.get(username);
+    public String getNiceTitle(String id) {
+        return userInfos.get(id);
     }
 
     public void clearUsers() {

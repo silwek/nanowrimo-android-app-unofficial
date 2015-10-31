@@ -23,7 +23,17 @@ public class StringUtils {
         return s1.equals(s2);
     }
 
-    public static String removeAccents(String text) {
+    public static String encodeUserNameForApi(String username) {
+        String encoded = removeAccents(username);
+        encoded = replaceWithDot(encoded);
+        return encoded;
+    }
+
+    protected static String replaceWithDot(String text) {
+        return (text == null) ? null : text.replaceAll("[@\\.\\ ]", "-");
+    }
+
+    protected static String removeAccents(String text) {
         return text == null ? null :
                 Normalizer.normalize(text, Normalizer.Form.NFD)
                         .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
