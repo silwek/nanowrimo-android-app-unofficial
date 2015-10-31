@@ -40,8 +40,12 @@ public class SectionsPagerAdapter extends SortableFragmentStatePagerAdapter {
         mUsers = users;
     }
 
-    public int getPosition(String username) {
-        return mUsers.indexOf(username) + POSITION_OFFSET;//
+    public int getPosition(String userid) {
+        final int index = mUsers.indexOf(userid);
+        if (index < 0) {
+            return -1;
+        }
+        return index + POSITION_OFFSET;
     }
 
     @Override

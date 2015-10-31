@@ -542,6 +542,8 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
         if (getActivity() != null) {
 
+            mTextViewUsername.setText(mUser.getName());
+
             mTextViewGoal.setText(String.valueOf(mUser.getGoal()));
             mTextViewWordcount.setText(mUser.getWordcount() + "");
             mTextViewWordcountToday.setText(mUser.getWordCountToday() + "");

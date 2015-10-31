@@ -58,6 +58,7 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
 
         mLoader = (ProgressBar) findViewById(R.id.loader);
 
+
         // Find the widget id from the intent.
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
