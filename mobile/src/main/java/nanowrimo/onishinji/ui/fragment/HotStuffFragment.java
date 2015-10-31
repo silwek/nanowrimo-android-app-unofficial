@@ -19,7 +19,6 @@ import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.event.UserEvent;
 import nanowrimo.onishinji.event.WordcountUpdateEvent;
 import nanowrimo.onishinji.model.BusManager;
-import nanowrimo.onishinji.model.Database;
 import nanowrimo.onishinji.model.User;
 import nanowrimo.onishinji.task.SubmitWordcountTask;
 import nanowrimo.onishinji.utils.AlertUtils;
@@ -173,7 +172,7 @@ public class HotStuffFragment extends Fragment {
         final int newWordcount = Integer.parseInt(mWordCount.getText().toString());
         if (newWordcount == newWordcount) {//Not a NaN
             final int oldWorcount = mUser.getWordcount();
-            final String userid = Database.getInstance(getActivity()).getUsers().get(0);
+            final String userid = mUser.getId();
             final String secretkey = PreferencesHelper.getSecretKey(getActivity());
             SubmitWordcountTask task = new SubmitWordcountTask(userid, secretkey, new SubmitWordcountTask.Callback() {
                 @Override

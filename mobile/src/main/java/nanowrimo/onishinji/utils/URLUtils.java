@@ -13,12 +13,12 @@ public class URLUtils {
 
     public static String getUserUrl(int type, String username) {
         final String baseUrl = type == WritingSession.NANOWRIMO ? baseUrlNano : baseUrlCamp;
-        return baseUrl + StringUtils.removeAccents(username).replace(" ", "-");
+        return baseUrl + StringUtils.encodeUserNameForApi(username);
     }
 
     public static String getFriendUserUrl(int type, String username) {
         final String baseUrl = type == WritingSession.NANOWRIMO ? baseUrlNano : baseUrlCamp;
-        return baseUrl + StringUtils.removeAccents(username).replace(" ", "-") + "/friends";
+        return baseUrl + StringUtils.encodeUserNameForApi(username) + "/friends";
     }
 
 }

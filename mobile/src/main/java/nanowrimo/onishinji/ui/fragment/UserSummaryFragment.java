@@ -35,13 +35,15 @@ public class UserSummaryFragment extends Fragment {
     protected boolean mIsSessionStarted = true;
 
     private String mId;
+    private String mUsername;
     protected User mUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.mId = WritingSessionHelper.getInstance().getUserName();
+        this.mId = WritingSessionHelper.getInstance().getUser().getId();
+        this.mUsername = WritingSessionHelper.getInstance().getUser().getName();
         mIsSessionStarted = WritingSessionHelper.getInstance().isSessionStarted();
         mIsUserLoading = true;
 
@@ -57,7 +59,7 @@ public class UserSummaryFragment extends Fragment {
                                                                            if (getActivity() != null) {
                                                                                Intent intent = new Intent(getActivity(), FriendActivity.class);
                                                                                intent.putExtra(FriendActivity.EXTRA_ID, mId);
-                                                                               intent.putExtra(FriendActivity.EXTRA_USERNAME, mId);
+                                                                               intent.putExtra(FriendActivity.EXTRA_USERNAME, (mUsername == null) ? mId : mUsername);
                                                                                startActivity(intent);
                                                                            }
                                                                        }
@@ -90,11 +92,6 @@ public class UserSummaryFragment extends Fragment {
         checkLoader();
     }
 
-    public void setId(String s) {
-        this.mId = s;
-
-    }
-
     protected boolean isLoading() {
         return mIsUserLoading;
     }
@@ -125,6 +122,11 @@ public class UserSummaryFragment extends Fragment {
         checkLoader();
 
         mUser = event.getUser();
+
+        WritingSessionHelper.getInstance().setUser(mUser);
+
+        mId = WritingSessionHelper.getInstance().getUser().getId();
+        mUsername = WritingSessionHelper.getInstance().getUser().getName();
 
         if (getActivity() != null) {
             mTextViewGoal.setText(String.valueOf(mUser.getGoal()));
