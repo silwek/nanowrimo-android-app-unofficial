@@ -32,6 +32,7 @@ import nanowrimo.onishinji.ui.widget.WordCountProgress;
 import nanowrimo.onishinji.utils.ProgressPieDailyUtils;
 import nanowrimo.onishinji.utils.ProgressPieUtils;
 import nanowrimo.onishinji.utils.URLUtils;
+import nanowrimo.onishinji.utils.WidgetUtils;
 import nanowrimo.onishinji.utils.WritingSessionHelper;
 
 
@@ -237,7 +238,7 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
                 if (i == null)
                     throw new PackageManager.NameNotFoundException();
 
-                i.putExtra("from_widget_id", intent.getStringExtra("id"));
+                i.putExtra(WidgetUtils.EXTRA_USER_ID, intent.getStringExtra("id"));
                 i.addCategory(Intent.CATEGORY_LAUNCHER);
                 context.startActivity(i);
             } catch (PackageManager.NameNotFoundException e) {

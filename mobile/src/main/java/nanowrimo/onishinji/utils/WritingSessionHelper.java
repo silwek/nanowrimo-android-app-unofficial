@@ -96,6 +96,7 @@ public class WritingSessionHelper {
     public boolean isSessionStarted() {
         Calendar session = Calendar.getInstance();
         session.setTime(mWritingSession.getStartDate());
+        session = absoluteDate(session);
         Calendar now = getNow();
         return now.after(session);
     }
@@ -209,7 +210,7 @@ public class WritingSessionHelper {
         c.set(Calendar.MONTH, Calendar.NOVEMBER);
         c.set(Calendar.DAY_OF_MONTH, 1);
 
-        return c;
+        return absoluteDate(c);
     }
 
     public static Calendar getNextNanowrimoSession() {
@@ -222,7 +223,7 @@ public class WritingSessionHelper {
         c.set(Calendar.MONTH, Calendar.NOVEMBER);
         c.set(Calendar.DAY_OF_MONTH, 1);
 
-        return c;
+        return absoluteDate(c);
     }
 
     public static Calendar getCampSession() {
@@ -239,7 +240,7 @@ public class WritingSessionHelper {
         }
         c.set(Calendar.DAY_OF_MONTH, 1);
 
-        return c;
+        return absoluteDate(c);
     }
 
     public static Calendar getNextCampSession() {
@@ -256,7 +257,7 @@ public class WritingSessionHelper {
         }
         c.set(Calendar.DAY_OF_MONTH, 1);
 
-        return c;
+        return absoluteDate(c);
     }
 
     public static boolean isSessionAvailableToInscription(Calendar sessionCalendar) {
@@ -295,6 +296,7 @@ public class WritingSessionHelper {
 
     private static Calendar absoluteDate(Calendar calendar) {
         calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);

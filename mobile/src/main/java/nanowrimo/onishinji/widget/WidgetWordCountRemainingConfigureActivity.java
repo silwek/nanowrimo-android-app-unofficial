@@ -5,7 +5,7 @@ import nanowrimo.onishinji.R;
 /**
  * Created by guillaume on 11/11/14.
  */
-public class WidgetWordCountRemainingConfigureActivity extends WidgetDailyWordCountRemainingConfigureActivity{
+public class WidgetWordCountRemainingConfigureActivity extends WidgetDailyWordCountRemainingConfigureActivity {
 
 
     protected void setContentViewStub() {

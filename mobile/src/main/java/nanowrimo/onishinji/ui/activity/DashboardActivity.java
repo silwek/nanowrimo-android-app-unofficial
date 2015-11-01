@@ -41,9 +41,15 @@ import nanowrimo.onishinji.utils.WritingSessionHelper;
  * Created by Silwek on 11/10/15.
  */
 public class DashboardActivity extends ToolbarActivity {
+
+    public static final String EXTRA_SHOW_USER_ID = "nanowrimo.onishinji.ui.activity.DashboardActivity.EXTRA_SHOW_USER_ID";
+
     private String mId;
     protected User mUser;
     protected boolean mIsUserLoading = false;
+
+
+    protected String mShowUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +87,10 @@ public class DashboardActivity extends ToolbarActivity {
         });
 
         mId = WritingSessionHelper.getInstance().getUserName();
+
+        if (getIntent().getExtras() != null) {
+            mShowUserId = getIntent().getExtras().getString(EXTRA_SHOW_USER_ID);
+        }
     }
 
     @Override
@@ -123,6 +133,19 @@ public class DashboardActivity extends ToolbarActivity {
 
     protected void onActionAbout() {
         startActivity(new Intent(this, AboutActivity.class));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (!TextUtils.isEmpty(mShowUserId)) {
+            Intent intent = new Intent(this, FriendActivity.class);
+            intent.putExtra(FriendActivity.EXTRA_ID, mShowUserId);
+            intent.putExtra(FriendActivity.EXTRA_USERNAME, mShowUserId);
+            startActivity(intent);
+            mShowUserId = null;
+        }
     }
 
     @Override

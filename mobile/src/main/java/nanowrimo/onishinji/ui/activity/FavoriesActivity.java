@@ -21,6 +21,7 @@ import nanowrimo.onishinji.utils.StringUtils;
 
 public class FavoriesActivity extends ToolbarActivity implements UserFragment.OnRemoveListener, RankingFragment.RankingListener {
 
+    public static final String EXTRA_USER_ID = "nanowrimo.onishinji.ui.activity.FavoriesActivity.EXTRA_USER_ID";
 
     protected Database mDatabase;
 
@@ -36,6 +37,8 @@ public class FavoriesActivity extends ToolbarActivity implements UserFragment.On
     private ArrayList<String> mUsersIds;
     private int mLastPosition;
 
+    protected String mShowUserId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,11 +52,8 @@ public class FavoriesActivity extends ToolbarActivity implements UserFragment.On
 
         reloadViewPager();
 
-        if (getIntent() != null) {
-            int index = mDatabase.getUsers().indexOf(getIntent().getStringExtra("from_widget_id"));
-            if (index != -1) {
-                mViewPager.setCurrentItem(index);
-            }
+        if (getIntent().getExtras() != null) {
+            mShowUserId = getIntent().getStringExtra(EXTRA_USER_ID);
         }
 
         setTitle(R.string.dashboard_my_favories);
@@ -215,6 +215,16 @@ public class FavoriesActivity extends ToolbarActivity implements UserFragment.On
             mUsersIds = list;
             mLastPosition = mViewPager.getCurrentItem();
             reloadViewPager();
+        }
+
+        if (!TextUtils.isEmpty(mShowUserId)) {
+            final int index = mSectionsPagerAdapter.getPosition(mShowUserId);
+            if (index != -1) {
+                mViewPager.setCurrentItem(index);
+            } else {
+                mViewPager.setCurrentItem(0);
+            }
+            mShowUserId = null;
         }
     }
 
