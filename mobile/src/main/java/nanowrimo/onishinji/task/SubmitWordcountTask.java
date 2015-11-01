@@ -2,6 +2,7 @@ package nanowrimo.onishinji.task;
 
 import android.os.AsyncTask;
 
+import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.RequestFuture;
 
@@ -35,15 +36,16 @@ public class SubmitWordcountTask extends AsyncTask<Integer, Void, Integer> {
             throw new IllegalArgumentException();
         mCallback = callback;
         mSecretKey = secretkey;
+        mUserid = userid;
     }
 
     @Override
     protected Integer doInBackground(Integer... params) {
         final String url = URLUtils.WRITE_API;
         String hash;
-        String wordcount = String.valueOf(params[0]);
+        int wordcount = params[0];
         try {
-            hash = getHash(mSecretKey, mUserid, wordcount);
+            hash = getHash(mSecretKey, mUserid, String.valueOf(wordcount));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return ERROR;
@@ -56,14 +58,14 @@ public class SubmitWordcountTask extends AsyncTask<Integer, Void, Integer> {
         try {
             requestparams.put("hash", hash);
             requestparams.put("name", mUserid);
-            requestparams.put("wordcount", wordcount);
+            requestparams.put("wordcount", String.valueOf(wordcount));
         } catch (JSONException e) {
             return ERROR;
         }
 
 
         RequestFuture<JSONObject> future = RequestFuture.newFuture();
-        JsonObjectRequest request = new JsonObjectRequest(url, requestparams, future, future);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, url, requestparams, future, future);
         HttpClient.getInstance().getQueue().add(request);
 
         try {

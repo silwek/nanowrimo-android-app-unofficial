@@ -3,6 +3,7 @@ package nanowrimo.onishinji.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -14,6 +15,7 @@ import nanowrimo.onishinji.model.BusManager;
 import nanowrimo.onishinji.model.Database;
 import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.utils.PreferencesHelper;
+import nanowrimo.onishinji.utils.WidgetUtils;
 import nanowrimo.onishinji.utils.WritingSessionHelper;
 
 /**
@@ -23,10 +25,16 @@ public class SplashscreenActivity extends AppCompatActivity {
 
     Database mDatabase;
 
+    protected String mWantedUserId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splashscreen);
+
+        if (getIntent().getExtras() != null) {
+            mWantedUserId = getIntent().getStringExtra(WidgetUtils.EXTRA_USER_ID);
+        }
 
         Fabric.with(getApplicationContext(), new Crashlytics());
         BusManager.getInstance();
@@ -66,6 +74,9 @@ public class SplashscreenActivity extends AppCompatActivity {
 
     protected void mainActivity() {
         Intent intent = new Intent(this, DashboardActivity.class);
+        if (!TextUtils.isEmpty(mWantedUserId)) {
+            intent.putExtra(DashboardActivity.EXTRA_SHOW_USER_ID, mWantedUserId);
+        }
         startActivity(intent);
         finish();
     }

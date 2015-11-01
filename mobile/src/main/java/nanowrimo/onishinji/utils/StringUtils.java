@@ -24,7 +24,8 @@ public class StringUtils {
     }
 
     public static String encodeUserNameForApi(String username) {
-        String encoded = removeAccents(username);
+        String encoded = username.toLowerCase();
+        encoded = removeAccents(encoded);
         encoded = replaceWithDot(encoded);
         return encoded;
     }
