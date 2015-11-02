@@ -2,6 +2,7 @@ package nanowrimo.onishinji.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -38,6 +39,8 @@ public class HotStuffFragment extends Fragment {
 
     protected TextView mRemainingWords, mEndPrompt, mSessionDay;
     protected boolean mIsSessionEnded, mIsSessionStarted;
+
+    protected boolean mCanDisplayDialog = false;
 
     @Nullable
     @Override
@@ -117,6 +120,13 @@ public class HotStuffFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mWordCount.clearFocus();
+        mCanDisplayDialog = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mCanDisplayDialog = false;
     }
 
     @SuppressWarnings("unused")
@@ -129,15 +139,17 @@ public class HotStuffFragment extends Fragment {
     }
 
     private void onWordcountFocus(boolean hasFocus) {
-        if (!mIsInit) {
+        if (!mIsInit && hasFocus) {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(mWordCount.getWindowToken(), 0);
             mWordCount.clearFocus();
-        } else if (!canSubmit()) {
+        } else if (!canSubmit() && hasFocus) {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(mWordCount.getWindowToken(), 0);
             mWordCount.clearFocus();
-            DialogUtils.displayMissingSecretKey(getActivity(), getActivity());
+            if (mCanDisplayDialog) {
+                DialogUtils.displayMissingSecretKey(getActivity(), getActivity());
+            }
         } else if (hasFocus) {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.showSoftInput(mWordCount, InputMethodManager.SHOW_IMPLICIT);
@@ -158,6 +170,8 @@ public class HotStuffFragment extends Fragment {
                     submitWordcount();
                 }
             });
+        } else if (mCanDisplayDialog) {
+            DialogUtils.displayMissingSecretKey(getActivity(), getActivity());
         }
     }
 
@@ -178,7 +192,15 @@ public class HotStuffFragment extends Fragment {
                 @Override
                 public void onSuccess() {
                     AlertUtils.display(getActivity(), R.string.dashboard_hotstuff_update_wordcount_success);
-                    BusManager.getInstance().getBus().post(new WordcountUpdateEvent());
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (getActivity() != null) {
+                                BusManager.getInstance().getBus().post(new WordcountUpdateEvent(newWordcount));
+                            }
+                        }
+                    }, 10000);
                 }
 
                 @Override

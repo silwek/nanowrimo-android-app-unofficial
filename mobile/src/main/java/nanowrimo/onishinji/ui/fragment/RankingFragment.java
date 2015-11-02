@@ -76,7 +76,7 @@ public class RankingFragment extends Fragment implements GetFavoriesRankingTask.
     }
 
     protected void showRank() {
-        if (getActivity() == null)
+        if (getActivity() == null || mRankingListener == null)
             return;
         final Database database = Database.getInstance(getActivity());
         ArrayList<String> list = (ArrayList<String>) database.getUsers().clone();
