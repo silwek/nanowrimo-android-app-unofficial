@@ -45,7 +45,7 @@ public class User {
             links.put("history", _links.getString("history"));
 
         } catch (JSONException e) {
-
+            e.printStackTrace();
         }
     }
 

@@ -78,7 +78,7 @@
     <string name="dialog_add_to_wordcount_title">Ajouter des mots à mon compteur</string>
     <string name="dialog_add_to_wordcount_hint">Nombre de mots</string>
     <string name="dialog_add_to_wordcount_positive">Ajouter</string>
-    <string name="dashboard_hotstuff_update_wordcount_success">Nombre de mots mis à jour</string>
+    <string name="dashboard_hotstuff_update_wordcount_success">Nombre de mots mis à jour. Cela peut prendre quelques instants.</string>
     <string name="dashboard_hotstuff_update_wordcount_error">Impossible de mettre à jour votre nombre de mots</string>
 
     <string name="dashboard_hotstuff_missing_secretkey_title">Clé secrète</string>

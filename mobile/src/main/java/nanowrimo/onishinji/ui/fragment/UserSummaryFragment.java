@@ -128,7 +128,7 @@ public class UserSummaryFragment extends Fragment {
         mId = WritingSessionHelper.getInstance().getUser().getId();
         mUsername = WritingSessionHelper.getInstance().getUser().getName();
 
-        if (getActivity() != null) {
+            if (getActivity() != null) {
             mTextViewGoal.setText(String.valueOf(mUser.getGoal()));
             mTextViewWordcount.setText(mUser.getWordcount() + "");
             mTextViewWordcountToday.setText(mUser.getWordCountToday() + "");

@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +18,8 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import java.util.List;
 
 import it.sephiroth.android.library.tooltip.TooltipManager;
 import nanowrimo.onishinji.R;
@@ -161,9 +165,20 @@ public class SettingsFragment extends Fragment {
     }
 
     protected void onOpenWritingApi() {
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(LINK_NANOWRIMO_WRITE_API_KEY));
-        startActivity(i);
+        if (getActivity() == null)
+            return;
+        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(LINK_NANOWRIMO_WRITE_API_KEY));
+        // Verify it resolves
+        PackageManager packageManager = getActivity().getPackageManager();
+        List<ResolveInfo> activities = packageManager.queryIntentActivities(i, 0);
+        boolean isIntentSafe = activities.size() > 0;
+
+        // Start an activity if it's safe
+        if (isIntentSafe) {
+            startActivity(i);
+        } else {
+            //TODO show info
+        }
     }
 
     protected void onClearData() {
