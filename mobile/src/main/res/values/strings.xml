@@ -82,7 +82,7 @@
     <string name="dialog_add_to_wordcount_title">Add words to my wordcount</string>
     <string name="dialog_add_to_wordcount_hint">Words written today</string>
     <string name="dialog_add_to_wordcount_positive">Add</string>
-    <string name="dashboard_hotstuff_update_wordcount_success">Word count updated</string>
+    <string name="dashboard_hotstuff_update_wordcount_success">Word count updated. This may take a few moments.</string>
     <string name="dashboard_hotstuff_update_wordcount_error">Unable to update your word count</string>
 
     <string name="dashboard_hotstuff_missing_secretkey_title">Secret key</string>

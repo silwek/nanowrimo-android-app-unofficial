@@ -66,17 +66,21 @@ public class PrepareSessionFragment extends SlidingFragment {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                User user = new User(response);
-                WritingSessionHelper.getInstance().setUser(user);
-                WritingSessionHelper.getInstance().saveConfig(getActivity());
-                onWantNextSlide();
+                if (getActivity() != null) {
+                    User user = new User(response);
+                    WritingSessionHelper.getInstance().setUser(user);
+                    WritingSessionHelper.getInstance().saveConfig(getActivity());
+                    onWantNextSlide();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("error", error.toString());
-                Toast.makeText(getActivity(), R.string.bad_request, Toast.LENGTH_SHORT).show();
-                onWantPreviousSlide();
+                if (getActivity() != null) {
+                    Log.e("error", error.toString());
+                    Toast.makeText(getActivity(), R.string.bad_request, Toast.LENGTH_SHORT).show();
+                    onWantPreviousSlide();
+                }
             }
         });
         queue.add(request);

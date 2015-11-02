@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -169,10 +170,7 @@ public class DialogUtils {
             }
         });
 
-        alert.setNegativeButton(context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-            }
-        });
+        alert.setNegativeButton(context.getString(R.string.cancel), null);
 
         alert.show();
     }
@@ -193,7 +191,8 @@ public class DialogUtils {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 final String value = input.getText().toString().trim();
-                callback.onSuccess(Integer.parseInt(value));
+                if (!TextUtils.isEmpty(value))
+                    callback.onSuccess(Integer.parseInt(value));
             }
         });
 

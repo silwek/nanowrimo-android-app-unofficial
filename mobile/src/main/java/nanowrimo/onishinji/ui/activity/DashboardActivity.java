@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
@@ -44,12 +45,20 @@ public class DashboardActivity extends ToolbarActivity {
 
     public static final String EXTRA_SHOW_USER_ID = "nanowrimo.onishinji.ui.activity.DashboardActivity.EXTRA_SHOW_USER_ID";
 
+    protected static final String TAG_FRAG_HOTSTUFF = "nanowrimo.onishinji.ui.activity.HotStuffFragment";
+    protected static final String TAG_FRAG_FAVS = "nanowrimo.onishinji.ui.activity.FavsFragment";
+    protected static final String TAG_FRAG_USERSUMMARY = "nanowrimo.onishinji.ui.activity.UserSummaryFragment";
+
+    protected static final long UPDATE_DELAY = 60000;
+
     private String mId;
     protected User mUser;
     protected boolean mIsUserLoading = false;
 
-
     protected String mShowUserId;
+
+    protected Handler mUpdateHandler;
+    protected Runnable mUpdateRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,14 +73,20 @@ public class DashboardActivity extends ToolbarActivity {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
 
-        HotStuffFragment hotStuffFragment = new HotStuffFragment();
-        transaction.add(R.id.container_hotstuff, hotStuffFragment);
+        HotStuffFragment hotStuffFragment = (HotStuffFragment) fm.findFragmentByTag(TAG_FRAG_HOTSTUFF);
+        if (hotStuffFragment == null)
+            hotStuffFragment = new HotStuffFragment();
+        transaction.replace(R.id.container_hotstuff, hotStuffFragment, TAG_FRAG_HOTSTUFF);
 
-        FavsFragment favsFragment = new FavsFragment();
-        transaction.add(R.id.container_favs, favsFragment);
+        FavsFragment favsFragment = (FavsFragment) fm.findFragmentByTag(TAG_FRAG_FAVS);
+        if (favsFragment == null)
+            favsFragment = new FavsFragment();
+        transaction.replace(R.id.container_favs, favsFragment, TAG_FRAG_FAVS);
 
-        UserSummaryFragment userSummaryFragment = new UserSummaryFragment();
-        transaction.add(R.id.container_user_summary, userSummaryFragment);
+        UserSummaryFragment userSummaryFragment = (UserSummaryFragment) fm.findFragmentByTag(TAG_FRAG_USERSUMMARY);
+        if (userSummaryFragment == null)
+            userSummaryFragment = new UserSummaryFragment();
+        transaction.replace(R.id.container_user_summary, userSummaryFragment, TAG_FRAG_USERSUMMARY);
 
         transaction.commit();
 
@@ -159,6 +174,7 @@ public class DashboardActivity extends ToolbarActivity {
     protected void onPause() {
         super.onPause();
         BusManager.getInstance().getBus().unregister(this);
+        cancelScheduleUpdate();
     }
 
     private void getRemoteData() {
@@ -174,6 +190,7 @@ public class DashboardActivity extends ToolbarActivity {
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
+                    scheduleNextUpdate();
                     mIsUserLoading = false;
                     checkLoader();
                     handleResponse(response);
@@ -182,6 +199,7 @@ public class DashboardActivity extends ToolbarActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
 
+                    scheduleNextUpdate();
                     mIsUserLoading = false;
                     checkLoader();
 
@@ -232,6 +250,26 @@ public class DashboardActivity extends ToolbarActivity {
     private void handleResponse(JSONObject response) {
         mUser = new User(response);
         BusManager.getInstance().getBus().post(new UserEvent(mUser));
+    }
+
+    protected void scheduleNextUpdate() {
+        if (mUpdateHandler == null) {
+            mUpdateHandler = new Handler();
+        }
+        mUpdateRunnable = new Runnable() {
+            @Override
+            public void run() {
+                getRemoteData();
+                mUpdateRunnable = null;
+            }
+        };
+        mUpdateHandler.postDelayed(mUpdateRunnable, UPDATE_DELAY);
+    }
+
+    protected void cancelScheduleUpdate() {
+        if (mUpdateHandler != null) {
+            mUpdateHandler.removeCallbacks(mUpdateRunnable);
+        }
     }
 
     @SuppressWarnings("unused")

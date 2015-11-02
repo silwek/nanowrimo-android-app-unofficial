@@ -71,8 +71,10 @@ public class Database {
     }
 
     public boolean isCurrentUser(String id) {
-        if (this.users.indexOf(id.toLowerCase()) == 0) {
-            return true;
+        if (!TextUtils.isEmpty(id)) {
+            if (this.users.indexOf(id.toLowerCase()) == 0) {
+                return true;
+            }
         }
 
         return false;

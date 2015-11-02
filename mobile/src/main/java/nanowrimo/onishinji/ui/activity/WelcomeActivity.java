@@ -33,7 +33,7 @@ public class WelcomeActivity extends AppCompatActivity implements SlidingFragmen
 
         SlidingFragment frag = new WelcomeFragment();
         fragmentTransaction.add(R.id.content, frag);
-        fragmentTransaction.commit();
+        fragmentTransaction.commitAllowingStateLoss();
     }
 
     @Override
@@ -65,6 +65,6 @@ public class WelcomeActivity extends AppCompatActivity implements SlidingFragmen
         ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
         ft.replace(R.id.content, newFragment);
         ft.addToBackStack(null);
-        ft.commit();
+        ft.commitAllowingStateLoss();
     }
 }

@@ -40,20 +40,34 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activity.FriendsActivity"></activity>
+        <activity
+            android:name=".ui.activity.FriendsActivity"
+            android:screenOrientation="portrait"></activity>
 
 
-        <activity android:name=".ui.activity.FriendActivity"></activity>
+        <activity
+            android:name=".ui.activity.FriendActivity"
+            android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".ui.activity.CompareActivity"></activity>
+        <activity
+            android:name=".ui.activity.CompareActivity"
+            android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".ui.activity.DashboardActivity"></activity>
+        <activity
+            android:name=".ui.activity.DashboardActivity"
+            android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".ui.activity.SettingsActivity"></activity>
+        <activity
+            android:name=".ui.activity.SettingsActivity"
+            android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".ui.activity.AboutActivity"></activity>
+        <activity
+            android:name=".ui.activity.AboutActivity"
+            android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".ui.activity.FavoriesActivity"></activity>
+        <activity
+            android:name=".ui.activity.FavoriesActivity"
+            android:screenOrientation="portrait"></activity>
 
 
         <receiver
