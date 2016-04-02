@@ -21,6 +21,7 @@ import nanowrimo.onishinji.event.UserEvent;
 import nanowrimo.onishinji.event.WordcountUpdateEvent;
 import nanowrimo.onishinji.model.BusManager;
 import nanowrimo.onishinji.model.User;
+import nanowrimo.onishinji.model.WritingSession;
 import nanowrimo.onishinji.task.SubmitWordcountTask;
 import nanowrimo.onishinji.utils.AlertUtils;
 import nanowrimo.onishinji.utils.DialogUtils;
@@ -65,28 +66,36 @@ public class HotStuffFragment extends Fragment {
             mEndPrompt.setText(getString(R.string.dashboard_hotstuff_ended, WritingSessionHelper.getInstance().getSessionName()));
         } else if (mIsSessionStarted) {
             cardHotstuff.setVisibility(View.VISIBLE);
-            mWordCount.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    onWordcountFocus(hasFocus);
-                }
-            });
-            mWordCount.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if (actionId == EditorInfo.IME_ACTION_SEND) {
-                        submitWordcount();
-                    }
-                    return false;
-                }
-            });
 
-            mAddToWordcount.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onWantAddToWordCount();
-                }
-            });
+            if (WritingSessionHelper.getInstance().getSessionType() == WritingSession.NANOWRIMO) {
+                mAddToWordcount.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onWantAddToWordCount();
+                    }
+                });
+
+                mWordCount.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        onWordcountFocus(hasFocus);
+                    }
+                });
+                mWordCount.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        if (actionId == EditorInfo.IME_ACTION_SEND) {
+                            submitWordcount();
+                        }
+                        return false;
+                    }
+                });
+            } else {
+                mAddToWordcount.setVisibility(View.GONE);
+
+                mWordCount.setFocusable(false);
+                mWordCount.setClickable(false);
+            }
 
             mSessionDay.setText(getString(R.string.dashboard_hotstuff_day, WritingSessionHelper.getInstance().getSessionDay()));
         } else {

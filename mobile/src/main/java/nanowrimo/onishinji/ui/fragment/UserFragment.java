@@ -46,6 +46,7 @@ import nanowrimo.onishinji.model.Database;
 import nanowrimo.onishinji.model.Historic;
 import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
+import nanowrimo.onishinji.model.WritingSession;
 import nanowrimo.onishinji.ui.activity.CompareActivity;
 import nanowrimo.onishinji.ui.activity.FriendsActivity;
 import nanowrimo.onishinji.ui.widget.MyBarMarkerView;
@@ -285,7 +286,10 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
     private void refreshActionButton() {
 
         if (getActivity() != null) {
-            if (isCurrentUser()) {
+            if (WritingSessionHelper.getInstance().getSessionType() == WritingSession.CAMP) {
+                mButtonBuddies.setVisibility(View.GONE);
+                mButtonAction.setVisibility(View.GONE);
+            } else if (isCurrentUser()) {
                 mButtonAction.setVisibility(View.GONE);
             } else if (canRemoveUser()) {
                 mButtonAction.setVisibility(View.VISIBLE);
@@ -558,8 +562,8 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
             refreshActionButton();
 
             if (mIsSessionStarted) {
-                final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), mId);
-                getHistoricRemoteData(url + "/history");
+                final String url = URLUtils.getHistoryUserUrl(WritingSessionHelper.getInstance().getSessionType(), mId);
+                getHistoricRemoteData(url);
             }
         }
 

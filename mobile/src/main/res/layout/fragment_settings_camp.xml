@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:id="@+id/settings_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/margin_large">
+
+        <TextView
+            style="@style/TextRegular_Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_default"
+            android:layout_marginRight="@dimen/margin_default"
+            android:text="@string/setting_account_title" />
+
+        <TextView
+            android:id="@+id/account_session"
+            style="@style/TextRegular_Subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_default"
+            android:layout_marginLeft="@dimen/margin_default"
+            android:layout_marginRight="@dimen/margin_default"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/setting_account_shortdescription" />
+
+        <Button
+            android:id="@+id/bt_clear_my_account"
+            style="@style/ButtonColoredWrimo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_default"
+            android:layout_marginRight="@dimen/margin_default"
+            android:gravity="center"
+            android:text="@string/setting_account_cleardata" />
+
+    </LinearLayout>
+</ScrollView>

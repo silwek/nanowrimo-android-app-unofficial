@@ -23,6 +23,7 @@ import java.util.List;
 
 import it.sephiroth.android.library.tooltip.TooltipManager;
 import nanowrimo.onishinji.R;
+import nanowrimo.onishinji.model.WritingSession;
 import nanowrimo.onishinji.ui.activity.SplashscreenActivity;
 import nanowrimo.onishinji.utils.PreferencesHelper;
 import nanowrimo.onishinji.utils.WritingSessionHelper;
@@ -45,7 +46,11 @@ public class SettingsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = (ViewGroup) inflater.inflate(R.layout.fragment_settings, container, false);
+        if (WritingSessionHelper.getInstance().getSessionType() == WritingSession.NANOWRIMO)
+            mView = (ViewGroup) inflater.inflate(R.layout.fragment_settings, container, false);
+        else
+            mView = (ViewGroup) inflater.inflate(R.layout.fragment_settings_camp, container, false);
+
         mView.findViewById(R.id.settings_container).setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -56,63 +61,68 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        mHelpSecretKey = mView.findViewById(R.id.bt_help_secretkey);
-        mHelpSecretKey.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onHelpSecretKey();
-            }
-        });
-        mEditTextSecretKey = (EditText) mView.findViewById(R.id.et_secretkey);
-        mBtClearSecretKey = mView.findViewById(R.id.bt_clear_secretkey);
+        if (WritingSessionHelper.getInstance().getSessionType() == WritingSession.NANOWRIMO) {
 
-        mIsSecretKeyFieldInit = false;
-        mBtClearSecretKey.setVisibility(View.GONE);
+            mHelpSecretKey = mView.findViewById(R.id.bt_help_secretkey);
+            mHelpSecretKey.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onHelpSecretKey();
+                }
+            });
+            mEditTextSecretKey = (EditText) mView.findViewById(R.id.et_secretkey);
+            mBtClearSecretKey = mView.findViewById(R.id.bt_clear_secretkey);
 
-        mEditTextSecretKey.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
-                    mEditTextSecretKey.append("");
-                    mBtClearSecretKey.setVisibility(View.VISIBLE);
-                } else {
-                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    if (mIsSecretKeyFieldInit) {
-                        saveSecretKey();
+            mIsSecretKeyFieldInit = false;
+            mBtClearSecretKey.setVisibility(View.GONE);
+
+            mEditTextSecretKey.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if (hasFocus) {
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(v, InputMethodManager.SHOW_IMPLICIT);
+                        mEditTextSecretKey.append("");
+                        mBtClearSecretKey.setVisibility(View.VISIBLE);
+                    } else {
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                        if (mIsSecretKeyFieldInit) {
+                            saveSecretKey();
+                        }
+                        mBtClearSecretKey.setVisibility(View.GONE);
                     }
-                    mBtClearSecretKey.setVisibility(View.GONE);
                 }
-            }
-        });
-        mEditTextSecretKey.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    v.clearFocus();
+            });
+            mEditTextSecretKey.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        v.clearFocus();
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
 
-        mView.findViewById(R.id.bt_clear_secretkey).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clearSecretKeyTF();
-            }
-        });
+            mView.findViewById(R.id.bt_clear_secretkey).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clearSecretKeyTF();
+                }
+            });
+
+            mView.findViewById(R.id.bt_secretkey_link).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onOpenWritingApi();
+                }
+            });
+
+        }
 
         WritingSessionHelper wsh = WritingSessionHelper.getInstance();
         ((TextView) mView.findViewById(R.id.account_session)).setText(getString(R.string.setting_account_shortdescription, wsh.getUserName(), wsh.getSessionName()));
 
-        mView.findViewById(R.id.bt_secretkey_link).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onOpenWritingApi();
-            }
-        });
 
         mView.findViewById(R.id.bt_clear_my_account).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,16 +136,19 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        mEditTextSecretKey.setText("");
-        final String secretKey = PreferencesHelper.getSecretKey(getActivity());
-        mEditTextSecretKey.append(secretKey);
-        mIsSecretKeyFieldInit = true;
+        if (mEditTextSecretKey != null) {
+            mEditTextSecretKey.setText("");
+            final String secretKey = PreferencesHelper.getSecretKey(getActivity());
+            mEditTextSecretKey.append(secretKey);
+            mIsSecretKeyFieldInit = true;
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mEditTextSecretKey.clearFocus();
+        if (mEditTextSecretKey != null)
+            mEditTextSecretKey.clearFocus();
     }
 
     protected void saveSecretKey() {

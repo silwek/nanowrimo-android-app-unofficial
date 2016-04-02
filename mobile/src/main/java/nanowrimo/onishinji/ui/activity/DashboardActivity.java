@@ -32,6 +32,7 @@ import nanowrimo.onishinji.event.WordcountUpdateEvent;
 import nanowrimo.onishinji.model.BusManager;
 import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
+import nanowrimo.onishinji.model.WritingSession;
 import nanowrimo.onishinji.ui.fragment.FavsFragment;
 import nanowrimo.onishinji.ui.fragment.HotStuffFragment;
 import nanowrimo.onishinji.ui.fragment.UserSummaryFragment;
@@ -63,8 +64,10 @@ public class DashboardActivity extends ToolbarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_dashboard);
+        if (WritingSessionHelper.getInstance().getSessionType() == WritingSession.NANOWRIMO)
+            setContentView(R.layout.activity_dashboard);
+        else
+            setContentView(R.layout.activity_dashboard_camp);
         setTitle(WritingSessionHelper.getInstance().getUserName());
 
         if (getSupportActionBar() != null)
@@ -78,10 +81,12 @@ public class DashboardActivity extends ToolbarActivity {
             hotStuffFragment = new HotStuffFragment();
         transaction.replace(R.id.container_hotstuff, hotStuffFragment, TAG_FRAG_HOTSTUFF);
 
-        FavsFragment favsFragment = (FavsFragment) fm.findFragmentByTag(TAG_FRAG_FAVS);
-        if (favsFragment == null)
-            favsFragment = new FavsFragment();
-        transaction.replace(R.id.container_favs, favsFragment, TAG_FRAG_FAVS);
+        if (WritingSessionHelper.getInstance().getSessionType() == WritingSession.NANOWRIMO) {
+            FavsFragment favsFragment = (FavsFragment) fm.findFragmentByTag(TAG_FRAG_FAVS);
+            if (favsFragment == null)
+                favsFragment = new FavsFragment();
+            transaction.replace(R.id.container_favs, favsFragment, TAG_FRAG_FAVS);
+        }
 
         UserSummaryFragment userSummaryFragment = (UserSummaryFragment) fm.findFragmentByTag(TAG_FRAG_USERSUMMARY);
         if (userSummaryFragment == null)
