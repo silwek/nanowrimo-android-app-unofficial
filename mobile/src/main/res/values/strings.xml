@@ -90,7 +90,7 @@
     <string name="dashboard_hotstuff_missing_secretkey_positive">Settings</string>
 
     <string name="dashboard_hotstuff_advice_remaining_a_lot">Hang on! %d words to write for today</string>
-    <string name="dashboard_hotstuff_advice_remaining">Only %d days left for today</string>
+    <string name="dashboard_hotstuff_advice_remaining">Only %d words left for today</string>
     <string name="dashboard_hotstuff_advice_remaining_one">One final word for today</string>
     <string name="dashboard_hotstuff_advice_exact_wordcount">You\'re exactly on time</string>
     <string name="dashboard_hotstuff_advice_bonus_wordcount">Nice one! %d additional words for today</string>
@@ -109,7 +109,7 @@
 
     <string name="settings_title">Settings</string>
     <string name="secretkey_title">Secret NaNoWriMo Key</string>
-    <string name="secretkey_short_description">A personal key provides by the official website nanowrimo.org</string>
+    <string name="secretkey_short_description">A personal key provided by the official website nanowrimo.org</string>
     <string name="secretkey_long_description">This key can be found on the official website and allows you to submit your word count from Wrimo Companion. Don\'t worry, this key stay in your phone\'s storage and we don\'t share it.</string>
     <string name="secretkey_hint">Your secret key</string>
     <string name="secretkey_link">Open the official website to get your key</string>
