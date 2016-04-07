@@ -261,9 +261,9 @@ public class CompareFragment extends Fragment {
         if (userId != null && !TextUtils.isEmpty(userId)) {
 
             nbLoad = 4;
-            final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), userId);
+            final String url = URLUtils.getHistoryUserUrl(WritingSessionHelper.getInstance().getSessionType(), userId);
 
-            getHistoricRemoteData(user, url + "/history");
+            getHistoricRemoteData(user, url);
 
             JSONObject params = new JSONObject();
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
