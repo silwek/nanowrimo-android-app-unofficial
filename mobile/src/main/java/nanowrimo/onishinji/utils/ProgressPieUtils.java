@@ -2,7 +2,6 @@ package nanowrimo.onishinji.utils;
 
 import android.content.Context;
 
-import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.User;
 import nanowrimo.onishinji.ui.widget.WordCountProgress;
 
@@ -17,7 +16,7 @@ public class ProgressPieUtils {
         return pg;
     }
 
-    public WordCountProgress getWordCountProgressPie( Context context, User user) {
+    public WordCountProgress getWordCountProgressPie(Context context, User user) {
         WordCountProgress pg = constructWordCountProgressPie(context);
         return pg;
     }

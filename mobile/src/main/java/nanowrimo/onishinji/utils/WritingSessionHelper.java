@@ -1,6 +1,7 @@
 package nanowrimo.onishinji.utils;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -36,6 +37,10 @@ public class WritingSessionHelper {
     //==================================
     // WritingSession
     //==================================
+
+    public boolean isDefined() {
+        return !TextUtils.isEmpty(mWritingSession.getName());
+    }
 
     public void setNewSession(String sessionName, Date startDate, int type) {
         mWritingSession.setName(sessionName);

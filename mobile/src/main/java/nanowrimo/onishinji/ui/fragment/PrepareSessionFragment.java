@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -22,6 +23,7 @@ import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.User;
 import nanowrimo.onishinji.model.WritingSession;
 import nanowrimo.onishinji.utils.URLUtils;
+import nanowrimo.onishinji.utils.VolleyErrorHelper;
 import nanowrimo.onishinji.utils.WritingSessionHelper;
 
 /**
@@ -78,7 +80,15 @@ public class PrepareSessionFragment extends SlidingFragment {
             public void onErrorResponse(VolleyError error) {
                 if (getActivity() != null) {
                     Log.e("error", error.toString());
-                    Toast.makeText(getActivity(), R.string.bad_request, Toast.LENGTH_SHORT).show();
+                    String message = getString(R.string.name_invalid);
+                    if (error instanceof TimeoutError) {
+                        message = getString(R.string.generic_server_down);
+                    } else if (VolleyErrorHelper.isServerProblem(error)) {
+                        message = VolleyErrorHelper.handleServerError(error, getActivity());
+                    } else if (VolleyErrorHelper.isNetworkProblem(error)) {
+                        message = getString(R.string.no_internet);
+                    }
+                    Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                     onWantPreviousSlide();
                 }
             }

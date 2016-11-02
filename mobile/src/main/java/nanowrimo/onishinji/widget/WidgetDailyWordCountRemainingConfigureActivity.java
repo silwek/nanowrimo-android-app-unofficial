@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
@@ -23,6 +24,7 @@ import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.HttpClient;
 import nanowrimo.onishinji.model.User;
 import nanowrimo.onishinji.utils.URLUtils;
+import nanowrimo.onishinji.utils.VolleyErrorHelper;
 import nanowrimo.onishinji.utils.WritingSessionHelper;
 
 
@@ -84,7 +86,7 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
 
     View.OnClickListener mOnClickListener = new View.OnClickListener() {
         public void onClick(View v) {
-            final Context context = WidgetDailyWordCountRemainingConfigureActivity.this;
+            final Context context = WidgetDailyWordCountRemainingConfigureActivity.this.getBaseContext();
 
             // When the button is clicked, store the string locally
             String username = mAppWidgetText.getText().toString();
@@ -118,10 +120,17 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
                     mButtonValid.setClickable(true);
                     mLoader.setVisibility(View.GONE);
-                    Toast alert = Toast.makeText(WidgetDailyWordCountRemainingConfigureActivity.this, getString(R.string.name_invalid), Toast.LENGTH_SHORT);
+                    String message = getString(R.string.name_invalid);
+                    if (error instanceof TimeoutError) {
+                        message = getString(R.string.generic_server_down);
+                    } else if (VolleyErrorHelper.isServerProblem(error)) {
+                        message = VolleyErrorHelper.handleServerError(error, context);
+                    } else if (VolleyErrorHelper.isNetworkProblem(error)) {
+                        message = getString(R.string.no_internet);
+                    }
+                    Toast alert = Toast.makeText(WidgetDailyWordCountRemainingConfigureActivity.this, message, Toast.LENGTH_SHORT);
                     alert.show();
                 }
             });

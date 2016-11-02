@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    package="nanowrimo.onishinji"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    package="nanowrimo.onishinji"
     android:installLocation="auto">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -17,9 +17,9 @@
             android:name=".ui.activity.SplashscreenActivity"
             android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
@@ -30,13 +30,13 @@
 
         <activity android:name=".widget.WidgetDailyWordCountRemainingConfigureActivity">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
 
         <activity android:name=".widget.WidgetWordCountRemainingConfigureActivity">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
 
@@ -69,36 +69,40 @@
             android:name=".ui.activity.FavoriesActivity"
             android:screenOrientation="portrait"></activity>
 
+        <activity
+            android:name=".ui.activity.HelpUsernameActivity"
+            android:screenOrientation="portrait"></activity>
+
 
         <receiver
             android:name=".widget.WidgetDailyWordCountRemaining"
             android:label="@string/widget_title">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
 
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_daily_word_count_remaining_info" />
+                android:resource="@xml/widget_daily_word_count_remaining_info"/>
         </receiver>
 
         <receiver
             android:name=".widget.WidgetWordCountRemaining"
             android:label="@string/widget_title_global">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
 
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_word_count_remaining_info" />
+                android:resource="@xml/widget_word_count_remaining_info"/>
         </receiver>
 
         <meta-data
             android:name="com.crashlytics.ApiKey"
-            android:value="b764f108892a2f4f8117d92e650403590400bc8c" />
+            android:value="b764f108892a2f4f8117d92e650403590400bc8c"/>
 
     </application>
 

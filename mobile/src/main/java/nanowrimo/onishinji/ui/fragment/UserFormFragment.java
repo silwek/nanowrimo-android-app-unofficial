@@ -1,5 +1,6 @@
 package nanowrimo.onishinji.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,12 +13,14 @@ import android.widget.TextView;
 
 import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.WritingSession;
+import nanowrimo.onishinji.ui.activity.HelpUsernameActivity;
 import nanowrimo.onishinji.utils.WritingSessionHelper;
 
 public class UserFormFragment extends SlidingFragment {
 
     protected EditText mTfUsername;
     protected Button mBtValid;
+    protected Button mBtHelp;
     protected ImageView mIvSessionLogo;
 
     public UserFormFragment() {
@@ -34,6 +37,7 @@ public class UserFormFragment extends SlidingFragment {
         mTfUsername = (EditText) v.findViewById(R.id.tf_user_name);
         mIvSessionLogo = (ImageView) v.findViewById(R.id.iv_session_logo);
         mBtValid = (Button) v.findViewById(R.id.bt_valid);
+        mBtHelp = (Button) v.findViewById(R.id.bt_help);
         mBtValid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,6 +45,12 @@ public class UserFormFragment extends SlidingFragment {
                     WritingSessionHelper.getInstance().setUserName(mTfUsername.getText().toString().trim());
                     onWantNextSlide();
                 }
+            }
+        });
+        mBtHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onHelp();
             }
         });
 
@@ -52,6 +62,10 @@ public class UserFormFragment extends SlidingFragment {
         }
 
         return v;
+    }
+
+    protected void onHelp() {
+        startActivity(new Intent(getActivity(), HelpUsernameActivity.class));
     }
 
 }
