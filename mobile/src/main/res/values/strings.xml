@@ -123,4 +123,28 @@
     <string name="about_us_message">Wish to know more about Wrimo Companion and its makers?\nFirst and foremost,  thank you for downloading our app! We hope it is to your taste. We\'re Amandine and Guillaume. The first writes often while the second reads a lot, but we\'re both mobile programming professionals.\n This app was made on our spare time, and we\'re doing our best to make it both pratical and easy to use for every writer wanted to take part in those wonderful challenges that are NaNoWriMo and Camp NaNoWriMo. Should you encouter any issues with the app or just wish to give us feedback or ideas feel free to contact us at the email address bellow.</string>
 
     <string name="about_us_contact_email" translatable="false">nekotoneko.apps@gmail.com</string>
+
+    <string name="email_chooser">Envoyez l\'email...</string>
+    <string name="user_name">Username</string>
+
+    <!-- Errors -->
+    <string name="generic_server_error">Our servers have a problem (%d)</string>
+    <string name="generic_server_down">Our servers are inaccessible. Try again later.</string>
+    <string name="generic_error">An error occurred</string>
+    <string name="parsing_failed">Unable to communicate with our servers. Try again later.</string>
+    <string name="no_internet">Check your network</string>
+    <string name="no_network_connection">@string/no_internet</string>
+    <string name="auth_failed">The username is not found</string>
+    <string name="generic_server_timeout">Unable to join with our servers. Try again later.</string>
+
+    <string name="welcome_username_help">My nickname is ok but I can not start my session</string>
+    <string name="help_title">FAQ</string>
+    <string name="help_username_not_found">\"I\'m sure to enter the correct username but the application still say that it is not correct or does not find the corresponding user\"</string>
+    <string name="help_username_not_found_answer">Two cases are possible: your username contains special characters not managed by the application or when your username is similar to that of another user once convert for the official website.</string>
+    <string name="help_username_not_found_support">You also have two solutions available. You can first contact support to inform him that your username is not recognized, it will be possible to send you back the username to enter in the application to start your Wrimo Companion session. This will also improve the application for future users.</string>
+    <string name="help_username_not_found_authorinfo">You can then go get yourself transformed the pseudonym to be sent to the official website. For example, the nanowrimo.org site, open the \"Author Info\" located in the \"My NaNoWriMo\" menu.</string>
+    <string name="help_username_not_found_addressbar">In your browser\'s address bar, copy the text after the last \"/\" using your phone or on a paper and then enter the text as your username in Wrimo Companion (case does not important).</string>
+    <string name="help_connection_failure">\"I check my internet connection but the application can not start my session.\"</string>
+    <string name="help_connection_failure_answer">Try again a few moments later. If the problem persists, send the exact content of the displayed error and explain that you wanted to do.</string>
+    <string name="help_support">Contact Support</string>
 </resources>

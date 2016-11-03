@@ -3,9 +3,9 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Wrimo" parent="@style/_Wrimo" />
+    <style name="Wrimo" parent="@style/_Wrimo"/>
 
-    <style name="_Wrimo" parent="Theme.AppCompat.NoActionBar">
+    <style name="_Wrimo" parent="Theme.AppCompat.Light.NoActionBar">
 
         <item name="android:buttonStyle">@style/ButtonWrimo</item>
 
