@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import java.util.Calendar;
 
+import nanowrimo.onishinji.databases.UsernameConverter;
 import nanowrimo.onishinji.model.WritingSession;
 
 /**
@@ -30,7 +31,7 @@ public class URLUtils {
 
     protected static String getBaseUserUrl(int type, String username) {
         final String baseUrl = type == WritingSession.NANOWRIMO ? baseUrlNano : baseUrlCamp;
-        return baseUrl + StringUtils.encodeUserNameForApi(username);
+        return baseUrl + UsernameConverter.convert(username);
     }
 
     protected static String addTimeZone(String url) {
