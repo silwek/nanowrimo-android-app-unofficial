@@ -15,6 +15,8 @@ public class UsernameConverter {
         encodedName = replaceDot(encodedName);
         encodedName = replaceApostrophe(encodedName);
         encodedName = removeAccents(encodedName);
+        encodedName = replaceExtraDash(encodedName);
+        encodedName = replaceEndDash(encodedName);
         return encodedName;
     }
 
@@ -30,5 +32,22 @@ public class UsernameConverter {
         return text == null ? null :
                 Normalizer.normalize(text, Normalizer.Form.NFD)
                         .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+    }
+
+    protected static String replaceExtraDash(String text) {
+        if (text == null)
+            return null;
+        String loopText = new String(text);
+        while (loopText.contains("--")) {
+            loopText = loopText.replaceAll("--", "-");
+        }
+        return loopText;
+    }
+
+    protected static String replaceEndDash(String text) {
+        if (text.endsWith("-")) {
+            return text.substring(0, text.length() - 1);
+        }
+        return text;
     }
 }
