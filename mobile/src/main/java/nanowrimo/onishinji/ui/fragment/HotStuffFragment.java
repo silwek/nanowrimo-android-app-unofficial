@@ -189,6 +189,10 @@ public class HotStuffFragment extends Fragment {
     }
 
     protected void submitWordcount() {
+        if (TextUtils.isEmpty(mWordCount.getText().toString())) {
+            return;
+        }
+        
         mWordCount.clearFocus();
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mWordCount.getWindowToken(), 0);

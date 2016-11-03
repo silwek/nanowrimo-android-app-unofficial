@@ -55,7 +55,11 @@ public class WelcomeActivity extends AppCompatActivity implements SlidingFragmen
     @Override
     public void onPreviousSlide(SlidingFragment fragment) {
         if (fragment instanceof PrepareSessionFragment) {
-            onBackPressed();
+            try {
+                onBackPressed();
+            } catch (IllegalStateException ignored) {
+
+            }
         }
     }
 

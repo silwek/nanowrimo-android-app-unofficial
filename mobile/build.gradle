@@ -23,8 +23,8 @@ android {
         applicationId "nanowrimo.onishinji"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 20
-        versionName "1.7"
+        versionCode 21
+        versionName "1.7.1"
     }
     buildTypes {
         release {
@@ -45,7 +45,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
     compile 'it.sephiroth.android.library.targettooltip:target-tooltip-library:1.2.9@aar'
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
     }
+    testCompile 'junit:junit:4.12'
 }

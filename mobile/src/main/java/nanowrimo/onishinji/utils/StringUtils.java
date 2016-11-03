@@ -23,24 +23,6 @@ public class StringUtils {
         return s1.equals(s2);
     }
 
-    public static String encodeUserNameForApi(String username) {
-        String encoded = username.toLowerCase();
-        encoded = removeAccents(encoded);
-        encoded = replaceWithDot(encoded);
-        return encoded;
-    }
-
-    protected static String replaceWithDot(String text) {
-        return (text == null) ? null : text.replaceAll("[@\\.\\ ]", "-");
-    }
-
-    protected static String removeAccents(String text) {
-        return text == null ? null :
-                Normalizer.normalize(text, Normalizer.Form.NFD)
-                        .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-    }
-
-
     public static Map jsonToMap(JSONObject json) throws JSONException {
         Map<String, Object> retMap = new HashMap<String, Object>();
 
