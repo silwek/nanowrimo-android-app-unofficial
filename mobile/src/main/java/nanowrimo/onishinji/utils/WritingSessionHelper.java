@@ -73,9 +73,7 @@ public class WritingSessionHelper {
     }
 
     public int getSessionLastDay() {
-        Calendar c = Calendar.getInstance();
-        c.setTime(mWritingSession.getStartDate());
-        return c.getActualMaximum(Calendar.DAY_OF_MONTH);
+        return getSessionLastDay(mWritingSession);
     }
 
     public boolean isSessionExpired() {
@@ -155,6 +153,9 @@ public class WritingSessionHelper {
         return ((session1.get(Calendar.YEAR) == session2.get(Calendar.YEAR)) && (session1.get(Calendar.MONTH) == session2.get(Calendar.MONTH)));
     }
 
+    public WritingSession getWritingSession() {
+        return mWritingSession;
+    }
 
     //==================================
     // Current User
@@ -316,5 +317,23 @@ public class WritingSessionHelper {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar;
+    }
+
+
+    public static int getSessionLastDay(WritingSession session) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(session.getStartDate());
+        return c.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
+
+    public static int getDefaultDailyTarget() {
+        return getDefaultDailyTarget(getInstance().getWritingSession(), getInstance().getUser());
+    }
+
+    public static int getDefaultDailyTarget(WritingSession session, User user) {
+        final int lastDay = getSessionLastDay(session);
+        final int goal = user != null ? user.getGoal() : 50000;
+        final int defaultDailyTarget = (int) Math.ceil((float) goal / (float) lastDay);
+        return defaultDailyTarget;
     }
 }

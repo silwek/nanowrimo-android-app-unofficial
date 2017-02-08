@@ -4,6 +4,9 @@ import org.junit.Test;
 
 import java.util.Calendar;
 
+import nanowrimo.onishinji.model.User;
+import nanowrimo.onishinji.model.WritingSession;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -99,4 +102,27 @@ public class WritingSessionHelperTest {
         assertThat(next.get(Calendar.YEAR), is(2001));
     }
 
+
+    @Test
+    public void getDefaultDailyTarget() throws Exception {
+        Calendar start = Calendar.getInstance();
+        start.set(Calendar.YEAR, 2000);
+        start.set(Calendar.MONTH, Calendar.NOVEMBER);
+        start.set(Calendar.DAY_OF_MONTH, 1);
+        WritingSession session = new WritingSession();
+        session.setType(WritingSession.NANOWRIMO);
+        session.setStartDate(start.getTime());
+        session.setName("Nanowrimo test");
+
+        User user = null;
+        assertThat(WritingSessionHelper.getDefaultDailyTarget(session, user), is(1667));
+        user = new User();
+        user.setName("User test");
+        user.setGoal(50000);
+        assertThat(WritingSessionHelper.getDefaultDailyTarget(session, user), is(1667));
+        user.setGoal(25000);
+        assertThat(WritingSessionHelper.getDefaultDailyTarget(session, user), is(834));
+        user.setGoal(30);
+        assertThat(WritingSessionHelper.getDefaultDailyTarget(session, user), is(1));
+    }
 }
