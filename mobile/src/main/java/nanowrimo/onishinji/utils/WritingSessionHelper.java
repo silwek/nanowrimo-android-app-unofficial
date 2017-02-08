@@ -206,63 +206,73 @@ public class WritingSessionHelper {
     }
 
     public static Calendar getNanowrimoSession() {
+        return getNanowrimoSession(getNow());
+    }
 
-        Calendar c = getNow();
-        final int curMonth = c.get(Calendar.MONTH);
+    public static Calendar getNanowrimoSession(Calendar now) {
+        final int curMonth = now.get(Calendar.MONTH);
         if (curMonth >= Calendar.JANUARY && curMonth <= Calendar.SEPTEMBER) {
-            c.add(Calendar.YEAR, -1);
+            now.add(Calendar.YEAR, -1);
         }
-        c.set(Calendar.MONTH, Calendar.NOVEMBER);
-        c.set(Calendar.DAY_OF_MONTH, 1);
+        now.set(Calendar.MONTH, Calendar.NOVEMBER);
+        now.set(Calendar.DAY_OF_MONTH, 1);
 
-        return absoluteDate(c);
+        return absoluteDate(now);
     }
 
     public static Calendar getNextNanowrimoSession() {
+        return getNextNanowrimoSession(getNow());
+    }
 
-        Calendar c = getNow();
-        final int curMonth = c.get(Calendar.MONTH);
+    public static Calendar getNextNanowrimoSession(Calendar now) {
+        Calendar next = (Calendar) now.clone();
+        final int curMonth = now.get(Calendar.MONTH);
         if (curMonth >= Calendar.DECEMBER) {
-            c.add(Calendar.YEAR, 1);
+            next.add(Calendar.YEAR, 1);
         }
-        c.set(Calendar.MONTH, Calendar.NOVEMBER);
-        c.set(Calendar.DAY_OF_MONTH, 1);
+        next.set(Calendar.MONTH, Calendar.NOVEMBER);
+        next.set(Calendar.DAY_OF_MONTH, 1);
 
-        return absoluteDate(c);
+        return absoluteDate(next);
     }
 
     public static Calendar getCampSession() {
+        return getCampSession(getNow());
+    }
 
-        Calendar c = getNow();
-        final int curMonth = c.get(Calendar.MONTH);
+    public static Calendar getCampSession(Calendar now) {
+        final int curMonth = now.get(Calendar.MONTH);
         if (curMonth >= Calendar.JANUARY && curMonth <= Calendar.FEBRUARY) {
-            c.add(Calendar.YEAR, -1);
-            c.set(Calendar.MONTH, Calendar.JULY);
+            now.add(Calendar.YEAR, -1);
+            now.set(Calendar.MONTH, Calendar.JULY);
         } else if (curMonth >= Calendar.MARCH && curMonth <= Calendar.MAY) {
-            c.set(Calendar.MONTH, Calendar.APRIL);
+            now.set(Calendar.MONTH, Calendar.APRIL);
         } else if (curMonth >= Calendar.JUNE) {
-            c.set(Calendar.MONTH, Calendar.JULY);
+            now.set(Calendar.MONTH, Calendar.JULY);
         }
-        c.set(Calendar.DAY_OF_MONTH, 1);
+        now.set(Calendar.DAY_OF_MONTH, 1);
 
-        return absoluteDate(c);
+        return absoluteDate(now);
     }
 
     public static Calendar getNextCampSession() {
+        return getNextCampSession(getNow());
+    }
 
-        Calendar c = getNow();
-        final int curMonth = c.get(Calendar.MONTH);
+    public static Calendar getNextCampSession(Calendar now) {
+        Calendar next = (Calendar) now.clone();
+        final int curMonth = now.get(Calendar.MONTH);
         if (curMonth >= Calendar.JANUARY && curMonth <= Calendar.APRIL) {
-            c.set(Calendar.MONTH, Calendar.APRIL);
+            next.set(Calendar.MONTH, Calendar.APRIL);
         } else if (curMonth >= Calendar.MAY && curMonth <= Calendar.JULY) {
-            c.set(Calendar.MONTH, Calendar.JULY);
+            next.set(Calendar.MONTH, Calendar.JULY);
         } else if (curMonth >= Calendar.AUGUST) {
-            c.set(Calendar.MONTH, Calendar.APRIL);
-            c.add(Calendar.YEAR, 1);
+            next.add(Calendar.YEAR, 1);
+            next.set(Calendar.MONTH, Calendar.APRIL);
         }
-        c.set(Calendar.DAY_OF_MONTH, 1);
+        next.set(Calendar.DAY_OF_MONTH, 1);
 
-        return absoluteDate(c);
+        return absoluteDate(next);
     }
 
     public static boolean isSessionAvailableToInscription(Calendar sessionCalendar) {

@@ -38,10 +38,22 @@
             android:textStyle="bold"/>
 
         <Button
-            android:id="@+id/bt_nano"
+            android:id="@+id/bt_next_event"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableRight="@drawable/ic_send"
+            android:gravity="left"
+            android:text="@string/welcome_choice_next_event"
+            android:textColor="@color/welcome_button_text_active"
+            android:textSize="20sp"/>
+
+        <Button
+            android:id="@+id/bt_nano"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:background="?android:attr/selectableItemBackground"
             android:drawableRight="@drawable/ic_send"
             android:gravity="left"

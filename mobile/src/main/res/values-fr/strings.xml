@@ -143,5 +143,12 @@
     <string name="help_connection_failure_answer">Essayez à nouveau quelques instants plus tard. Si le problème persiste, envoyez au support l\'intitulé exacte de l\'erreur affiché et indiqué ce que vous vouliez faire.</string>
     <string name="help_support">Contacter le support</string>
 
+    <!-- Next event -->
+    <string name="welcome_choice_next_event">Je veux connaitre les prochains évènements</string>
+    <string name="nextevent_nanowrimo_ongoing">Le NaNoWriMo est en cours ce mois-ci</string>
+    <string name="nextevent_nanowrimo_next">Le NaNoWriMo se déroulera du 1er au 30 novembre %d</string>
+    <string name="nextevent_camp_ongoing">Le Camp NaNoWriMo est en cours ce mois-ci</string>
+    <string name="nextevent_camp_next">Le Camp NaNoWriMo se déroulera du 1er au %1$d %2$s %3$d</string>
+
 
 </resources>
