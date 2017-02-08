@@ -1,5 +1,6 @@
 package nanowrimo.onishinji.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import java.util.Calendar;
 
 import nanowrimo.onishinji.R;
 import nanowrimo.onishinji.model.WritingSession;
+import nanowrimo.onishinji.ui.activity.NextEventActivity;
 import nanowrimo.onishinji.utils.WritingSessionHelper;
 
 /**
@@ -19,12 +21,21 @@ public class WelcomeFragment extends SlidingFragment {
 
     protected Button mBtCampNano;
     protected Button mBtNanowrimo;
+    protected Button mBtNextEvent;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         ViewGroup v = (ViewGroup) inflater.inflate(R.layout.fragment_welcome, container, false);
+
+        mBtNextEvent = (Button) v.findViewById(R.id.bt_next_event);
+        mBtNextEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onWantNextEvent();
+            }
+        });
 
         mBtCampNano = (Button) v.findViewById(R.id.bt_campnano);
 
@@ -65,5 +76,9 @@ public class WelcomeFragment extends SlidingFragment {
     protected void disableButton(Button bt) {
         bt.setTextColor(getResources().getColor(R.color.welcome_button_text_inactive));
         bt.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.ic_send_disabled), null);
+    }
+
+    private void onWantNextEvent() {
+        startActivity(new Intent(getContext(), NextEventActivity.class));
     }
 }

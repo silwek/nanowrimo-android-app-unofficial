@@ -147,4 +147,11 @@
     <string name="help_connection_failure">\"I check my internet connection but the application can not start my session.\"</string>
     <string name="help_connection_failure_answer">Try again a few moments later. If the problem persists, send the exact content of the displayed error and explain that you wanted to do.</string>
     <string name="help_support">Contact Support</string>
+
+    <!-- Next event -->
+    <string name="welcome_choice_next_event">I wish to know the next events</string>
+    <string name="nextevent_nanowrimo_ongoing">NaNoWriMo is on going this month</string>
+    <string name="nextevent_nanowrimo_next">NaNoWriMo takes place from the 1st to 30th november %d</string>
+    <string name="nextevent_camp_ongoing">Camp NaNoWriMo is on going this month</string>
+    <string name="nextevent_camp_next">Camp NaNoWriMo takes place from 1st to %1$dth %2$s %3$d</string>
 </resources>
