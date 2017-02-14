@@ -73,6 +73,10 @@
             android:name=".ui.activity.HelpUsernameActivity"
             android:screenOrientation="portrait"></activity>
 
+        <activity
+            android:name=".ui.activity.NextEventActivity"
+            android:screenOrientation="portrait"></activity>
+
 
         <receiver
             android:name=".widget.WidgetDailyWordCountRemaining"

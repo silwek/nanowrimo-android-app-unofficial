@@ -359,10 +359,12 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
             }
 
+            final int goal = mUser != null ? mUser.getGoal() : 50000;
+            final int defaultDailyTarget = WritingSessionHelper.getDefaultDailyTarget();
 
             ArrayList<Entry> defaultLineEntries = new ArrayList<Entry>();
-            defaultLineEntries.add(new Entry(0, 0));
-            defaultLineEntries.add(new Entry(mUser != null ? mUser.getGoal() : 50000, defaultLineValues.size() - 1));
+            defaultLineEntries.add(new Entry(defaultDailyTarget, 0));
+            defaultLineEntries.add(new Entry(goal, defaultLineValues.size() - 1));
 
 
             LineDataSet linearProgressionDataSet = new LineDataSet(defaultLineEntries, "naive linear progression");
