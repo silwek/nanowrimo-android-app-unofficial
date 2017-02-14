@@ -23,8 +23,8 @@ android {
         applicationId "nanowrimo.onishinji"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 21
-        versionName "1.7.1"
+        versionCode 22
+        versionName "1.7.2"
     }
     buildTypes {
         release {
