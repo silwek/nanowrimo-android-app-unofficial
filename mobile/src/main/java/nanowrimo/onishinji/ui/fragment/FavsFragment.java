@@ -156,50 +156,52 @@ public class FavsFragment extends Fragment implements GetFavoriesRankingTask.OnF
 
     @Override
     public void onFavoritesSorted(ArrayList<User> users) {
-        mTask = null;
-        final int nbFavs = users.size();
-        if (nbFavs > 0) {
-            showUserRank(users.get(0), mRankOne, mRankOneWC, mRankOneName);
-            if (nbFavs > 1) {
-                mRankSeparatorTwo.setVisibility(View.VISIBLE);
-                showUserRank(users.get(1), mRankTwo, mRankTwoWC, mRankTwoName);
-                if (nbFavs > 2) {
-                    mRankSeparatorThree.setVisibility(View.VISIBLE);
-                    showUserRank(users.get(2), mRankThree, mRankThreeWC, mRankThreeName);
+        if (getActivity() != null) {
+            mTask = null;
+            final int nbFavs = users.size();
+            if (nbFavs > 0) {
+                showUserRank(users.get(0), mRankOne, mRankOneWC, mRankOneName);
+                if (nbFavs > 1) {
+                    mRankSeparatorTwo.setVisibility(View.VISIBLE);
+                    showUserRank(users.get(1), mRankTwo, mRankTwoWC, mRankTwoName);
+                    if (nbFavs > 2) {
+                        mRankSeparatorThree.setVisibility(View.VISIBLE);
+                        showUserRank(users.get(2), mRankThree, mRankThreeWC, mRankThreeName);
+                    } else {
+                        mRankThree.setVisibility(View.GONE);
+                        mRankSeparatorThree.setVisibility(View.GONE);
+                    }
+
                 } else {
+                    mRankTwo.setVisibility(View.GONE);
                     mRankThree.setVisibility(View.GONE);
+                    mRankSeparatorTwo.setVisibility(View.GONE);
                     mRankSeparatorThree.setVisibility(View.GONE);
                 }
-
             } else {
+                mRankOne.setVisibility(View.GONE);
                 mRankTwo.setVisibility(View.GONE);
                 mRankThree.setVisibility(View.GONE);
                 mRankSeparatorTwo.setVisibility(View.GONE);
                 mRankSeparatorThree.setVisibility(View.GONE);
             }
-        } else {
-            mRankOne.setVisibility(View.GONE);
-            mRankTwo.setVisibility(View.GONE);
-            mRankThree.setVisibility(View.GONE);
-            mRankSeparatorTwo.setVisibility(View.GONE);
-            mRankSeparatorThree.setVisibility(View.GONE);
-        }
 
-        if (nbFavs > 3) {
-            final int more = nbFavs - 3;
-            if (more == 1) {
-                mRankMore.setText(getString(R.string.dashboard_my_favories_more_one, more));
+            if (nbFavs > 3) {
+                final int more = nbFavs - 3;
+                if (more == 1) {
+                    mRankMore.setText(getString(R.string.dashboard_my_favories_more_one, more));
+                } else {
+                    mRankMore.setText(getString(R.string.dashboard_my_favories_more, more));
+                }
+                mRankMore.setVisibility(View.VISIBLE);
+                mRankSeparatorMore.setVisibility(View.VISIBLE);
             } else {
-                mRankMore.setText(getString(R.string.dashboard_my_favories_more, more));
+                mRankMore.setVisibility(View.GONE);
+                mRankSeparatorMore.setVisibility(View.GONE);
             }
-            mRankMore.setVisibility(View.VISIBLE);
-            mRankSeparatorMore.setVisibility(View.VISIBLE);
-        } else {
-            mRankMore.setVisibility(View.GONE);
-            mRankSeparatorMore.setVisibility(View.GONE);
-        }
 
-        mProgressBar.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
+        }
     }
 
     protected void showUserRank(User u, View container, TextView tfwordcount, TextView tfname) {
