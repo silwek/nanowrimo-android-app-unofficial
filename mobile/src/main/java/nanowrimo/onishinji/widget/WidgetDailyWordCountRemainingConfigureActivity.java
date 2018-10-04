@@ -92,7 +92,7 @@ public class WidgetDailyWordCountRemainingConfigureActivity extends Activity {
             String username = mAppWidgetText.getText().toString();
 
             // Test username
-            final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), username);
+            final String url = URLUtils.getProjectUrl(WritingSessionHelper.getInstance().getSessionType(), username);
             JSONObject params = new JSONObject();
             mLoader.setVisibility(View.VISIBLE);
             mButtonValid.setClickable(false);

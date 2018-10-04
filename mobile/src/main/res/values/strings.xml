@@ -136,6 +136,7 @@
     <string name="no_network_connection">@string/no_internet</string>
     <string name="auth_failed">The username is not found</string>
     <string name="generic_server_timeout">Unable to join with our servers. Try again later.</string>
+    <string name="no_project_found">No writing project found. Make sure you create a project on official website.</string>
 
     <string name="welcome_username_help">My nickname is ok but I can not start my session</string>
     <string name="help_title">FAQ</string>
@@ -154,4 +155,5 @@
     <string name="nextevent_nanowrimo_next">NaNoWriMo takes place from the 1st to 30th november %d</string>
     <string name="nextevent_camp_ongoing">Camp NaNoWriMo is on going this month</string>
     <string name="nextevent_camp_next">Camp NaNoWriMo takes place from 1st to %1$dth %2$s %3$d</string>
+
 </resources>

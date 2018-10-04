@@ -64,7 +64,7 @@ public class GetFavoriesRankingTask extends AsyncTask<ArrayList<String>, Void, A
     protected User getUser(String username) {
         if (!TextUtils.isEmpty(username)) {
 
-            final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), username);
+            final String url = URLUtils.getProjectUrl(WritingSessionHelper.getInstance().getSessionType(), username);
 
             RequestFuture<JSONObject> future = RequestFuture.newFuture();
             JsonObjectRequest request = new JsonObjectRequest(url, null, future, future);

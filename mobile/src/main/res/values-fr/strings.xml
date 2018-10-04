@@ -131,6 +131,7 @@
     <string name="no_network_connection">@string/no_internet</string>
     <string name="auth_failed">L\'utilisateur est introuvable</string>
     <string name="generic_server_timeout">Impossible de joindre avec nos serveurs. Réessayez un peu plus tard.</string>
+    <string name="no_project_found">Aucun projet d\'écriture trouvé. Assurez vous d\'avoir créer votre projet sur le site officiel.</string>
 
     <string name="welcome_username_help">Mon pseudonyme est correct mais je n\'arrive pas à démarrer ma session</string>
     <string name="help_title">FAQ</string>

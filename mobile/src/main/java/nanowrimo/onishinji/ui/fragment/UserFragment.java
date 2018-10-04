@@ -415,7 +415,7 @@ public class UserFragment extends Fragment implements PickerUserFragment.EditNam
 
             mIsUserLoading = true;
             checkLoader();
-            final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), mId);
+            final String url = URLUtils.getProjectUrl(WritingSessionHelper.getInstance().getSessionType(), mId);
 
             JSONObject params = new JSONObject();
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
