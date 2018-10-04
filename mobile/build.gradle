@@ -17,14 +17,14 @@ repositories {
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '24.0.1'
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         applicationId "nanowrimo.onishinji"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 22
-        versionName "1.7.2"
+        versionCode 23
+        versionName "1.7.3"
     }
     buildTypes {
         release {
