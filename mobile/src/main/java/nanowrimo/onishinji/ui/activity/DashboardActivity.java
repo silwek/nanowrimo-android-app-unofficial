@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.android.volley.Cache;
 import com.android.volley.Request;
@@ -189,7 +190,7 @@ public class DashboardActivity extends ToolbarActivity {
 
             mIsUserLoading = true;
             checkLoader();
-            final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), mId);
+            final String url = URLUtils.getProjectUrl(WritingSessionHelper.getInstance().getSessionType(), mId);
 
             JSONObject params = new JSONObject();
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
@@ -207,8 +208,7 @@ public class DashboardActivity extends ToolbarActivity {
                     scheduleNextUpdate();
                     mIsUserLoading = false;
                     checkLoader();
-
-                    Log.e("error", error.toString());
+                    checkError(error);
 
                     Cache c = HttpClient.getInstance().getQueue().getCache();
                     Cache.Entry entry = c.get(url);
@@ -250,6 +250,23 @@ public class DashboardActivity extends ToolbarActivity {
     }
 
     protected void checkLoader() {
+    }
+
+    protected void checkError(VolleyError error) {
+        if (error.networkResponse.statusCode == 404) {
+            //No project
+            onNoProject();
+        } else {
+            Log.e("error", error.toString());
+        }
+    }
+
+    private void onNoProject() {
+        mUser = new User();
+        mUser.setId(mId);
+        mUser.setName(mId);
+        BusManager.getInstance().getBus().post(new UserEvent(mUser));
+        Toast.makeText(this, R.string.no_project_found, Toast.LENGTH_LONG).show();
     }
 
     private void handleResponse(JSONObject response) {

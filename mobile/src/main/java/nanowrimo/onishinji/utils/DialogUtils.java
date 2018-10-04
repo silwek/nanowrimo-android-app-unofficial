@@ -84,7 +84,7 @@ public class DialogUtils {
 
                 // Test username
                 RequestQueue queue = Volley.newRequestQueue(context);
-                final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), value);
+                final String url = URLUtils.getProjectUrl(WritingSessionHelper.getInstance().getSessionType(), value);
                 JSONObject params = new JSONObject();
                 JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, params, new Response.Listener<JSONObject>() {
                     @Override

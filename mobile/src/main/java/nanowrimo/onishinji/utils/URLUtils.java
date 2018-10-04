@@ -12,12 +12,18 @@ import nanowrimo.onishinji.model.WritingSession;
  */
 public class URLUtils {
 
-    protected final static String baseUrlCamp = "https://campnanowrimo.herokuapp.com/users/";
-    protected final static String baseUrlNano = "https://nanowrimo.herokuapp.com/users/";
+    protected final static String baseUrlCamp = "https://campnanowrimo.herokuapp.com/";
+    protected final static String baseUrlNano = "https://nanowrimo.herokuapp.com/";
+    protected final static String baseUrlCampV2 = "https://campnanowrimo.herokuapp.com/v2/";
+    protected final static String baseUrlNanoV2 = "https://nanowrimo.herokuapp.com/v2/";
     public final static String WRITE_API = "https://nanowrimo.org/api/wordcount";
 
     public static String getUserUrl(int type, String username) {
-        return addTimeZone(getBaseUserUrl(type, username));
+        return addTimeZone(getUrlV2(type, "users/", username));
+    }
+
+    public static String getProjectUrl(int type, String username) {
+        return addTimeZone(getUrlV2(type, "project/", username));
     }
 
     public static String getHistoryUserUrl(int type, String username) {
@@ -29,9 +35,14 @@ public class URLUtils {
         return addTimeZone(baseUrl + "/friends");
     }
 
+    protected static String getUrlV2(int type, String path, String username) {
+        final String baseUrlV2 = type == WritingSession.NANOWRIMO ? baseUrlNanoV2 : baseUrlCampV2;
+        return baseUrlV2 + path + UsernameConverter.convert(username);
+    }
+
     protected static String getBaseUserUrl(int type, String username) {
         final String baseUrl = type == WritingSession.NANOWRIMO ? baseUrlNano : baseUrlCamp;
-        return baseUrl + UsernameConverter.convert(username);
+        return baseUrl + "users/" + UsernameConverter.convert(username);
     }
 
     protected static String addTimeZone(String url) {

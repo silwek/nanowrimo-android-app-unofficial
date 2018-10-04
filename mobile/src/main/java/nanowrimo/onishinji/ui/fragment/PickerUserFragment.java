@@ -111,7 +111,7 @@ public class PickerUserFragment extends DialogFragment {
 
                     mLoader.setVisibility(View.VISIBLE);
                     // Test username
-                    final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), mCurrentUser);
+                    final String url = URLUtils.getProjectUrl(WritingSessionHelper.getInstance().getSessionType(), mCurrentUser);
                     JSONObject params = new JSONObject();
                     mLoader.setVisibility(View.VISIBLE);
                     mButtonValid.setClickable(false);

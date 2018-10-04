@@ -1,0 +1,23 @@
+def releasePath = file("${rootDir}/archive")
+
+def publish = project.tasks.create("publishAll")
+android.applicationVariants.all { variant ->
+    if (variant.buildType.name.equals("release") && !variant.name.startsWith("dev")) {
+        variant.outputs.all { output ->
+            def finalVersionCode = versionCode
+            def finalVersionName = versionName
+            output.versionCodeOverride = finalVersionCode
+            outputFileName = new File(
+                    output.outputFile.parent,
+                    outputFileName.replace(".apk", "-${finalVersionName}_${finalVersionCode}.apk")).name
+        }
+
+        def task = project.tasks.create("publish${variant.name.capitalize()}Apk", Copy)
+        task.from(variant.outputs[0].outputFile)
+        task.into(releasePath)
+
+        task.dependsOn variant.assemble
+        task.mustRunAfter variant.assemble
+        publish.dependsOn task
+    }
+}

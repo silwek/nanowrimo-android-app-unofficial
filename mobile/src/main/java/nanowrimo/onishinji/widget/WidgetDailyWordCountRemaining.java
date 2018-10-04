@@ -101,7 +101,7 @@ public class WidgetDailyWordCountRemaining extends AppWidgetProvider {
         if (!WritingSessionHelper.getInstance().isDefined()) {
             WritingSessionHelper.getInstance().restoreConfig(context);
         }
-        final String url = URLUtils.getUserUrl(WritingSessionHelper.getInstance().getSessionType(), (String) widgetText);
+        final String url = URLUtils.getProjectUrl(WritingSessionHelper.getInstance().getSessionType(), (String) widgetText);
 
         if (widgetText != null && !TextUtils.isEmpty(widgetText)) {
             JSONObject params = new JSONObject();
